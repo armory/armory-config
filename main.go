@@ -1,10 +1,10 @@
 package main
 
 import (
+	"config/deploymentconfigurations"
 	"fmt"
 	"log"
 
-	"github.com/austinthao5/golang_proto/config"
 	"google.golang.org/protobuf/proto"
 )
 
@@ -12,7 +12,7 @@ func main() {
 
 	fmt.Println("Hello World")
 
-	testEnv := pb.Env{
+	testEnv := deploymentconfigurations.Env{
 		name:  "testEnv",
 		value: "testValue",
 	}
@@ -22,16 +22,19 @@ func main() {
 		log.Fatal("Marshaling error", err)
 	}
 
-	// testContainer := &Containers{
-	// 	name: "Test",
-	// 	image: "testImage",
-	// 	command: "yes",
-	// 	env: testEnv,
-	// }
-
 	fmt.Println(data)
-}
 
-func test() (*config.Env, error) {
+	testContainer := deploymentconfigurations.Containers{
+		name:    "Test",
+		image:   "testImage",
+		command: "yes",
+		env:     testEnv,
+	}
+	data_again, err := proto.Marshal(testContainer)
+	if err != nil {
+		log.Fatal("Marshaling error", err)
+	}
+
+	fmt.Print(data_again)
 
 }
