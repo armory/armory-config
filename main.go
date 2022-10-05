@@ -47,11 +47,11 @@ func main() {
 
 	fmt.Print(testContainer.Command)
 
-	// testDE := deploymentConfigurations.DeploymentEnvironment{
-	// 	Container: arr,
-	// }
+	testDE := deploymentEnv.DeploymentEnvironment{
+		Container: arr,
+	}
 
-	// fmt.Print("\n------------\n")
-	// fmt.Print(testDE.Container)
+	fmt.Print("\n------------\n")
+	fmt.Print(testDE.Container)
 
 }

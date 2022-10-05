@@ -1,7 +1,7 @@
 syntax = "proto3";
 package proto.deploymentEnvironment;
 
-option go_package = "config/deploymentConfigurations";
+option go_package = "config/deploymentConfigurations/deploymentEnv";
 
 import "proto/deploymentConfigurations/deploymentEnv/Containers.proto";
 import "proto/deploymentConfigurations/deploymentEnv/Volumes.proto";

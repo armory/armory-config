@@ -4,10 +4,9 @@
 // 	protoc        v3.21.5
 // source: proto/deploymentConfigurations/deploymentEnv/DeploymentEnvironment.proto
 
-package deploymentConfigurations
+package deploymentEnv
 
 import (
-	deploymentEnv "config/deploymentConfigurations/deploymentEnv"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -27,9 +26,9 @@ type DeploymentEnvironment struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Container      []*deploymentEnv.Containers     `protobuf:"bytes,1,rep,name=container,proto3" json:"container,omitempty"`
-	InitContainers []*deploymentEnv.InitContainers `protobuf:"bytes,2,rep,name=initContainers,proto3" json:"initContainers,omitempty"`
-	Volumes        []*deploymentEnv.Volumes        `protobuf:"bytes,3,rep,name=volumes,proto3" json:"volumes,omitempty"`
+	Container      []*Containers     `protobuf:"bytes,1,rep,name=container,proto3" json:"container,omitempty"`
+	InitContainers []*InitContainers `protobuf:"bytes,2,rep,name=initContainers,proto3" json:"initContainers,omitempty"`
+	Volumes        []*Volumes        `protobuf:"bytes,3,rep,name=volumes,proto3" json:"volumes,omitempty"`
 }
 
 func (x *DeploymentEnvironment) Reset() {
@@ -64,21 +63,21 @@ func (*DeploymentEnvironment) Descriptor() ([]byte, []int) {
 	return file_proto_deploymentConfigurations_deploymentEnv_DeploymentEnvironment_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *DeploymentEnvironment) GetContainer() []*deploymentEnv.Containers {
+func (x *DeploymentEnvironment) GetContainer() []*Containers {
 	if x != nil {
 		return x.Container
 	}
 	return nil
 }
 
-func (x *DeploymentEnvironment) GetInitContainers() []*deploymentEnv.InitContainers {
+func (x *DeploymentEnvironment) GetInitContainers() []*InitContainers {
 	if x != nil {
 		return x.InitContainers
 	}
 	return nil
 }
 
-func (x *DeploymentEnvironment) GetVolumes() []*deploymentEnv.Volumes {
+func (x *DeploymentEnvironment) GetVolumes() []*Volumes {
 	if x != nil {
 		return x.Volumes
 	}
@@ -117,10 +116,11 @@ var file_proto_deploymentConfigurations_deploymentEnv_DeploymentEnvironment_prot
 	0x6d, 0x65, 0x73, 0x18, 0x03, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x24, 0x2e, 0x70, 0x72, 0x6f, 0x74,
 	0x6f, 0x2e, 0x64, 0x65, 0x70, 0x6c, 0x6f, 0x79, 0x6d, 0x65, 0x6e, 0x74, 0x45, 0x6e, 0x76, 0x69,
 	0x72, 0x6f, 0x6e, 0x6d, 0x65, 0x6e, 0x74, 0x2e, 0x56, 0x6f, 0x6c, 0x75, 0x6d, 0x65, 0x73, 0x52,
-	0x07, 0x76, 0x6f, 0x6c, 0x75, 0x6d, 0x65, 0x73, 0x42, 0x21, 0x5a, 0x1f, 0x63, 0x6f, 0x6e, 0x66,
+	0x07, 0x76, 0x6f, 0x6c, 0x75, 0x6d, 0x65, 0x73, 0x42, 0x2f, 0x5a, 0x2d, 0x63, 0x6f, 0x6e, 0x66,
 	0x69, 0x67, 0x2f, 0x64, 0x65, 0x70, 0x6c, 0x6f, 0x79, 0x6d, 0x65, 0x6e, 0x74, 0x43, 0x6f, 0x6e,
-	0x66, 0x69, 0x67, 0x75, 0x72, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x73, 0x62, 0x06, 0x70, 0x72, 0x6f,
-	0x74, 0x6f, 0x33,
+	0x66, 0x69, 0x67, 0x75, 0x72, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x73, 0x2f, 0x64, 0x65, 0x70, 0x6c,
+	0x6f, 0x79, 0x6d, 0x65, 0x6e, 0x74, 0x45, 0x6e, 0x76, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f,
+	0x33,
 }
 
 var (
@@ -137,10 +137,10 @@ func file_proto_deploymentConfigurations_deploymentEnv_DeploymentEnvironment_pro
 
 var file_proto_deploymentConfigurations_deploymentEnv_DeploymentEnvironment_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
 var file_proto_deploymentConfigurations_deploymentEnv_DeploymentEnvironment_proto_goTypes = []interface{}{
-	(*DeploymentEnvironment)(nil),        // 0: proto.deploymentEnvironment.DeploymentEnvironment
-	(*deploymentEnv.Containers)(nil),     // 1: proto.deploymentEnvironment.Containers
-	(*deploymentEnv.InitContainers)(nil), // 2: proto.deploymentEnvironment.InitContainers
-	(*deploymentEnv.Volumes)(nil),        // 3: proto.deploymentEnvironment.Volumes
+	(*DeploymentEnvironment)(nil), // 0: proto.deploymentEnvironment.DeploymentEnvironment
+	(*Containers)(nil),            // 1: proto.deploymentEnvironment.Containers
+	(*InitContainers)(nil),        // 2: proto.deploymentEnvironment.InitContainers
+	(*Volumes)(nil),               // 3: proto.deploymentEnvironment.Volumes
 }
 var file_proto_deploymentConfigurations_deploymentEnv_DeploymentEnvironment_proto_depIdxs = []int32{
 	1, // 0: proto.deploymentEnvironment.DeploymentEnvironment.container:type_name -> proto.deploymentEnvironment.Containers
@@ -158,6 +158,8 @@ func file_proto_deploymentConfigurations_deploymentEnv_DeploymentEnvironment_pro
 	if File_proto_deploymentConfigurations_deploymentEnv_DeploymentEnvironment_proto != nil {
 		return
 	}
+	file_proto_deploymentConfigurations_deploymentEnv_Containers_proto_init()
+	file_proto_deploymentConfigurations_deploymentEnv_Volumes_proto_init()
 	if !protoimpl.UnsafeEnabled {
 		file_proto_deploymentConfigurations_deploymentEnv_DeploymentEnvironment_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*DeploymentEnvironment); i {
