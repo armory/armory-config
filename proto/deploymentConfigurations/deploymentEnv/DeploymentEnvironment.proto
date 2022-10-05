@@ -1,0 +1,16 @@
+syntax = "proto3";
+package proto.deploymentEnvironment;
+
+option go_package = "config/deploymentConfigurations";
+
+import "proto/deploymentConfigurations/deploymentEnv/Containers.proto";
+import "proto/deploymentConfigurations/deploymentEnv/Volumes.proto";
+
+// Configuration for the clouddriver microservice.
+message DeploymentEnvironment {
+
+    repeated Containers container = 1;
+    repeated InitContainers initContainers =2;
+    repeated Volumes volumes = 3;
+
+}

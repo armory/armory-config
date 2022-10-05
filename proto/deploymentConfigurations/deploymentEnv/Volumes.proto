@@ -1,0 +1,20 @@
+syntax = "proto3";
+package proto.deploymentEnvironment;
+
+option go_package = "config/deploymentConfigurations/deploymentEnv";
+
+// Configuration for the clouddriver microservice.
+message Volumes {
+
+    string name = 1;
+    string emptyDir = 2;
+    Secret secret = 3;
+
+}
+
+message Secret {
+
+    string secretName = 1;
+    string defaultMode = 2;
+
+}

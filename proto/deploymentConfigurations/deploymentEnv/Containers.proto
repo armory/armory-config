@@ -1,0 +1,44 @@
+syntax = "proto3";
+package proto.deploymentEnvironment;
+
+option go_package = "config/deploymentConfigurations/deploymentEnv";
+
+// Configuration for the clouddriver microservice.
+message Containers {
+
+    string name = 1;
+    string image = 2;
+    repeated string command = 3;
+    repeated Env env = 4;
+    repeated VolumeMounts volumeMounts = 5;
+
+}
+
+message Env {
+
+    string name = 1;
+    string value = 2;
+
+}
+
+message VolumeMounts {
+
+    string mountPath = 1;
+    string name = 2;
+
+}
+
+
+message InitContainers {
+
+    repeated ContainerService service = 1;
+
+}
+
+message ContainerService {
+
+    string name = 1;
+    string image = 2;
+    repeated VolumeMounts volumeMounts = 3;
+
+}

@@ -1,0 +1,28 @@
+syntax = "proto3";
+package proto.config;
+
+option go_package = "config/deploymentConfigurations";
+
+import "proto/deploymentConfigurations/deploymentEnv/DeploymentEnvironment.proto";
+// Configuration for the clouddriver microservice.
+message DeploymentConfigurations {
+
+    string name = 1;
+    string version = 2;
+    deploymentEnvironment.DeploymentEnvironment deploymentEnvironment = 3;
+    // Providers providers = 4;
+    // PersistentStorage persistentStorage = 5;
+    // Features features = 6;
+    // MetricStores metricStores = 7;
+    // Notifications notifications = 8;
+    // Ci ci = 9;
+    // Repository repository = 10;
+    // Security security = 11;
+    // Artifacts artifacts = 12;
+    // Pubsub pubsub = 13;
+    // Canary canary = 14;
+    // Spinnaker spinnaker = 15;
+    // Webhook webhook = 16;
+    // Armory armory = 17;
+
+}

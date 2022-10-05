@@ -1,0 +1,33 @@
+syntax = "proto3";
+package proto.deploymentEnvironment;
+
+option go_package = "config/deploymentConfigurations";
+
+import "proto/deploymentConfigurations/Containers.proto";
+
+// Configuration for the clouddriver microservice.
+message InitContainers {
+
+    repeated Service service = 1;
+
+}
+
+message Service {
+
+    string name = 1;
+    string image = 2;
+    repeated VolumeMounts volumeMounts = 3;
+
+}
+
+// initContainers:
+//     clouddriver:
+//       - name: eap
+//         image: docker.io/armory/eap-plugin:<PLUGIN_VERSION>
+//         volumeMounts:
+//           - mountPath: /opt/eap/target
+//             name: eap-plugin
+//       - name: clouddriver
+//         volumeMounts:
+//           - mountPath: /opt/spinnaker/lib/local-plugins
+//             name: eap-plugin
