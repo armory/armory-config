@@ -3,6 +3,8 @@ package proto.config;
 
 option go_package = "config/deploymentConfigurations";
 
+
+
 import "proto/deploymentConfigurations/deploymentEnv/DeploymentEnvironment.proto";
 // Configuration for the clouddriver microservice.
 message DeploymentConfigurations {

@@ -1,0 +1,26 @@
+syntax = "proto3";
+package proto.providers;
+
+option go_package = "config/deploymentConfigurations/providers";
+
+import "proto/deploymentConfigurations/providers/AppEngine.proto";
+
+// Configuration for the clouddriver microservice.
+message Providers {
+
+    
+
+    AppEngine appEngine = 1;
+    // AWS aws = 2;
+    // Ecs ecs = 3;
+    // Azure azure = 4;
+    // Dcos dcos = 5; 
+    // DockerRegistry dockerRegistry = 6;
+    // Google google = 7; 
+    // Huaweicloud huaweicloud = 8; 
+    // Kubernetes kubernetes = 9;
+    // Tencentcloud tencentcloud = 10;
+    // Orcale oracle = 11;
+    // Cloudfoundry cloudfoundry = 12;
+
+}

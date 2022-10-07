@@ -1,0 +1,19 @@
+syntax = "proto3";
+package proto.providers;
+
+option go_package = "config/deploymentConfigurations/providers";
+
+// Configuration for the clouddriver microservice.
+message AppEngine {
+
+    bool enabled = 1;
+    repeated AppEngineAcc Account = 2;
+    string primaryAccount = 3;
+
+}
+
+message AppEngineAcc {
+
+    string name = 1;
+
+}
