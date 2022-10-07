@@ -8,7 +8,16 @@ import "proto/deploymentConfigurations/providers/Aws.proto";
 import "proto/deploymentConfigurations/providers/Ecs.proto";
 import "proto/deploymentConfigurations/providers/Azure.proto";
 import "proto/deploymentConfigurations/providers/DockerRegistry.proto";
+import "proto/deploymentConfigurations/providers/Google.proto";
 // Configuration for the clouddriver microservice.
+
+/* 
+ToDo:
+
+Azure provider - Need more information of all possible configs
+Docker Registry - Needs some touching up to ensure it covers all possible configs
+
+*/
 message Providers {
 
     AppEngine appEngine = 1;

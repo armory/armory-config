@@ -1,0 +1,69 @@
+syntax = "proto3";
+package proto.providers;
+
+option go_package = "config/deploymentConfigurations/providers";
+
+// Configuration for the clouddriver microservice.
+message Google {
+
+    bool enabled = 1;
+    string primaryAccount = 2;
+    repeated GoogleAcc Account = 3;
+    BakeryDefaults bakeryDefault = 4;
+    
+}
+
+message GoogleAcc {
+
+    string name = 1;
+    repeated string requiredGroupMembership = 2;
+    repeated string permissions = 3;
+    string project = 4;
+    string jsonPath = 5;
+    bool alphaListed = 6;
+    repeated string imageProjects = 7;
+    Consul consul = 8;
+
+}
+
+message Consul {
+
+    bool enabled = 1;
+    string agentEndpoint = 2;
+    int32 agentPort = 3;
+    repeated string datacenters = 4;
+    repeated string regions = 5;
+
+}
+
+message BakeryDefaults {
+    string templateFile = 1;
+    repeated string baseImages = 2;
+    string zone = 3;
+    string network = 4;
+    bool useInternaIp = 5;
+}
+
+//     google:
+//       enabled: true
+//       accounts:
+//       - name: gcp-account
+//         requiredGroupMembership: []
+//         permissions: {}
+//         project: some-project
+//         jsonPath: /home/spinnaker/password.json
+//         alphaListed: false
+//         imageProjects: []
+//         consul:
+//           enabled: false
+//           agentEndpoint: localhost
+//           agentPort: 8500
+//           datacenters: []
+//         regions: []
+//       primaryAccount: gcp-account
+//       bakeryDefaults:
+//         templateFile: gce.json
+//         baseImages: []
+//         zone: us-central1-f
+//         network: default
+//         useInternalIp: false
