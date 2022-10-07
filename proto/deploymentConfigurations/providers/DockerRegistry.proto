@@ -1,0 +1,59 @@
+syntax = "proto3";
+package proto.providers;
+
+option go_package = "config/deploymentConfigurations/providers";
+
+// Configuration for the clouddriver microservice.
+message DockerRegistry {
+
+    bool enabled = 1;
+    string primaryAccount = 2;
+    repeated DockerRegistryAcc Account = 3;
+    // BakeryDefaults bakeryDefault = 4;
+    // string accessKey = 5;
+    // string secretAccessKey = 6;
+    // string defaultKeyPairTemplate = 7;
+    // repeated string defaultRegions = 8;
+    // AwsDefaults defaults = 9;
+    
+}
+
+message DockerRegistryAcc {
+
+    string name = 1;
+    repeated string requiredGroupMembership = 2;
+    repeated string permissions = 3;
+    string address = 4;
+    string username = 5;
+    string email = 6;
+    int32 cacheIntervalSeconds = 7;
+    int32 clientTimeoutMillis = 8;
+    int32 cacheThreads  = 9;
+    int32 paginateSize = 10;
+    bool sortTagsByDate = 11;
+    bool trackDigests = 12;
+    bool insecureRegistry = 13;
+
+
+}
+
+
+
+// dockerRegistry:
+// enabled: true
+// accounts:
+// - name: my-docker-registry
+//   requiredGroupMembership: []
+//   permissions: {}
+//   address: https://some.address
+//   username: jsonKey
+//   email: fake.email@spinnaker.io
+//   cacheIntervalSeconds: 30
+//   clientTimeoutMillis: 60000
+//   cacheThreads: 1
+//   paginateSize: 100
+//   sortTagsByDate: false
+//   trackDigests: false
+//   insecureRegistry: false
+//   repositories: []
+// primaryAccount: my-docker-registry

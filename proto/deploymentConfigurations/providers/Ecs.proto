@@ -4,21 +4,25 @@ package proto.providers;
 option go_package = "config/deploymentConfigurations/providers";
 
 // Configuration for the clouddriver microservice.
-message AppEngine {
+message Ecs {
 
     bool enabled = 1;
     string primaryAccount = 2;
-    repeated AppEngineAcc Account = 3;
-
+    repeated EcsAcc Account = 3;
+    // BakeryDefaults bakeryDefault = 4;
+    // string accessKey = 5;
+    // string secretAccessKey = 6;
+    // string defaultKeyPairTemplate = 7;
+    // repeated string defaultRegions = 8;
+    // AwsDefaults defaults = 9;
+    
 }
 
-message AppEngineAcc {
+message EcsAcc {
 
     string name = 1;
     repeated string requiredGroupMembership = 2;
     repeated string permissions = 3;
-    string project = 4;
-    string jsonPath = 5;
-    string localRepositoryDirectory = 6;
-    bool sshTrustUnknownHosts = 7;
+    string awsAccount = 4;
+
 }

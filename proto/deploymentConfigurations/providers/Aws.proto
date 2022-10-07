@@ -1,0 +1,45 @@
+syntax = "proto3";
+package proto.providers;
+
+option go_package = "config/deploymentConfigurations/providers";
+
+// Configuration for the clouddriver microservice.
+message Aws {
+
+    bool enabled = 1;
+    string primaryAccount = 2;
+    repeated AwsAcc Account = 3;
+    BakeryDefaults bakeryDefault = 4;
+    string accessKey = 5;
+    string secretAccessKey = 6;
+    string defaultKeyPairTemplate = 7;
+    repeated string defaultRegions = 8;
+    AwsDefaults defaults = 9;
+    
+}
+
+message AwsAcc {
+
+    string name = 1;
+    string accountId = 2;
+    string assumeRole = 3;
+    string providerVersion = 4;
+    repeated string regions = 5;
+
+}
+
+message BakeryDefaults {
+
+    string templateFile = 1;
+    string awsAccessKey = 2;
+    string awsSecretKey = 3;
+    repeated string baseImages = 4;
+    bool awsAssociatePublicIpAddress = 5;
+    string defaultVirtualizationType = 6;
+
+}
+
+
+message AwsDefaults {
+    string iamBaseRole = 1;
+}
