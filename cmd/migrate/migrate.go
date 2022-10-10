@@ -74,6 +74,7 @@ func migrator(halconfig_dir string, output_dir string, deployment_dir string) {
 			}
 
 			fmt.Println("Account: " + halyard.PrimaryAccount)
+			fmt.Printf("\nHalyard: %#v \n\n", halyard)
 		}
 
 	}
