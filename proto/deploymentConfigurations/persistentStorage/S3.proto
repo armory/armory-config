@@ -1,0 +1,17 @@
+syntax = "proto3";
+package proto.persistentStorage;
+
+option go_package = "config/deploymentConfigurations/persistentStorage";
+
+// Configuration for the clouddriver microservice.
+message S3 {
+
+    string bucket = 1;
+    string rootFolder = 2;
+    string region = 3;
+    bool pathStyleAccess = 4;
+    string accessKeyId = 5;
+    string secretAccessKey = 6;
+    
+}
+

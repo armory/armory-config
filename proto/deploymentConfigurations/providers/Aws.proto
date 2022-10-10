@@ -9,7 +9,7 @@ message Aws {
     bool enabled = 1;
     string primaryAccount = 2;
     repeated AwsAcc Account = 3;
-    BakeryDefaults bakeryDefault = 4;
+    AwsBakeryDefaults bakeryDefault = 4;
     string accessKey = 5;
     string secretAccessKey = 6;
     string defaultKeyPairTemplate = 7;
@@ -28,7 +28,7 @@ message AwsAcc {
 
 }
 
-message BakeryDefaults {
+message AwsBakeryDefaults {
 
     string templateFile = 1;
     string awsAccessKey = 2;

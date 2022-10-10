@@ -6,13 +6,14 @@ option go_package = "config/deploymentConfigurations";
 
 
 import "proto/deploymentConfigurations/deploymentEnv/DeploymentEnvironment.proto";
+import "proto/deploymentConfigurations/providers/Providers.proto";
 // Configuration for the clouddriver microservice.
 message DeploymentConfigurations {
 
     string name = 1;
     string version = 2;
     deploymentEnvironment.DeploymentEnvironment deploymentEnvironment = 3;
-    // Providers providers = 4;
+    providers.Providers providers = 4;
     // PersistentStorage persistentStorage = 5;
     // Features features = 6;
     // MetricStores metricStores = 7;

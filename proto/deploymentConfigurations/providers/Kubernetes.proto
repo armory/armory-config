@@ -1,0 +1,55 @@
+syntax = "proto3";
+package proto.providers;
+
+option go_package = "config/deploymentConfigurations/providers";
+
+// Configuration for the clouddriver microservice.
+message Kubernetes {
+
+    bool enabled = 1;
+    string primaryAccount = 2;
+    repeated KubernetesAcc Account = 3;
+    
+}
+
+message KubernetesAcc {
+
+    string name = 1;
+    repeated string requiredGroupMembership = 2;
+    repeated string permissions = 3;
+    repeated string dockerRegistries = 4;
+    string providerVersion = 5;
+    bool configureImagePullSecrets = 6;
+    bool serviceAccount = 7;
+    int32 cacheThreads = 8;
+    repeated string namespaces = 9;
+    repeated string omitNamespaces = 10;
+    repeated string kinds = 11;
+    repeated string omitKinds = 12;
+    repeated string customResources = 13;
+    repeated string cachingPolicies = 14;
+    repeated string oauthScopes = 15;
+    bool onlySpinnakerManaged = 16;
+
+}
+
+// kubernetes:
+// enabled: true
+// accounts:
+// - name: spinnaker
+//   requiredGroupMembership: []
+//   permissions: {}
+//   dockerRegistries: []
+//   providerVersion: V2
+//   configureImagePullSecrets: true
+//   serviceAccount: true
+//   cacheThreads: 1
+//   namespaces:
+//   - spinnaker
+//   omitNamespaces: []
+//   kinds: []
+//   omitKinds: []
+//   customResources: []
+//   cachingPolicies: []
+//   oAuthScopes: []
+//   onlySpinnakerManaged: true

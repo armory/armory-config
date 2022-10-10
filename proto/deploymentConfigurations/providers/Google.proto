@@ -9,7 +9,7 @@ message Google {
     bool enabled = 1;
     string primaryAccount = 2;
     repeated GoogleAcc Account = 3;
-    BakeryDefaults bakeryDefault = 4;
+    GoogleBakeryDefaults bakeryDefault = 4;
     
 }
 
@@ -36,7 +36,7 @@ message Consul {
 
 }
 
-message BakeryDefaults {
+message GoogleBakeryDefaults {
     string templateFile = 1;
     repeated string baseImages = 2;
     string zone = 3;
