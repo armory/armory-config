@@ -44,3 +44,6 @@ vendor/
 
 # Test
 test_output/
+
+### Mac ###
+.DS_Store
