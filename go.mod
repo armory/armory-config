@@ -5,4 +5,5 @@ go 1.14
 require (
 	github.com/spf13/cobra v1.5.0
 	google.golang.org/protobuf v1.28.1
+	sigs.k8s.io/yaml v1.3.0
 )

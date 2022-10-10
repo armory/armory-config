@@ -1,0 +1,46 @@
+
+### Emacs ###
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+auto-save-list
+tramp
+
+### Go ###
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+# Test binary, build with 'go test -c'
+*.test
+!Dockerfile.test
+# Output of the go coverage tool, specifically when used with LiteIDE
+*.out
+
+### Vim ###
+# swap
+.sw[a-p]
+.*.sw[a-p]
+# session
+Session.vim
+# temporary
+.netrwhist
+# auto-generated tag files
+tags
+
+### VisualStudioCode ###
+.vscode/*
+.history
+
+### Intellij ###
+.idea
+*.iml
+build/
+
+#Vendor
+vendor/
+
+# Test
+test_output/

@@ -8,6 +8,8 @@ import (
 	"log"
 	"os"
 
+	"github.com/austinthao5/golang_proto_test/internal/parser"
+
 	"github.com/spf13/cobra"
 )
 
@@ -63,18 +65,15 @@ func migrator(halconfig_dir string, output_dir string, deployment_dir string) {
 		// }
 
 		if file.Name() == "config" {
-			fmt.Println("Found Halonfig!")
+			fmt.Println("Found Halconfig!")
 
-			config, err := os.Open(halconfig_dir + "/" + file.Name())
+			halyard, err := parser.ParseHalConfig(halconfig_dir + "/" + file.Name())
 			if err != nil {
 				fmt.Println(err)
 				os.Exit(1)
 			}
 
-			defer config.Close()
-			var buf bytes.Buffer
-			io.Copy(&buf, config)
-			halconfig = buf.String()
+			fmt.Println("Account: " + halyard.PrimaryAccount)
 		}
 
 	}
