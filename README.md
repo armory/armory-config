@@ -20,3 +20,4 @@ This tool is to migrate you current Halyard-generated halconfig to the spinnaker
 - [K8s Operator pattern](https://kubernetes.io/docs/concepts/extend-kubernetes/operator/)
 - [Armory support help](https://support.armory.io/support)
 - [Manual migration](https://github.com/armory/spinnaker-operator/blob/master/doc/migrate.md)
+- [Manual migration 2](https://docs.armory.io/armory-enterprise/installation/armory-operator/hal-op-migration/)
