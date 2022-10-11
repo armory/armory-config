@@ -1,0 +1,30 @@
+syntax = "proto3";
+package proto.persistentStorage;
+
+option go_package = "config/deploymentConfigurations/persistentStorage";
+
+// Configuration for the clouddriver microservice.
+message Gcs {
+
+    string jsonPath = 1;
+    string project = 2;
+    string bucket = 3;
+    string rootFolder = 4;
+    string bucketLocation = 5;
+    
+}
+
+
+/* 
+
+Example Config
+
+gcs:
+  jsonPath:
+  project:
+  bucket:
+  rootFolder:
+  bucketLocation:
+
+*/
+

@@ -7,6 +7,7 @@ option go_package = "config/deploymentConfigurations";
 
 import "proto/deploymentConfigurations/deploymentEnv/DeploymentEnvironment.proto";
 import "proto/deploymentConfigurations/providers/Providers.proto";
+import "proto/deploymentConfigurations/persistentStorage/PersistentStorage.proto";
 // Configuration for the clouddriver microservice.
 message DeploymentConfigurations {
 
@@ -14,7 +15,7 @@ message DeploymentConfigurations {
     string version = 2;
     deploymentEnvironment.DeploymentEnvironment deploymentEnvironment = 3;
     providers.Providers providers = 4;
-    // PersistentStorage persistentStorage = 5;
+    persistentStorage.PersistentStorage persistentStorage = 5;
     // Features features = 6;
     // MetricStores metricStores = 7;
     // Notifications notifications = 8;

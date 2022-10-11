@@ -19,6 +19,7 @@ Azure provider - Need more information on all possible configs
 Docker Registry - Needs some touching up to ensure it covers all possible configs
 Google provider - Need to review later
 Huawei Cloud - Does anyone even use this? Will revisit later
+
 */
 message Providers {
 

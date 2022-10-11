@@ -23,33 +23,45 @@ message KubernetesAcc {
     bool serviceAccount = 7;
     int32 cacheThreads = 8;
     repeated string namespaces = 9;
-    repeated string omitNamespaces = 10;
-    repeated string kinds = 11;
-    repeated string omitKinds = 12;
-    repeated string customResources = 13;
-    repeated string cachingPolicies = 14;
-    repeated string oauthScopes = 15;
-    bool onlySpinnakerManaged = 16;
+    string kubeconfigFile = 10;
+    repeated string omitNamespaces = 11;
+    repeated string kinds = 12;
+    repeated string omitKinds = 13;
+    repeated string customResources = 14;
+    repeated string cachingPolicies = 15;
+    repeated string oauthScopes = 16;
+    bool onlySpinnakerManaged = 17;
 
 }
 
-// kubernetes:
-// enabled: true
-// accounts:
-// - name: spinnaker
-//   requiredGroupMembership: []
-//   permissions: {}
-//   dockerRegistries: []
-//   providerVersion: V2
-//   configureImagePullSecrets: true
-//   serviceAccount: true
-//   cacheThreads: 1
-//   namespaces:
-//   - spinnaker
-//   omitNamespaces: []
-//   kinds: []
-//   omitKinds: []
-//   customResources: []
-//   cachingPolicies: []
-//   oAuthScopes: []
-//   onlySpinnakerManaged: true
+
+
+
+
+/* 
+
+Example Config
+
+kubernetes:
+enabled: true
+accounts:
+- name: spinnaker
+  requiredGroupMembership: []
+  permissions: {}
+  dockerRegistries: []
+  providerVersion: V2
+  configureImagePullSecrets: true
+  serviceAccount: true
+  cacheThreads: 1
+  namespaces:
+  - spinnaker
+  kubeconfigFile: 
+  omitNamespaces: []
+  kinds: []
+  omitKinds: []
+  customResources: []
+  cachingPolicies: []
+  oAuthScopes: []
+  onlySpinnakerManaged: true
+
+*/

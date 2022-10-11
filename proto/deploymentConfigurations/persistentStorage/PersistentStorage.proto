@@ -4,15 +4,18 @@ package proto.persistentStorage;
 option go_package = "config/deploymentConfigurations/persistentStorage";
 
 import "proto/deploymentConfigurations/persistentStorage/S3.proto";
+import "proto/deploymentConfigurations/persistentStorage/Azs.proto";
+import "proto/deploymentConfigurations/persistentStorage/Oracle.proto";
+import "proto/deploymentConfigurations/persistentStorage/Gcs.proto";
 // Configuration for the clouddriver microservice.
 message PersistentStorage {
 
     string persistentStoreType = 1;
-    // Azs azs = 2;
-    // Gcs gcs = 3;
+    Azs azs = 2;
+    Gcs gcs = 3;
     // Redis redis = 4;
     S3 s3 = 5;
-    // Oracle oracle = 6;
+    Oracle oracle = 6;
     
 }
 

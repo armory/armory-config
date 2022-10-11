@@ -1,0 +1,38 @@
+syntax = "proto3";
+package proto.persistentStorage;
+
+option go_package = "config/deploymentConfigurations/persistentStorage";
+
+// Configuration for the clouddriver microservice.
+message Oracle {
+
+    string bucketName = 1;
+    string namespace = 2;
+    string compartmentId = 3;
+    string region = 4;
+    string userId = 5;
+    string fingerprint = 6;
+    string sshPrivateKeyFilePath = 7;
+    string privateKeyPassphrase = 8;
+    string tenancyId = 9;
+    
+}
+
+
+/* 
+
+Example Config
+
+oracle:
+  bucketName:
+  namespace:
+  compartmentId:
+  region:
+  userId:
+  fingerprint:
+  sshPrivateKeyFilePath:
+  privateKeyPassphrase:
+  tenancyId:
+
+*/
+
