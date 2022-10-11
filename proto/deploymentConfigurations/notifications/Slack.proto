@@ -1,0 +1,35 @@
+syntax = "proto3";
+package proto.notifications;
+
+option go_package = "config/deploymentConfigurations/notifications";
+
+message Slack {
+
+    bool enabled = 1;
+    string botName = 2;
+    string token = 3;
+    string baseUrl = 4;
+    bool forceUseIncomingWebhook = 5;
+    
+}
+
+
+/* 
+
+Example Config
+
+  notifications:
+    slack:
+      enabled: true
+      botName: test-bot
+      token: '12345'
+      baseUrl: http://localhost:9090
+      forceUseIncomingWebhook: true
+
+
+*/
+
+
+
+
+

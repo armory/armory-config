@@ -1,0 +1,49 @@
+syntax = "proto3";
+package proto.security;
+
+option go_package = "config/deploymentConfigurations/security";
+
+// Configuration for the clouddriver microservice.
+message Saml {
+    bool enabled = 1;
+    string metadataRemote = 2;
+    string issuerId = 3;
+    string keyStore = 4;
+    string keyStorePassword = 5;
+    string keyStoreAliasName = 6;
+    string serviceAddress = 7;
+    message userInfoMapping {
+        string email = 1;
+        string firstname = 2;
+        string lastname = 3;
+        string username = 4;
+        string roles = 5;
+        string rolesDelimiter = 6;
+    }
+}
+/* 
+
+Example Config
+
+      saml:
+        enabled: false
+        metadataRemote: http://localhost:9090
+        issuerId: '12345'
+        keyStore: /home/spinnaker/password.json
+        keyStorePassword: password
+        keyStoreAliasName: alias
+        serviceAddress: http://localhost:9090
+        userAttributeMapping:
+          firstName: firstname
+          lastName: lastname
+          roles: roles
+          rolesDelimiter: ','
+          username: username
+          email: email
+
+*/
+
+
+
+
+

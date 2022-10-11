@@ -1,0 +1,47 @@
+syntax = "proto3";
+package proto.ci;
+
+option go_package = "config/deploymentConfigurations/ci";
+
+import "proto/deploymentConfigurations/Permissions.proto";
+// Configuration for the clouddriver microservice.
+message Wercker {
+
+    bool enabled = 1;
+    repeated WerckerMasters masters = 2;
+    
+}
+
+message WerckerMasters {
+    string name = 1;
+    config.Permissions permission = 2;
+    string address = 3;
+    string user = 4;
+    string token = 5;
+}
+
+/* 
+
+Example Config
+
+wercker:
+    enabled: true
+    masters:
+    - name: TEST
+    permissions:
+        READ:
+        - dev
+        - test
+        WRITE:
+        - dev
+        - test
+    address: http://localhost:9090
+    user: username
+    token: '12345'
+
+*/
+
+
+
+
+

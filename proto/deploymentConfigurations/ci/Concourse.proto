@@ -1,0 +1,47 @@
+syntax = "proto3";
+package proto.ci;
+
+option go_package = "config/deploymentConfigurations/ci";
+
+import "proto/deploymentConfigurations/Permissions.proto";
+// Configuration for the clouddriver microservice.
+message Concourse {
+
+    bool enabled = 1;
+    repeated ConcourseMasters masters = 2;
+    
+}
+
+message ConcourseMasters {
+    string name = 1;
+    config.Permissions permission = 2;
+    string url = 3;
+    string username = 4;
+    string password = 5;
+}
+
+/* 
+
+Example Config
+
+concourse:
+    enabled: true
+    masters:
+    - name: MASTER
+    permissions:
+        READ:
+        - dev
+        - test
+        WRITE:
+        - dev
+        - test
+    url: http://localhost:9090
+    username: username
+    password: password
+
+*/
+
+
+
+
+

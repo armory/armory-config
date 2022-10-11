@@ -1,0 +1,26 @@
+syntax = "proto3";
+package proto.security;
+
+option go_package = "config/deploymentConfigurations/security";
+
+// Configuration for the clouddriver microservice.
+message X509 {
+    bool enabled = 1;
+    string roleOid = 2;
+    string subjectPrincipalRegex = 3;
+}
+/* 
+
+Example Config
+
+      x509:
+        enabled: false
+        roleOid: 1.2.840.10070.8.1
+        subjectPrincipalRegex: '*.someregex'
+
+*/
+
+
+
+
+

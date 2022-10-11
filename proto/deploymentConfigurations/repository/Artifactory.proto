@@ -1,0 +1,56 @@
+syntax = "proto3";
+package proto.repository;
+
+option go_package = "config/deploymentConfigurations/repository";
+
+import "proto/deploymentConfigurations/Permissions.proto";
+// Configuration for the clouddriver microservice.
+message Artifactory {
+
+    bool enabled = 1;
+    repeated ArtifactorySearch searches = 2;
+    
+}
+
+message ArtifactorySearch {
+    string name = 1;
+    config.Permissions permissions = 2;
+    string baseUrl = 3;
+    string repo = 4;
+    string groupId = 5;
+    string repoType = 6;
+    string username = 7;
+    string password = 8;
+
+}
+
+/* 
+
+Example Config
+
+artifactory:
+    enabled: true
+    searches:
+    - name: SEARCH
+    permissions:
+        READ:
+        - dev
+        - test
+        WRITE:
+        - dev
+        - test
+    baseUrl: http://localhost:9090
+    repo: test-repo
+    groupId: '12345'
+    repoType: maven
+    username: username
+    password: password
+
+
+
+*/
+
+
+
+
+

@@ -1,0 +1,34 @@
+syntax = "proto3";
+package proto.security;
+
+option go_package = "config/deploymentConfigurations/security";
+
+// Configuration for the clouddriver microservice.
+message Ldap {
+    bool enabled = 1;
+    string url = 2;
+    string userDnPattern = 3;
+    string userSearchFilter = 4;
+    string managerDn = 5;
+    string managerPassword = 6;
+    string groupSearchBase = 7;
+}
+/* 
+
+Example Config
+
+      ldap:
+        enabled: false
+        url: http://localhost:9090
+        userDnPattern: dn
+        userSearchFilter: filter
+        managerDn: dn
+        managerPassword: password
+        groupSearchBase: test
+
+*/
+
+
+
+
+

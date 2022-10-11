@@ -1,0 +1,41 @@
+syntax = "proto3";
+package proto.ci;
+
+option go_package = "config/deploymentConfigurations/ci";
+
+// import "proto/deploymentConfigurations/ci/Permissions.proto";
+// Configuration for the clouddriver microservice.
+message Codebuild{
+
+    bool enabled = 1;
+    repeated CodebuildAccounts accounts = 2;
+    
+}
+
+message CodebuildAccounts {
+    string name = 1;
+    string permission = 2;
+    string accountId = 3;
+    string assumeRole = 4;
+    string region = 5;
+}
+
+/* 
+
+Example Config
+
+codebuild:
+    enabled: true
+    accounts:
+    - name: ACCOUNT
+      permissions: {}
+      accountId: '12345'
+      assumeRole: assumedRole
+      region: us-west-1
+
+*/
+
+
+
+
+

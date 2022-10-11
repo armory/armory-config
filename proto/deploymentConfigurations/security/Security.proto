@@ -1,0 +1,122 @@
+syntax = "proto3";
+package proto.security;
+
+option go_package = "config/deploymentConfigurations/security";
+
+import "proto/deploymentConfigurations/security/Oauth2.proto";
+import "proto/deploymentConfigurations/security/Saml.proto";
+import "proto/deploymentConfigurations/security/Ldap.proto";
+import "proto/deploymentConfigurations/security/X509.proto";
+import "proto/deploymentConfigurations/security/Iap.proto";
+// Configuration for the clouddriver microservice.
+message Security {
+
+    ApiSecurity apiSecurity = 1;
+    UiSecurity uiSecurity = 2;
+    Authn authn = 3;
+    Authz authz = 4;
+    
+}
+
+message ApiSecurity {
+
+    Ssl ssl = 1;
+    string overrideBaseUrl = 2;
+
+}
+
+message UiSecurity {
+
+    Ssl ssl = 1;
+    string overrideBaseUrl = 2;
+
+}
+
+message Ssl {
+    bool enabled = 1;
+
+}
+
+message Authn {
+
+    Oauth2 oauth2 = 1;
+    Saml saml = 2;
+    Ldap ldap = 3;
+    X509 x509 = 4;
+    Iap iap = 5;
+
+}
+
+message Authz {
+    GroupMembership groupMembership = 1;
+
+}
+
+message GroupMembership {
+
+    string service = 1;
+    message google {
+        string roleProviderType = 1;
+    }
+    message github {
+        string roleProviderType = 1;
+    }
+    message file {
+        string roleProviderType = 1;
+    }
+    message ldap {
+        string roleProviderType = 1;
+    }
+    bool enabled = 2;
+
+}
+
+/* 
+
+Example Config
+
+  security:
+    apiSecurity:
+      ssl:
+        enabled: false
+      overrideBaseUrl: http://localhost:9090
+    uiSecurity:
+      ssl:
+        enabled: false
+      overrideBaseUrl: http://localhost:9090
+    authn:
+      oauth2:
+        enabled: false
+        client: {}
+        resource: {}
+        userInfoMapping: {}
+      saml:
+        enabled: false
+        userAttributeMapping: {}
+      ldap:
+        enabled: false
+      x509:
+        enabled: false
+      iap:
+        enabled: false
+      enabled: false
+    authz:
+      groupMembership:
+        service: EXTERNAL
+        google:
+          roleProviderType: GOOGLE
+        github:
+          roleProviderType: GITHUB
+        file:
+          roleProviderType: FILE
+        ldap:
+          roleProviderType: LDAP
+      enabled: false
+
+
+*/
+
+
+
+
+

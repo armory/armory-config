@@ -1,0 +1,56 @@
+syntax = "proto3";
+package proto.ci;
+
+option go_package = "config/deploymentConfigurations/ci";
+
+import "proto/deploymentConfigurations/ci/Jenkins.proto";
+import "proto/deploymentConfigurations/ci/Travis.proto";
+import "proto/deploymentConfigurations/ci/Wercker.proto";
+import "proto/deploymentConfigurations/ci/Concourse.proto";
+import "proto/deploymentConfigurations/ci/Gcb.proto";
+import "proto/deploymentConfigurations/ci/Codebuild.proto";
+
+// Configuration for the clouddriver microservice.
+message Ci {
+
+    Jenkins jenkins = 1;
+    Travis travis = 2;
+    Wercker wercker = 3;
+    Concourse concourse = 4;
+    Gcb gcb = 5;
+    Codebuild codebuild = 6;
+    
+}
+
+
+/* 
+
+Example Config
+
+  ci:
+    jenkins:
+      enabled: false
+      masters: []
+    travis:
+      enabled: false
+      masters: []
+    wercker:
+      enabled: false
+      masters: []
+    concourse:
+      enabled: false
+      masters: []
+    gcb:
+      enabled: false
+      accounts: []
+    codebuild:
+      enabled: false
+      accounts: []
+
+
+*/
+
+
+
+
+

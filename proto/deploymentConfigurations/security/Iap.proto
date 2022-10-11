@@ -1,0 +1,30 @@
+syntax = "proto3";
+package proto.security;
+
+option go_package = "config/deploymentConfigurations/security";
+
+// Configuration for the clouddriver microservice.
+message Iap {
+    bool enabled = 1;
+    string jwtHeader = 2;
+    string issuerId = 3;
+    string audience = 4;
+    string iapVerifyKeyUrl = 5;
+}
+/* 
+
+Example Config
+
+      iap:
+        enabled: false
+        jwtHeader: header
+        issuerId: '12345'
+        audience: audience
+        iapVerifyKeyUrl: http://localhost:9090
+
+*/
+
+
+
+
+
