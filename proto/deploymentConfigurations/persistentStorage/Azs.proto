@@ -1,0 +1,26 @@
+syntax = "proto3";
+package proto.persistentStorage;
+
+option go_package = "config/deploymentConfigurations/persistentStorage";
+
+// Configuration for the clouddriver microservice.
+message Azs {
+
+    string storageAccountName = 1;
+    string storageAccountKey = 2;
+    string storageContainerName = 3;
+    
+}
+
+
+/* 
+
+Example Config
+
+azs:
+  storageAccountName:
+  storageAccountKey:
+  storageContainerName:
+
+*/
+
