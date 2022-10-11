@@ -1,0 +1,33 @@
+syntax = "proto3";
+package proto.metricStores;
+
+option go_package = "config/deploymentConfigurations/metricStores";
+
+// Configuration for the clouddriver microservice.
+message Datadog {
+
+    bool enabled = 1;
+    string api_key = 2;
+    string app_key = 3;
+    repeated string tags = 4;
+}
+
+
+/* 
+
+Example Config
+
+datadog:
+    enabled: true
+    api_key: '12345'
+    app_key: '12345'
+    tags:
+    - app:test
+    - env:dev
+
+*/
+
+
+
+
+

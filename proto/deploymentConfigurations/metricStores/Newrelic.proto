@@ -1,0 +1,28 @@
+syntax = "proto3";
+package proto.metricStores;
+
+option go_package = "config/deploymentConfigurations/metricStores";
+
+// Configuration for the clouddriver microservice.
+message Newrelic {
+
+    bool enabled = 1;
+    string insert_key = 2;
+    string host = 3;
+    repeated string tags = 4;
+}
+
+
+/* 
+
+Example Config
+
+newrelic:
+    enabled: true
+    insert_key: '12345'
+    host: http://localhost:9090
+    tags:
+    - app:test
+    - env:dev
+
+*/

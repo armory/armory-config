@@ -1,0 +1,24 @@
+syntax = "proto3";
+package proto.metricStores;
+
+option go_package = "config/deploymentConfigurations/metricStores";
+
+// Configuration for the clouddriver microservice.
+message Prometheus {
+
+    bool enabled = 1;
+    string push_gateway = 2;
+    bool add_source_metalabels = 3;
+}
+
+
+/* 
+
+Example Config
+
+prometheus:
+    enabled: true
+    push_gateway: http://localhost:9090
+    add_source_metalabels: true
+
+*/

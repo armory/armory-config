@@ -1,0 +1,47 @@
+syntax = "proto3";
+package proto.metricStores;
+
+option go_package = "config/deploymentConfigurations/metricStores";
+
+import "proto/deploymentConfigurations/metricStores/Datadog.proto";
+import "proto/deploymentConfigurations/metricStores/Prometheus.proto";
+import "proto/deploymentConfigurations/metricStores/Stackdriver.proto";
+import "proto/deploymentConfigurations/metricStores/Newrelic.proto";
+// Configuration for the clouddriver microservice.
+message MetricStores {
+
+    Datadog datadog = 1;
+    Prometheus prometheus = 2;
+    Stackdriver stackdriver = 3;
+    Newrelic newrelic = 4;
+    int32 period = 5;
+    bool enabled = 6;
+    
+}
+
+
+/* 
+
+Example Config
+
+  metricStores:
+    datadog:
+      enabled: false
+      tags: []
+    prometheus:
+      enabled: false
+      add_source_metalabels: true
+    stackdriver:
+      enabled: false
+    newrelic:
+      enabled: false
+      tags: []
+    period: 30
+    enabled: false
+
+*/
+
+
+
+
+

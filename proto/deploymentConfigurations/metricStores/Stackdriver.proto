@@ -1,0 +1,26 @@
+syntax = "proto3";
+package proto.metricStores;
+
+option go_package = "config/deploymentConfigurations/metricStores";
+
+// Configuration for the clouddriver microservice.
+message Stackdriver {
+
+    bool enabled = 1;
+    string project = 2;
+    string zone = 3;
+    string credentials_path = 4;
+}
+
+
+/* 
+
+Example Config
+
+stackdriver:
+    enabled: true
+    project: test-proj
+    zone: some-zone
+    credentials_path: /home/spinnaker/password.json
+
+*/
