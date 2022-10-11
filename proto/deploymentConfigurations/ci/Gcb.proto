@@ -1,0 +1,41 @@
+syntax = "proto3";
+package proto.ci;
+
+option go_package = "config/deploymentConfigurations/ci";
+
+// import "proto/deploymentConfigurations/ci/Permissions.proto";
+// Configuration for the clouddriver microservice.
+message Gcb{
+
+    bool enabled = 1;
+    repeated GcbAccounts accounts = 2;
+    
+}
+
+message GcbAccounts {
+    string name = 1;
+    string permission = 2;
+    string project = 3;
+    string subscriptionName = 4;
+    string jsonKey = 5;
+}
+
+/* 
+
+Example Config
+
+gcb:
+    enabled: true
+    accounts:
+    - name: ACCOUNT
+    permissions: {}
+    project: test-proj
+    subscriptionName: sub-name
+    jsonKey: /home/spinnaker/password.json
+
+*/
+
+
+
+
+

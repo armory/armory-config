@@ -1,0 +1,53 @@
+syntax = "proto3";
+package proto.ci;
+
+option go_package = "config/deploymentConfigurations/ci";
+
+import "proto/deploymentConfigurations/Permissions.proto";
+// Configuration for the clouddriver microservice.
+message Travis {
+
+    bool enabled = 1;
+    repeated TravisMasters masters = 2;
+    
+}
+
+message TravisMasters {
+    string name = 1;
+    config.Permissions permission = 2;
+    string address = 3;
+    string baseUrl = 4;
+    string githubToken = 5;
+    int32 numberOfRepositories = 6;
+    repeated string filteredRepositories = 7;
+}
+
+/* 
+
+Example Config
+
+travis:
+    enabled: true
+    masters:
+    - name: MASTER
+    permissions:
+        READ:
+        - dev
+        - test
+        WRITE:
+        - dev
+        - test
+    address: http://localhost:9090
+    baseUrl: http://localhost:9090
+    githubToken: '12345'
+    numberOfRepositories: 10
+    filteredRepositories:
+    - test
+
+
+*/
+
+
+
+
+

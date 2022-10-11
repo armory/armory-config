@@ -10,6 +10,10 @@ import "proto/deploymentConfigurations/providers/Providers.proto";
 import "proto/deploymentConfigurations/persistentStorage/PersistentStorage.proto";
 import "proto/deploymentConfigurations/features/Features.proto";
 import "proto/deploymentConfigurations/metricStores/MetricStores.proto";
+import "proto/deploymentConfigurations/notifications/Notifications.proto";
+import "proto/deploymentConfigurations/ci/Ci.proto";
+import "proto/deploymentConfigurations/repository/Repository.proto";
+import "proto/deploymentConfigurations/security/Security.proto";
 // Configuration for the clouddriver microservice.
 message DeploymentConfigurations {
 
@@ -20,10 +24,10 @@ message DeploymentConfigurations {
     persistentStorage.PersistentStorage persistentStorage = 5;
     features.Features features = 6;
     metricStores.MetricStores metricStores = 7;
-    // Notifications notifications = 8;
-    // Ci ci = 9;
-    // Repository repository = 10;
-    // Security security = 11;
+    notifications.Notifications notifications = 8;
+    ci.Ci ci = 9;
+    repository.Repository repository = 10;
+    security.Security security = 11;
     // Artifacts artifacts = 12;
     // Pubsub pubsub = 13;
     // Canary canary = 14;
@@ -32,3 +36,15 @@ message DeploymentConfigurations {
     // Armory armory = 17;
 
 }
+
+
+/*
+
+ToDo:
+
+- Review Providers
+- Review PersistentStorage
+- Check ci.gcb permission structure
+- Check ci.Codebuild permission structure (Should be the same as ci.gcb)
+- Revisit the oauth2 proto struct
+*/

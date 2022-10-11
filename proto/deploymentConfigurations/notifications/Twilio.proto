@@ -1,0 +1,34 @@
+syntax = "proto3";
+package proto.notifications;
+
+option go_package = "config/deploymentConfigurations/notifications";
+
+message Twilio {
+
+    bool enabled = 1;
+    string account = 2;
+    string baseUrl = 3;
+    string from = 4;
+    bool token = 5;
+    
+}
+
+
+/* 
+
+Example Config
+
+twilio:
+    enabled: true
+    account: '12345'
+    baseUrl: https://api.twilio.com/
+    from: +1234-567-8910
+    token: '12345'
+
+
+*/
+
+
+
+
+

@@ -1,0 +1,36 @@
+syntax = "proto3";
+package proto.repository;
+
+option go_package = "config/deploymentConfigurations/repository";
+
+import "proto/deploymentConfigurations/repository/Artifactory.proto";
+import "proto/deploymentConfigurations/repository/Nexus.proto";
+// Configuration for the clouddriver microservice.
+message Repository {
+
+    Artifactory artifactory = 1;
+    Nexus nexus = 2;
+    
+}
+
+
+/* 
+
+Example Config
+
+  repository:
+    artifactory:
+      enabled: true
+      searches: []
+    nexus:
+      enabled: false
+      searches: []
+
+
+
+*/
+
+
+
+
+

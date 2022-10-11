@@ -1,0 +1,38 @@
+syntax = "proto3";
+package proto.notifications;
+
+option go_package = "config/deploymentConfigurations/notifications";
+
+import "proto/deploymentConfigurations/notifications/Slack.proto";
+import "proto/deploymentConfigurations/notifications/Twilio.proto";
+import "proto/deploymentConfigurations/notifications/Githubstatus.proto";
+// Configuration for the clouddriver microservice.
+message Notifications {
+
+    Slack slack = 1;
+    Twilio twilio = 2;
+    Githubstatus githubStatus = 3;
+    
+}
+
+
+/* 
+
+Example Config
+
+  notifications:
+    slack:
+      enabled: false
+    twilio:
+      enabled: false
+      baseUrl: https://api.twilio.com/
+    github-status:
+      enabled: false
+
+
+*/
+
+
+
+
+

@@ -1,0 +1,69 @@
+syntax = "proto3";
+package proto.security;
+
+option go_package = "config/deploymentConfigurations/security";
+
+// Configuration for the clouddriver microservice.
+message Oauth2 {
+
+    bool enabled = 1;
+    Oauth2Client client = 2;
+    message userInfoRequirements {
+        // Need to revisit this struct
+        string kvpair = 1;
+    }
+    message resource {
+        string userInfoUri = 1;
+    }
+    message userInfoMapping {
+        string email = 1;
+        string firstname = 2;
+        string lastname = 3;
+        string username = 4;
+    }
+    string provider = 3;
+}
+
+message Oauth2Client {
+    string clientId = 1;
+    string clientSecret = 2;
+    string accessTokenUri = 3;
+    string userAuthorizationUri = 4;
+    string clientAuthenticationScheme = 5;
+    string scope = 6;
+    string preEstablishedRedirectUri = 7;
+    bool useCurrentUri = 8;
+}
+
+/* 
+
+Example Config
+
+      oauth2:
+        enabled: true
+        client:
+          clientId: '12345'
+          clientSecret: '12345'
+          accessTokenUri: http://localhost:9090
+          userAuthorizationUri: http://localhost:9090
+          clientAuthenticationScheme: http
+          scope: test
+          preEstablishedRedirectUri: http://localhost:9090
+          useCurrentUri: false
+        userInfoRequirements:
+          foo: bar
+        resource:
+          userInfoUri: http://localhost:9090
+        userInfoMapping:
+          email: email
+          firstName: firstname
+          lastName: lastname
+          username: username
+        provider: OTHER
+
+*/
+
+
+
+
+

@@ -1,0 +1,28 @@
+syntax = "proto3";
+package proto.notifications;
+
+option go_package = "config/deploymentConfigurations/notifications";
+
+message Githubstatus {
+
+    bool enabled = 1;
+    string token = 2;
+    
+}
+
+
+/* 
+
+Example Config
+
+github-status:
+    enabled: true
+    token: '12345'
+
+
+*/
+
+
+
+
+
