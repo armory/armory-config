@@ -3,6 +3,7 @@ package fileio
 
 import (
 	"fmt"
+	"io/fs"
 	"io/ioutil"
 	"os"
 
@@ -61,6 +62,20 @@ func WriteConfigs(hal *providers.AppEngine, dir string) error {
 	return nil
 }
 
+// Check if the provided string is a directory
+func IsDirectory(dir string) (bool, error) {
+	fileInfo, err := os.Stat(dir)
+	if err != nil {
+		return false, err
+	}
+
+	if fileInfo.IsDir() {
+		return true, nil
+	} else {
+		return false, nil
+	}
+}
+
 func EnsureDirectory(dir string) error {
 	stat, err := os.Stat(dir)
 	if os.IsNotExist(err) {
@@ -72,4 +87,39 @@ func EnsureDirectory(dir string) error {
 		return fmt.Errorf("%s is not a directory", dir)
 	}
 	return nil
+}
+
+func GetListOfFiles(dirToSearch string) ([]fs.FileInfo, error) {
+	dir, err := os.Open(dirToSearch)
+	if err != nil {
+		return nil, err
+	}
+
+	defer dir.Close()
+
+	files, err := dir.Readdir(-1)
+	if err != nil {
+		return nil, err
+	}
+
+	return files, nil
+}
+
+func FindFileInDir(dirToSearch string, fileToFind string) (string, error) {
+	files, err := GetListOfFiles(dirToSearch)
+	if err != nil {
+		return "", err
+	}
+
+	fmt.Println("Reading " + dirToSearch)
+
+	for _, file := range files {
+		if file.Name() == fileToFind {
+			fmt.Println("Found:" + fileToFind)
+			fmt.Println("Full Path:" + dirToSearch + "/" + fileToFind)
+			return dirToSearch + "/" + file.Name(), nil
+		}
+	}
+
+	return "", fmt.Errorf("File:[%s] not found inside:[%s]", fileToFind, dirToSearch)
 }

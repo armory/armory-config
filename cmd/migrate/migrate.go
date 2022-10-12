@@ -1,9 +1,7 @@
 package migrate
 
 import (
-	"bytes"
 	"fmt"
-	"io"
 	"log"
 	"os"
 	"strings"
@@ -41,78 +39,74 @@ func init() {
 	convertCmd.Flags().StringVar(&spin_flavor, "spin_flavor", "ARMORY", "Select Spinnaker Operator flavor to use (ARMORY, OSS)")
 }
 
-// Read contents of halconfig and setup profiles patches for each service.
-func migrator(halconfig_dir string, output_dir string, deployment_dir string, spin_flavor string) {
+func getProfiles(profilesDir string) (map[string]string, error) {
+	config_files := make(map[string]string)
 
-	// Halconfig stuff
-	dir, err := os.Open(halconfig_dir)
+	profiles_files, err := fileio.GetListOfFiles(profilesDir)
 	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
+		return nil, err
 	}
 
-	defer dir.Close()
+	for _, profiles_files := range profiles_files {
 
-	files, err := dir.Readdir(-1)
-	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
-
-	fmt.Println("Reading " + halconfig_dir)
-
-	for _, file := range files {
-		// if file.Mode().IsRegular() {
-		// 	fmt.Println(file.Name(), file.Size(), "bytes")
-		// }
-
-		if file.Name() == "config" {
-			fmt.Println("Found Halconfig!")
-
-			halyard, err := parser.ParseHalConfig(halconfig_dir + "/" + file.Name())
-			if err != nil {
-				fmt.Println(err)
-				os.Exit(1)
-			}
-
-			fmt.Println("Account: " + halyard.PrimaryAccount)
-			fmt.Printf("\nHalyard: %#v \n\n", halyard)
+		isDir, err := fileio.IsDirectory(profilesDir + "/" + profiles_files.Name())
+		if isDir {
+			//Todo if is a dir go inside and iterate it
+			// config_map, err := getProfiles(profilesDir + "/" + profiles_files.Name())
+			// if err != nil {
+			// 	return nil, err
+			// }
+			// config_files[profiles_files.Name()] = config_map
+			continue
 		}
 
-	}
-
-	// Profiles stuff
-	fmt.Println("Reading " + halconfig_dir + "/" + deployment_dir + "/profiles")
-	profile_folder, err := os.Open(halconfig_dir + "/" + deployment_dir + "/profiles")
-	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
-
-	defer profile_folder.Close()
-
-	profiles_files, err := profile_folder.Readdir(-1)
-	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
-	for _, profiles_files := range profiles_files {
-		// fmt.Println(profiles_files.Name(), profiles_files.Size(), "bytes")
-
-		local_file, err := os.Open(halconfig_dir + "/" + deployment_dir + "/profiles/" + profiles_files.Name())
+		local_file, err := fileio.ReadFile(profilesDir + "/" + profiles_files.Name())
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
 		}
 
-		defer local_file.Close()
-		var buf bytes.Buffer
-		io.Copy(&buf, local_file)
-		config_files := make(map[string]string)
-		config_files[profiles_files.Name()] = buf.String()
-		fmt.Println("Found " + profiles_files.Name())
+		var buf = string(local_file)
 
+		config_files[profiles_files.Name()] = buf
+		fmt.Println("Found " + profiles_files.Name())
 	}
+
+	return config_files, nil
+}
+
+// Read contents of halconfig and setup profiles patches for each service.
+func migrator(halconfig_dir string, output_dir string, deployment_dir string, spin_flavor string) {
+
+	// Halconfig stuff
+	halconfig_file, err := fileio.FindFileInDir(halconfig_dir, "config")
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+
+	halyard, err := parser.ParseHalConfig(halconfig_file)
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+
+	fmt.Println("Account: " + halyard.PrimaryAccount)
+	fmt.Printf("\nHalyard: %#v \n\n", halyard)
+
+	// Profiles stuff
+	fmt.Println("Reading " + halconfig_dir + "/" + deployment_dir + "/profiles")
+
+	config_files, err = getProfiles(halconfig_dir + "/" + deployment_dir + "/profiles")
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+
+	// for _, config_files := range config_files {
+	// 	fmt.Println("config_file: " + config_files)
+	// }
+
 	// profile_settings :=
 
 	// fmt.Println(halconfig)
