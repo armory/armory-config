@@ -1,0 +1,35 @@
+syntax = "proto3";
+package proto.artifacts;
+
+option go_package = "config/deploymentConfigurations/artifacts";
+
+// Configuration for the clouddriver microservice.
+message Http {
+    bool enabled = 1;
+    repeated HttpAcc accounts = 2;
+
+    
+}
+
+message HttpAcc {
+    string name = 1;
+    string username = 2;
+    string password = 3;
+    string usernamePasswordFile = 4;
+}
+
+
+/* 
+
+Example Config
+
+    http:
+      enabled: true
+      accounts:
+      - name: ACCOUNT
+        username: username
+        password: password
+        usernamePasswordFile: /home/spinnaker/password.json
+
+
+*/

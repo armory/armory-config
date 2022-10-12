@@ -1,0 +1,39 @@
+syntax = "proto3";
+package proto.artifacts;
+
+option go_package = "config/deploymentConfigurations/artifacts";
+
+// Configuration for the clouddriver microservice.
+message Bitbucket {
+    bool enabled = 1;
+    repeated BitbucketAcc accounts = 2;
+
+    
+}
+
+message BitbucketAcc {
+    string name = 1;
+    string username = 2;
+    string password = 3;
+    string usernamePasswordFile = 4;
+}
+
+
+/* 
+
+Example Config
+
+    bitbucket:
+      enabled: true
+      accounts:
+      - name: ACCOUNT
+        username: username
+        password: password
+        usernamePasswordFile: /home/spinnaker/password.json
+
+*/
+
+
+
+
+

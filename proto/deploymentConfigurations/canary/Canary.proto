@@ -1,0 +1,65 @@
+syntax = "proto3";
+package proto.canary;
+
+option go_package = "config/deploymentConfigurations/canary";
+
+// Configuration for the clouddriver microservice.
+message Canary {
+    bool enabled = 1;
+    repeated serviceIntegrations serviceIntegrations = 2;
+    bool reduxLogger = 3;
+    string defaultJudge = 4;
+    bool stagesEnabled = 5;
+    bool templatesEnabled = 6;
+    bool showAllConfigsEnabled = 7;
+}
+
+message serviceIntegrations {
+    string name = 1;
+    bool enabled = 2;
+    
+
+}
+
+
+/* 
+
+Example Config
+
+  canary:
+    enabled: false
+    serviceIntegrations:
+    - name: google
+      enabled: false
+      accounts: []
+      gcsEnabled: false
+      stackdriverEnabled: false
+    - name: prometheus
+      enabled: false
+      accounts: []
+    - name: datadog
+      enabled: false
+      accounts: []
+    - name: signalfx
+      enabled: false
+      accounts: []
+    - name: aws
+      enabled: false
+      accounts: []
+      s3Enabled: false
+    - name: newrelic
+      enabled: false
+      accounts: []
+    reduxLoggerEnabled: true
+    defaultJudge: NetflixACAJudge-v1.0
+    stagesEnabled: true
+    templatesEnabled: true
+    showAllConfigsEnabled: true
+
+
+*/
+
+
+
+
+

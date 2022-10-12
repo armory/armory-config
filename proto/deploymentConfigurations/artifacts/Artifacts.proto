@@ -1,0 +1,77 @@
+syntax = "proto3";
+package proto.artifacts;
+
+option go_package = "config/deploymentConfigurations/artifacts";
+
+import "proto/deploymentConfigurations/artifacts/Bitbucket.proto";
+import "proto/deploymentConfigurations/artifacts/Gcs.proto";
+import "proto/deploymentConfigurations/artifacts/Oracle.proto";
+import "proto/deploymentConfigurations/artifacts/Github.proto";
+import "proto/deploymentConfigurations/artifacts/Gitlab.proto";
+import "proto/deploymentConfigurations/artifacts/Gitrepo.proto";
+import "proto/deploymentConfigurations/artifacts/Http.proto";
+import "proto/deploymentConfigurations/artifacts/Helm.proto";
+import "proto/deploymentConfigurations/artifacts/S3.proto";
+import "proto/deploymentConfigurations/artifacts/Maven.proto";
+// Configuration for the clouddriver microservice.
+message Artifacts {
+
+    Bitbucket bitbucket = 1;
+    Gcs gcs = 2;
+    Oracle oracle = 3;
+    Github github = 4;
+    Gitlab gitlab = 5;
+    Gitrepo gitrepo = 6;
+    Http http = 7;
+    Helm helm = 8;
+    S3 s3 = 9;
+    Maven maven = 10;
+    
+}
+
+
+/* 
+
+Example Config
+
+  artifacts:
+    bitbucket:
+      enabled: false
+      accounts: []
+    gcs:
+      enabled: false
+      accounts: []
+    oracle:
+      enabled: false
+      accounts: []
+    github:
+      enabled: false
+      accounts: []
+    gitlab:
+      enabled: false
+      accounts: []
+    gitrepo:
+      enabled: false
+      accounts: []
+    http:
+      enabled: false
+      accounts: []
+    helm:
+      enabled: false
+      accounts: []
+    s3:
+      enabled: false
+      accounts: []
+    maven:
+      enabled: false
+      accounts:
+      - name: ACCOUNT
+        repositoryUrl: https://api.something.com
+
+
+*/
+
+
+
+
+

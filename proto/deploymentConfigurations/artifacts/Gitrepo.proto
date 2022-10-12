@@ -1,0 +1,46 @@
+syntax = "proto3";
+package proto.artifacts;
+
+option go_package = "config/deploymentConfigurations/artifacts";
+
+// Configuration for the clouddriver microservice.
+message Gitrepo {
+    bool enabled = 1;
+    repeated GitrepoAcc accounts = 2;
+
+    
+}
+
+message GitrepoAcc {
+    string name = 1;
+    string username = 2;
+    string password = 3;
+    string usernamePasswordFile = 4;
+    string token = 5;
+    string tokenFile = 6;
+    string sshPrivateKeyFilePath = 7;
+    string sshPrivateKeyPassphrase = 8;
+    string sshKnownHostsFilePath = 9;
+    bool sshTrustUnknownHosts = 10;
+}
+
+
+/* 
+
+Example Config
+
+    gitrepo:
+      enabled: true
+      accounts:
+      - name: ACCOUNT
+        username: username
+        password: password
+        usernamePasswordFile: /home/spinnaker/password.json
+        token: token
+        tokenFile: /home/spinnaker/password.json
+        sshPrivateKeyFilePath: /home/spinnaker/password
+        sshPrivateKeyPassphrase: password
+        sshKnownHostsFilePath: /home/spinnaker/password.json
+        sshTrustUnknownHosts: true
+
+*/

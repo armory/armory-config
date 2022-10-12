@@ -1,0 +1,33 @@
+syntax = "proto3";
+package proto.pubsub;
+
+option go_package = "config/deploymentConfigurations/artifacts";
+
+import "proto/deploymentConfigurations/pubsub/Google.proto";
+// Configuration for the clouddriver microservice.
+message Pubsub {
+
+    bool enabled = 1;
+    Google google = 2;
+    
+}
+
+
+/* 
+
+Example Config
+
+  pubsub:
+    enabled: false
+    google:
+      enabled: false
+      pubsubType: GOOGLE
+      subscriptions: []
+      publishers: []
+
+*/
+
+
+
+
+

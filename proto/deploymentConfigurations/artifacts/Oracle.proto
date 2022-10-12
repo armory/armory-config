@@ -1,0 +1,47 @@
+syntax = "proto3";
+package proto.artifacts;
+
+option go_package = "config/deploymentConfigurations/artifacts";
+
+// Configuration for the clouddriver microservice.
+message Oracle {
+    bool enabled = 1;
+    repeated OracleAcc accounts = 2;
+
+    
+}
+
+message OracleAcc {
+    string name = 1;
+    string namespace = 2;
+    string region = 3;
+    string userId = 4;
+    string fingerprint = 5;
+    string sshPrivateKeyFilePath = 6;
+    string privateKeyPassphrase = 7;
+    string tenancyId = 8;
+}
+
+
+/* 
+
+Example Config
+
+    oracle:
+      enabled: true
+      accounts:
+      - name: ACCOUNT
+        namespace: namespace
+        region: us-phonix-1
+        userId: user
+        fingerprint: '12345'
+        sshPrivateKeyFilePath: /home/spinnaker/password.json
+        privateKeyPassphrase: password
+        tenancyId: '12345'
+
+*/
+
+
+
+
+

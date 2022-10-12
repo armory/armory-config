@@ -1,0 +1,32 @@
+syntax = "proto3";
+package proto.artifacts;
+
+option go_package = "config/deploymentConfigurations/artifacts";
+
+// Configuration for the clouddriver microservice.
+message Gitlab {
+    bool enabled = 1;
+    repeated GitlabAcc accounts = 2;
+
+    
+}
+
+message GitlabAcc {
+    string name = 1;
+    string token = 2;
+    string tokenFile = 3;
+}
+
+
+/* 
+
+Example Config
+
+    gitlab:
+      enabled: true
+      accounts:
+      - name: ACCOUNT
+        token: token
+        tokenFile: /home/spinnaker/password.json
+
+*/

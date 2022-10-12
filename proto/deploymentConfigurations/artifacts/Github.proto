@@ -1,0 +1,39 @@
+syntax = "proto3";
+package proto.artifacts;
+
+option go_package = "config/deploymentConfigurations/artifacts";
+
+// Configuration for the clouddriver microservice.
+message Github {
+    bool enabled = 1;
+    repeated GithubAcc accounts = 2;
+
+    
+}
+
+message GithubAcc {
+    string name = 1;
+    string username = 2;
+    string password = 3;
+    string userId = 4;
+    string usernamePasswordFile = 5;
+    string token = 6;
+    string tokenFile = 7;
+}
+
+
+/* 
+
+Example Config
+
+    github:
+      enabled: true
+      accounts:
+      - name: ACCOUNT
+        username: username
+        password: password
+        usernamePasswordFile: /home/spinnaker/password.json
+        token: token
+        tokenFile: /home/spinnaker/password.json
+
+*/

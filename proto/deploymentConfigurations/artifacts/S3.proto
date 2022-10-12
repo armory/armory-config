@@ -1,0 +1,39 @@
+syntax = "proto3";
+package proto.artifacts;
+
+option go_package = "config/deploymentConfigurations/artifacts";
+
+// Configuration for the clouddriver microservice.
+message S3 {
+    bool enabled = 1;
+    repeated S3Acc accounts = 2;
+
+    
+}
+
+message S3Acc {
+    string name = 1;
+    string apiEndpoint = 2;
+    string apiRegion = 3;
+    string region = 4;
+    string awsAccessKeyId = 5;
+    string awsSecretAccessKey = 6;
+}
+
+
+/* 
+
+Example Config
+
+    s3:
+      enabled: true
+      accounts:
+      - name: ACCOUNT
+        apiEndpoint: http://localhost:9090
+        apiRegion: us-east-1
+        region: us-west-1
+        awsAccessKeyId: '12345'
+        awsSecretAccessKey: '12345'
+
+
+*/

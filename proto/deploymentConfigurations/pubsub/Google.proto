@@ -1,0 +1,65 @@
+syntax = "proto3";
+package proto.pubsub;
+
+option go_package = "config/deploymentConfigurations/artifacts";
+
+// Configuration for the clouddriver microservice.
+message Google {
+
+    bool enabled = 1;
+    string pubsubType = 2;
+    repeated Subscriptions subscriptions = 3;
+    repeated Publishers publishers = 4;
+    
+}
+
+message Subscriptions {
+    string name = 1;
+    string project = 2;
+    string subscriptionName = 3;
+    string jsonPath = 4;
+    string templatePath = 5;
+    int32 ackDeadlineSeconds = 6;
+    string messageFormat = 7;
+}
+
+message Publishers {
+
+    string name = 1;
+    string project = 2;
+    string topicName = 3;
+    string jsonPath = 4;
+    string content = 5;
+    
+}
+
+
+/* 
+
+
+Example Config from Halyard:
+
+    google:
+      enabled: true
+      pubsubType: GOOGLE
+      subscriptions:
+      - name: SUBSCRIPTION
+        project: project
+        subscriptionName: sub-name
+        jsonPath: /home/spinnaker/password.json
+        templatePath: /home/spinnaker/password.json
+        ackDeadlineSeconds: 10
+        messageFormat: GCB
+      publishers:
+      - name: PUBLISHER
+        project: project
+        topicName: topic
+        jsonPath: /home/spinnaker/password.json
+        content: NOTIFICATIONS
+
+*/
+
+
+
+
+

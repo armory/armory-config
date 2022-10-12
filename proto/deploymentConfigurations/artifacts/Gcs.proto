@@ -1,0 +1,35 @@
+syntax = "proto3";
+package proto.artifacts;
+
+option go_package = "config/deploymentConfigurations/artifacts";
+
+// Configuration for the clouddriver microservice.
+message Gcs {
+    bool enabled = 1;
+    repeated GcsAcc accounts = 2;
+
+    
+}
+
+message GcsAcc {
+    string name = 1;
+    string jsonPath = 2;
+}
+
+
+/* 
+
+Example Config
+
+    gcs:
+      enabled: true
+      accounts:
+      - name: ACCOUNT
+        jsonPath: /home/spinnaker/password.json
+
+*/
+
+
+
+
+

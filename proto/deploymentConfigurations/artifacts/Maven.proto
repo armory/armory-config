@@ -1,0 +1,31 @@
+syntax = "proto3";
+package proto.artifacts;
+
+option go_package = "config/deploymentConfigurations/artifacts";
+
+// Configuration for the clouddriver microservice.
+message Maven {
+    bool enabled = 1;
+    repeated MavenAcc accounts = 2;
+
+    
+}
+
+message MavenAcc {
+    string name = 1;
+    string repositoryUrl = 2;
+}
+
+
+/* 
+
+Example Config
+
+    maven:
+      enabled: true
+      accounts:
+      - name: ACCOUNT
+        repositoryUrl: http://localhost:9090
+
+
+*/
