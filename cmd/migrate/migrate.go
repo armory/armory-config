@@ -39,7 +39,7 @@ func init() {
 	convertCmd.Flags().StringVar(&spin_flavor, "spin_flavor", "ARMORY", "Select Spinnaker Operator flavor to use (ARMORY, OSS)")
 }
 
-func getProfiles(profilesDir string) (map[string]string, error) {
+func getProfiles(profilesDir string, currentSubDir string) (map[string]string, error) {
 	config_files := make(map[string]string)
 
 	profiles_files, err := fileio.GetListOfFiles(profilesDir)
@@ -51,12 +51,15 @@ func getProfiles(profilesDir string) (map[string]string, error) {
 
 		isDir, err := fileio.IsDirectory(profilesDir + "/" + profiles_files.Name())
 		if isDir {
-			//Todo if is a dir go inside and iterate it
-			// config_map, err := getProfiles(profilesDir + "/" + profiles_files.Name())
-			// if err != nil {
-			// 	return nil, err
-			// }
-			// config_files[profiles_files.Name()] = config_map
+			config_maps, err := getProfiles(profilesDir+"/"+profiles_files.Name(), currentSubDir+"/"+profiles_files.Name())
+			if err != nil {
+				return nil, err
+			}
+
+			for fileName, config_map := range config_maps {
+				config_files[fileName] = config_map
+				// fmt.Println("fileName:" + fileName + " config_file: " + config_file)
+			}
 			continue
 		}
 
@@ -68,7 +71,12 @@ func getProfiles(profilesDir string) (map[string]string, error) {
 
 		var buf = string(local_file)
 
-		config_files[profiles_files.Name()] = buf
+		if "" != currentSubDir {
+			config_files[currentSubDir+"/"+profiles_files.Name()] = buf
+		} else {
+			config_files[profiles_files.Name()] = buf
+		}
+
 		fmt.Println("Found " + profiles_files.Name())
 	}
 
@@ -97,14 +105,14 @@ func migrator(halconfig_dir string, output_dir string, deployment_dir string, sp
 	// Profiles stuff
 	fmt.Println("Reading " + halconfig_dir + "/" + deployment_dir + "/profiles")
 
-	config_files, err = getProfiles(halconfig_dir + "/" + deployment_dir + "/profiles")
+	config_files, err = getProfiles(halconfig_dir+"/"+deployment_dir+"/profiles", "")
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)
 	}
 
-	// for _, config_files := range config_files {
-	// 	fmt.Println("config_file: " + config_files)
+	// for fileName, config_file := range config_files {
+	// 	fmt.Println("fileName:" + fileName + "\nconfig_file:" + config_file)
 	// }
 
 	// profile_settings :=
