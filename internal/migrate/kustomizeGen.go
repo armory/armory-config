@@ -33,29 +33,21 @@ func (KustomizeData Kustomize) CreateKustomization() error {
 
 	header := KustomizeData.GetHeaders()
 
-	err = KustomizeData.CreateSpinnakerService(header)
-	if err != nil {
-		return err
+	// Slice of function calls to generate all the kustomize files
+	functionCalls := []func(string) error{
+		KustomizeData.CreateSpinnakerService,
+		KustomizeData.CreateConfigPatch,
+		KustomizeData.CreateProfilesPatch,
+		KustomizeData.CreateFilesPatch,
+		KustomizeData.CreateServiceSettingsPatch,
 	}
 
-	err = KustomizeData.CreateConfigPatch(header)
-	if err != nil {
-		return err
-	}
-
-	err = KustomizeData.CreateProfilesPatch(header)
-	if err != nil {
-		return err
-	}
-
-	err = KustomizeData.CreateFilesPatch(header)
-	if err != nil {
-		return err
-	}
-
-	err = KustomizeData.CreateServiceSettingsPatch(header)
-	if err != nil {
-		return err
+	for _, function := range functionCalls {
+		err = function(header)
+		if err != nil {
+			return err
+			// return fmt.Errorf("Error while executing the function:%s Error:(%s)", function, err)
+		}
 	}
 
 	return nil
