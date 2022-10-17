@@ -4,12 +4,14 @@ package migrate
 import (
 	"strings"
 
+	"github.com/austinthao5/golang_proto_test/config/deploymentConfigurations"
 	"github.com/austinthao5/golang_proto_test/internal/fileio"
 )
 
 type Kustomize struct {
 	Spin_flavor string
 	Output_dir  string
+	Halyard     *deploymentConfigurations.HalFile
 }
 
 func (KustomizeData Kustomize) CreateKustomization() error {
@@ -40,6 +42,7 @@ func (KustomizeData Kustomize) CreateKustomization() error {
 		KustomizeData.CreateProfilesPatch,
 		KustomizeData.CreateFilesPatch,
 		KustomizeData.CreateServiceSettingsPatch,
+		KustomizeData.ConfigProviders,
 	}
 
 	for _, function := range functionCalls {
@@ -121,6 +124,16 @@ func (KustomizeData Kustomize) CreateServiceSettingsPatch(header string) error {
 	return nil
 }
 
+func (KustomizeData Kustomize) ConfigProviders(header string) error {
+	ConfigProvidersStr := KustomizeData.GetConfigProviders(header)
+
+	err := fileio.WriteConfigsTmp(KustomizeData.Output_dir+"/config-providers.yml", ConfigProvidersStr)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 func (KustomizeData Kustomize) GetSpinnakerService(header string) string {
 
 	str := header + `
@@ -183,7 +196,7 @@ func (KustomizeData Kustomize) GetConfigPatch(header string) string {
 	spinnakerConfig:
 		# spec.spinnakerConfig.config - This section contains the contents of a deployment found in a halconfig .deploymentConfigurations[0]
 		config:
-			version: 1.17.1  # the version of Spinnaker to be deployed
+			version: ` + "2.0" /*KustomizeData.Halyard.DeploymentConfigurations.Version*/ + `  # the version of Spinnaker to be deployed
 			persistentStorage:
 				persistentStoreType: s3
 				s3:
@@ -273,6 +286,59 @@ func (KustomizeData Kustomize) GetServiceSettingsPatch(header string) string {
 			orca: {}
 			rosco: {}
 `
+
+	str = strings.Replace(str, "\t", "  ", -1)
+
+	return str
+}
+
+func (KustomizeData Kustomize) GetConfigProviders(header string) string {
+
+	str := header + `
+	spinnakerConfig:
+		config:
+			providers:
+			aws:
+				enabled: true
+				primaryAccount: ` /*+ KustomizeData.Halyard.DeploymentConfigurations.Providers.Aws.PrimaryAccount + `                # Must be one of the configured AWS accounts
+					# accounts: []
+					accounts:
+					- name: XXXXX
+					accountId: "XXXXX"            # (Required). Your AWS account ID to manage. See the AWS IAM User Guide for more information.
+					assumeRole: XXXXX           # (Required). If set, will configure a credentials provider that uses AWS Security Token Service to assume the specified role. Example: “user/spinnaker” or “role/spinnakerManaged”
+					lifecycleHooks: []                   # (Optional). Configuration for AWS Auto Scaling Lifecycle Hooks. For more information, see: https://docs.aws.amazon.com/autoscaling/ec2/userguide/lifecycle-hooks.html
+					permissions: {}
+					providerVersion: V1
+					regions:
+					- name: us-east-1
+					- name: us-east-2
+					- name: us-west-1
+					- name: us-west-2
+					bakeryDefaults:                        # Configuration for Spinnaker’s image bakery.Configuration for Spinnaker’s image bakery.
+					baseImages: []
+					accessKeyId: ` + KustomizeData.Halyard.DeploymentConfigurations.Providers.Aws.AccessKey + `      # Only needed if cluster worker nodes don't have IAM roles for talking to the target aws account
+					secretAccessKey: ` + KustomizeData.Halyard.DeploymentConfigurations.Providers.Aws.SecretAccessKey + `  # Only needed if cluster worker nodes don't have IAM roles for talking to the target aws account
+					defaultKeyPairTemplate: '` + KustomizeData.DeploymentConfigurations.Halyard.Providers.Aws.DefaultKeyPairTemplate + `'
+					defaultRegions:
+					- name: us-east-1
+					- name: us-east-2
+					- name: us-west-1
+					- name: us-west-2
+					defaults:
+					iamRole: BaseIAMRole
+					features:
+					cloudFormation:
+					enabled: true                       # (Default: false). Enable cloudformation support on this AWS account.
+				ecs:
+					enabled: true
+					accounts:
+					- name: aws-dev-ecs
+					requiredGroupMembership: []
+					providerVersion: V1
+					permissions: {}
+					awsAccount: XXXXX                   # Must be one of the configured AWS accounts
+					primaryAccount: aws-dev-ecs             # Must be one of the configured AWS ECS accounts
+	`*/
 
 	str = strings.Replace(str, "\t", "  ", -1)
 

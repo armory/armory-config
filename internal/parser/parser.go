@@ -4,7 +4,7 @@ package parser
 import (
 	"fmt"
 
-	"github.com/austinthao5/golang_proto_test/config/deploymentconfigurations/providers"
+	"github.com/austinthao5/golang_proto_test/config/deploymentConfigurations"
 	"github.com/austinthao5/golang_proto_test/internal/fileio"
 	"github.com/austinthao5/golang_proto_test/internal/validate"
 	"google.golang.org/protobuf/encoding/protojson"
@@ -47,8 +47,7 @@ func UnmarshalStrict(b []byte, m proto.Message) error {
 // ParseHalConfig reads the YAML file at halPath parses it into a *config.Hal.
 // The config.Hal is validated; if there are any errors, they will be returned
 // in error and *config.Hal will be nil.
-// func ParseHalConfig(halPath string) (*config.Hal, error) {
-func ParseHalConfig(halPath string) (*providers.AppEngine, error) {
+func ParseHalConfig(halPath string) (*deploymentConfigurations.HalFile, error) {
 	data, err := fileio.ReadFile(halPath)
 	if err != nil {
 		return nil, err
@@ -57,8 +56,7 @@ func ParseHalConfig(halPath string) (*providers.AppEngine, error) {
 	// Debug
 	// fmt.Println("===RAW hal data START===\n" + string(data) + "\n===RAW hal data END===")
 
-	// hal := &config.Hal{}
-	hal := &providers.AppEngine{}
+	hal := &deploymentConfigurations.HalFile{}
 	if err := Unmarshal(data, hal); err != nil {
 		return nil, fmt.Errorf("unable to unmarshal %q: %v", halPath, err)
 	}
