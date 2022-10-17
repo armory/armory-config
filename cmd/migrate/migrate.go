@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 
+	"github.com/austinthao5/golang_proto_test/config/deploymentConfigurations"
 	"github.com/austinthao5/golang_proto_test/internal/fileio"
 	"github.com/austinthao5/golang_proto_test/internal/migrate"
 	"github.com/austinthao5/golang_proto_test/internal/parser"
@@ -99,8 +100,10 @@ func migrator(halconfig_dir string, output_dir string, deployment_dir string, sp
 		os.Exit(1)
 	}
 
-	fmt.Println("Account: " + halyard.PrimaryAccount)
+	// fmt.Println("Account: " + halyard.PrimaryAccount)
 	fmt.Printf("\nHalyard: %#v \n\n", halyard)
+	// fmt.Println("Aws.AccessKey: " + halyard.DeploymentConfigurations.providers.Aws.AccessKey)
+	// fmt.Println("Aws.AccessKey: " + halyard.DeploymentConfiguration[0].Name)
 
 	// Profiles stuff
 	fmt.Println("Reading " + halconfig_dir + "/" + deployment_dir + "/profiles")
@@ -121,12 +124,12 @@ func migrator(halconfig_dir string, output_dir string, deployment_dir string, sp
 	// fmt.Println(output)
 
 	// Create output files
-	output_config(output_dir, spin_flavor)
+	output_config(output_dir, spin_flavor, halyard)
 
 }
 
-func output_config(output_dir string, spin_flavor string) {
-	KustomizeData := migrate.Kustomize{Spin_flavor: spin_flavor, Output_dir: output_dir}
+func output_config(output_dir string, spin_flavor string, halyard *deploymentConfigurations.HalFile) {
+	KustomizeData := migrate.Kustomize{Spin_flavor: spin_flavor, Output_dir: output_dir, Halyard: halyard}
 
 	err := fileio.EnsureDirectory(output_dir)
 	if err != nil {

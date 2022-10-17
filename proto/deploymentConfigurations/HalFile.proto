@@ -1,0 +1,12 @@
+syntax = "proto3";
+package proto.config;
+
+option go_package = "config/deploymentConfigurations";
+
+import "proto/deploymentConfigurations/DeploymentConfigurations.proto";
+
+message HalFile {
+    string currentDeployment = 1;
+    string name = 2;
+    repeated DeploymentConfigurations deploymentConfiguration = 3;
+}
