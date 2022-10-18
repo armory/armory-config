@@ -9,13 +9,21 @@ import (
 )
 
 type Kustomize struct {
-	Spin_flavor string
-	Output_dir  string
-	Halyard     *deploymentConfigurations.HalFile
+	Spin_flavor          string
+	Output_dir           string
+	Halyard              *deploymentConfigurations.HalFile
+	CurrentDeploymentPos int
+	PatchSizing          bool
 }
 
+// KustomizeData.Halyard.DeploymentConfiguration[KustomizeData.CurrentDeploymentPos].Providers.AppEngine.Enable
 func (KustomizeData Kustomize) CreateKustomization() error {
-	str := `resources:
+	str := `apiVersion: kustomize.config.k8s.io/v1beta1
+	kind: Kustomization
+
+	namespace: spinnaker` + /*KustomizeData.Halyard.DeploymentConfiguration[KustomizeData.CurrentDeploymentPos].deploymentEnvironment.Location +*/ `
+
+	resources:
 	- SpinnakerService.yml
 
 	# Apply the patches top down order
@@ -25,6 +33,13 @@ func (KustomizeData Kustomize) CreateKustomization() error {
 	- files-patch.yml
 	- service-settings-patch.yml
 `
+	//Todo Check if patch-sizing not empty
+	KustomizeData.PatchSizing = true
+
+	if KustomizeData.PatchSizing {
+		str += `	- patch-sizing.yml              #Contains Halyard DeploymentEnvironment
+`
+	}
 
 	str = strings.Replace(str, "\t", "", -1)
 
@@ -34,6 +49,12 @@ func (KustomizeData Kustomize) CreateKustomization() error {
 	}
 
 	header := KustomizeData.GetHeaders()
+	KustomizeData.CurrentDeploymentPos = KustomizeData.GetCurrentDeploymentPosition()
+
+	//This should never ocurre because of the validation validateCurrentDeploymentExists
+	// if -1 == KustomizeData.CurrentDeploymentPos {
+	// 	return fmt.Errorf("Error while getting current deployment position")
+	// }
 
 	// Slice of function calls to generate all the kustomize files
 	functionCalls := []func(string) error{
@@ -42,7 +63,11 @@ func (KustomizeData Kustomize) CreateKustomization() error {
 		KustomizeData.CreateProfilesPatch,
 		KustomizeData.CreateFilesPatch,
 		KustomizeData.CreateServiceSettingsPatch,
-		KustomizeData.ConfigProviders,
+		KustomizeData.CreateConfigProviders,
+	}
+
+	if KustomizeData.PatchSizing {
+		functionCalls = append(functionCalls, KustomizeData.CreatePatchSizing)
 	}
 
 	for _, function := range functionCalls {
@@ -68,10 +93,21 @@ func (KustomizeData Kustomize) GetHeaders() string {
 	header := apiVersion + `
 kind: SpinnakerService
 metadata:
-	name: spinnaker
+  name: spinnaker
 spec:`
 
 	return header
+}
+
+func (KustomizeData Kustomize) GetCurrentDeploymentPosition() int {
+
+	for i, a := range KustomizeData.Halyard.GetDeploymentConfiguration() {
+		if KustomizeData.Halyard.GetCurrentDeployment() == a.Name {
+			return i
+		}
+	}
+
+	return -1
 }
 
 func (KustomizeData Kustomize) CreateSpinnakerService(header string) error {
@@ -124,10 +160,20 @@ func (KustomizeData Kustomize) CreateServiceSettingsPatch(header string) error {
 	return nil
 }
 
-func (KustomizeData Kustomize) ConfigProviders(header string) error {
+func (KustomizeData Kustomize) CreateConfigProviders(header string) error {
 	ConfigProvidersStr := KustomizeData.GetConfigProviders(header)
 
 	err := fileio.WriteConfigsTmp(KustomizeData.Output_dir+"/config-providers.yml", ConfigProvidersStr)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (KustomizeData Kustomize) CreatePatchSizing(header string) error {
+	PatchSizingStr := KustomizeData.GetPatchSizing(header)
+
+	err := fileio.WriteConfigsTmp(KustomizeData.Output_dir+"/patch-sizing.yml", PatchSizingStr)
 	if err != nil {
 		return err
 	}
@@ -138,53 +184,51 @@ func (KustomizeData Kustomize) GetSpinnakerService(header string) string {
 
 	str := header + `
 	spinnakerConfig:
-		config:
-			version: 0.0.0   # the version of Spinnaker to be deployed, see config-patch.yml
-			persistentStorage:
-			persistentStoreType: s3
-			s3:
-				bucket: mybucket
-				rootFolder: front50
-		profiles:
-			clouddriver:
-			artifacts:
-				http:
-				enabled: true
-				accounts: []
-			deck:
-			settings-local.js: |
-				window.spinnakerSettings.feature.kustomizeEnabled = true;
-				window.spinnakerSettings.feature.artifactsRewrite = true;
-			echo: {}    # is the contents of ~/.hal/default/profiles/echo.yml
-			fiat: {}    # is the contents of ~/.hal/default/profiles/fiat.yml
-			front50: {} # is the contents of ~/.hal/default/profiles/front50.yml
-			gate: {}    # is the contents of ~/.hal/default/profiles/gate.yml
-			igor: {}    # is the contents of ~/.hal/default/profiles/igor.yml
-			kayenta: {} # is the contents of ~/.hal/default/profiles/kayenta.yml
-			orca: {}    # is the contents of ~/.hal/default/profiles/orca.yml
-			rosco: {}   # is the contents of ~/.hal/default/profiles/rosco.yml
+    config:
+      version: 0.0.0   # the version of Spinnaker to be deployed, see config-patch.yml
+      persistentStorage:
+      persistentStoreType: s3
+      s3:
+        bucket: mybucket
+        rootFolder: front50
+    profiles:
+      clouddriver:
+      artifacts:
+        http:
+        enabled: true
+        accounts: []
+      deck:
+      settings-local.js: |
+        window.spinnakerSettings.feature.kustomizeEnabled = true;
+        window.spinnakerSettings.feature.artifactsRewrite = true;
+      echo: {}    # is the contents of ~/.hal/default/profiles/echo.yml
+      fiat: {}    # is the contents of ~/.hal/default/profiles/fiat.yml
+      front50: {} # is the contents of ~/.hal/default/profiles/front50.yml
+      gate: {}    # is the contents of ~/.hal/default/profiles/gate.yml
+      igor: {}    # is the contents of ~/.hal/default/profiles/igor.yml
+      kayenta: {} # is the contents of ~/.hal/default/profiles/kayenta.yml
+      orca: {}    # is the contents of ~/.hal/default/profiles/orca.yml
+      rosco: {}   # is the contents of ~/.hal/default/profiles/rosco.yml
 
-		service-settings:
-			clouddriver: {}
-			deck: {}
-			echo: {}
-			fiat: {}
-			front50: {}
-			gate: {}
-			igor: {}
-			kayenta: {}
-			orca: {}
-			rosco: {}
-		files: {}
+    service-settings:
+      clouddriver: {}
+      deck: {}
+      echo: {}
+      fiat: {}
+      front50: {}
+      gate: {}
+      igor: {}
+      kayenta: {}
+      orca: {}
+      rosco: {}
+    files: {}
 
-		expose:
-		type: service
-		service:
-			type: LoadBalancer
-			overrides: {}
+    expose:
+    type: service
+    service:
+      type: LoadBalancer
+      overrides: {}
 `
-
-	str = strings.Replace(str, "\t", "  ", -1)
 
 	return str
 }
@@ -192,19 +236,24 @@ func (KustomizeData Kustomize) GetSpinnakerService(header string) string {
 func (KustomizeData Kustomize) GetConfigPatch(header string) string {
 
 	str := header + `
-	# spec.spinnakerConfig - This section is how to specify configuration spinnaker
-	spinnakerConfig:
-		# spec.spinnakerConfig.config - This section contains the contents of a deployment found in a halconfig .deploymentConfigurations[0]
-		config:
-			version: ` + "2.0" /*KustomizeData.Halyard.DeploymentConfigurations.Version*/ + `  # the version of Spinnaker to be deployed
-			persistentStorage:
-				persistentStoreType: s3
-				s3:
-					bucket: mybucket
-					rootFolder: front50
+  # spec.spinnakerConfig - This section is how to specify configuration spinnaker
+  spinnakerConfig:
+    # spec.spinnakerConfig.config - This section contains the contents of a deployment found in a halconfig .deploymentConfigurations[0]
+    config:
+      version: ` + "2.0" /*KustomizeData.Halyard.DeploymentConfiguration[KustomizeData.CurrentDeploymentPos].Version*/ + `  # the version of Spinnaker to be deployed
+      timezone: ` + "America/Los_Angeles" /*KustomizeData.Halyard.DeploymentConfiguration[KustomizeData.CurrentDeploymentPos].Timezone*/ + `
+      persistentStorage:
+        persistentStoreType: s3
+        azs: {}
+        gcs:
+          rootFolder: front50
+          bucketLocation: ''
+        redis: {}
+        s3:
+          bucket: mybucket
+          rootFolder: front50
+        oracle: {}
 `
-
-	str = strings.Replace(str, "\t", "  ", -1)
 
 	return str
 }
@@ -212,29 +261,27 @@ func (KustomizeData Kustomize) GetConfigPatch(header string) string {
 func (KustomizeData Kustomize) GetProfilesPatch(header string) string {
 
 	str := header + `
-	# spec.spinnakerConfig - This section is how to specify configuration spinnaker
-	spinnakerConfig:
-		# spec.spinnakerConfig.profiles - This section contains the YAML of each service's profile
-		profiles:
-			clouddriver: {} # is the contents of ~/.hal/default/profiles/clouddriver.yml
-			# deck has a special key "settings-local.js" for the contents of settings-local.js
-			deck:
-				# settings-local.js - contents of ~/.hal/default/profiles/settings-local.js
-				# Use the | YAML symbol to indicate a block-style multiline string
-				settings-local.js: |
-					window.spinnakerSettings.feature.kustomizeEnabled = true;
-					window.spinnakerSettings.feature.artifactsRewrite = true;
-			echo: {}    # is the contents of ~/.hal/default/profiles/echo.yml
-			fiat: {}    # is the contents of ~/.hal/default/profiles/fiat.yml
-			front50: {} # is the contents of ~/.hal/default/profiles/front50.yml
-			gate: {}    # is the contents of ~/.hal/default/profiles/gate.yml
-			igor: {}    # is the contents of ~/.hal/default/profiles/igor.yml
-			kayenta: {} # is the contents of ~/.hal/default/profiles/kayenta.yml
-			orca: {}    # is the contents of ~/.hal/default/profiles/orca.yml
-			rosco: {}   # is the contents of ~/.hal/default/profiles/rosco.yml
+  # spec.spinnakerConfig - This section is how to specify configuration spinnaker
+  spinnakerConfig:
+    # spec.spinnakerConfig.profiles - This section contains the YAML of each service's profile
+    profiles:
+      clouddriver: {} # is the contents of ~/.hal/default/profiles/clouddriver.yml
+      # deck has a special key "settings-local.js" for the contents of settings-local.js
+      deck:
+        # settings-local.js - contents of ~/.hal/default/profiles/settings-local.js
+        # Use the | YAML symbol to indicate a block-style multiline string
+        settings-local.js: |
+          window.spinnakerSettings.feature.kustomizeEnabled = true;
+          window.spinnakerSettings.feature.artifactsRewrite = true;
+      echo: {}    # is the contents of ~/.hal/default/profiles/echo.yml
+      fiat: {}    # is the contents of ~/.hal/default/profiles/fiat.yml
+      front50: {} # is the contents of ~/.hal/default/profiles/front50.yml
+      gate: {}    # is the contents of ~/.hal/default/profiles/gate.yml
+      igor: {}    # is the contents of ~/.hal/default/profiles/igor.yml
+      kayenta: {} # is the contents of ~/.hal/default/profiles/kayenta.yml
+      orca: {}    # is the contents of ~/.hal/default/profiles/orca.yml
+      rosco: {}   # is the contents of ~/.hal/default/profiles/rosco.yml
 `
-
-	str = strings.Replace(str, "\t", "  ", -1)
 
 	return str
 }
@@ -242,27 +289,25 @@ func (KustomizeData Kustomize) GetProfilesPatch(header string) string {
 func (KustomizeData Kustomize) GetFilesPatch(header string) string {
 
 	str := header + `
-	# spec.spinnakerConfig - This section is how to specify configuration spinnaker
-	spinnakerConfig:
-		# spec.spinnakerConfig.files - This section allows you to include any other raw string files not handle above.
-		# The KEY is the filepath and filename of where it should be placed
-		#	- Files here will be placed into ~/.hal/default/ on halyard
-		#	- __ is used in place of / for the path separator
-		# The VALUE is the contents of the file.
-		#	- Use the | YAML symbol to indicate a block-style multiline string
-		#	- We currently only support string files
-		#	- NOTE: Kubernetes has a manifest size limitation of 1MB
-		files:
-#			profiles__rosco__packer__example-packer-config.json: |
-#				{
-#					"packerSetting": "someValue"
-#				}
-#			profiles__rosco__packer__my_custom_script.sh: |
-#				#!/bin/bash -e
-#				echo "hello world!"
+  # spec.spinnakerConfig - This section is how to specify configuration spinnaker
+  spinnakerConfig:
+    # spec.spinnakerConfig.files - This section allows you to include any other raw string files not handle above.
+    # The KEY is the filepath and filename of where it should be placed
+    #  - Files here will be placed into ~/.hal/default/ on halyard
+    #  - __ is used in place of / for the path separator
+    # The VALUE is the contents of the file.
+    #  - Use the | YAML symbol to indicate a block-style multiline string
+    #  - We currently only support string files
+    #  - NOTE: Kubernetes has a manifest size limitation of 1MB
+    files:
+    #  profiles__rosco__packer__example-packer-config.json: |
+    #    {
+    #      "packerSetting": "someValue"
+    #    }
+    #  profiles__rosco__packer__my_custom_script.sh: |
+    #    #!/bin/bash -e
+    #    echo "hello world!"
 `
-
-	str = strings.Replace(str, "\t", "  ", -1)
 
 	return str
 }
@@ -270,21 +315,66 @@ func (KustomizeData Kustomize) GetFilesPatch(header string) string {
 func (KustomizeData Kustomize) GetServiceSettingsPatch(header string) string {
 
 	str := header + `
-	# spec.spinnakerConfig - This section is how to specify configuration spinnaker
-	spinnakerConfig:
-		# spec.spinnakerConfig.service-settings - This section contains the YAML of the service's service-setting
-		# see https://www.spinnaker.io/reference/halyard/custom/#tweakable-service-settings for available settings
-		service-settings:
-			clouddriver: {}
-			deck: {}
-			echo: {}
-			fiat: {}
-			front50: {}
-			gate: {}
-			igor: {}
-			kayenta: {}
-			orca: {}
-			rosco: {}
+  # spec.spinnakerConfig - This section is how to specify configuration spinnaker
+  spinnakerConfig:
+    # spec.spinnakerConfig.service-settings - This section contains the YAML of the service's service-setting
+    # see https://www.spinnaker.io/reference/halyard/custom/#tweakable-service-settings for available settings
+    service-settings:
+      clouddriver: {}
+      deck: {}
+      echo: {}
+      fiat: {}
+      front50: {}
+      gate: {}
+      igor: {}
+      kayenta: {}
+      orca: {}
+      rosco: {}
+`
+
+	return str
+}
+
+func (KustomizeData Kustomize) GetConfigProviders(header string) string {
+
+	// KustomizeData.Halyard.DeploymentConfiguration[KustomizeData.CurrentDeploymentPos].Providers.Aws.GetAwsAcc()
+	// KustomizeData.Halyard.DeploymentConfiguration[KustomizeData.CurrentDeploymentPos].Providers.AppEngine
+
+	prob := Providers{}
+	prob.SetProvidersData(KustomizeData)
+
+	str := header + `
+  validation:
+    providers:
+      ` + prob.Enable + `:
+        enabled: true    # Default: true. Indicate if operator should do connectivity checks to configured kubernetes accounts before applying the manifest
+  spinnakerConfig:
+    config:
+      providers:
+        appengine:
+          ` + prob.AppEngine + `
+        aws:
+          ` + prob.Aws + `
+        ecs:
+          ` + prob.Ecs + `
+        azure:
+          ` + prob.Azure + `
+        dcos:
+          ` + prob.Dcos + `
+        dockerRegistry:
+          ` + prob.DockerRegistry + `
+        google:
+          ` + prob.Google + `
+        huaweicloud:
+          ` + prob.Huaweicloud + `
+        kubernetes:
+          ` + prob.Kubernetes + `
+        tencentcloud:
+          ` + prob.Tencentcloud + `
+        oracle:
+          ` + prob.Oracle + `
+        cloudfoundry:
+          ` + prob.Cloudfoundry + `
 `
 
 	str = strings.Replace(str, "\t", "  ", -1)
@@ -292,55 +382,33 @@ func (KustomizeData Kustomize) GetServiceSettingsPatch(header string) string {
 	return str
 }
 
-func (KustomizeData Kustomize) GetConfigProviders(header string) string {
-
+func (KustomizeData Kustomize) GetPatchSizing(header string) string {
 	str := header + `
-	spinnakerConfig:
-		config:
-			providers:
-			aws:
-				enabled: true
-				primaryAccount: ` /*+ KustomizeData.Halyard.DeploymentConfigurations.Providers.Aws.PrimaryAccount + `                # Must be one of the configured AWS accounts
-					# accounts: []
-					accounts:
-					- name: XXXXX
-					accountId: "XXXXX"            # (Required). Your AWS account ID to manage. See the AWS IAM User Guide for more information.
-					assumeRole: XXXXX           # (Required). If set, will configure a credentials provider that uses AWS Security Token Service to assume the specified role. Example: “user/spinnaker” or “role/spinnakerManaged”
-					lifecycleHooks: []                   # (Optional). Configuration for AWS Auto Scaling Lifecycle Hooks. For more information, see: https://docs.aws.amazon.com/autoscaling/ec2/userguide/lifecycle-hooks.html
-					permissions: {}
-					providerVersion: V1
-					regions:
-					- name: us-east-1
-					- name: us-east-2
-					- name: us-west-1
-					- name: us-west-2
-					bakeryDefaults:                        # Configuration for Spinnaker’s image bakery.Configuration for Spinnaker’s image bakery.
-					baseImages: []
-					accessKeyId: ` + KustomizeData.Halyard.DeploymentConfigurations.Providers.Aws.AccessKey + `      # Only needed if cluster worker nodes don't have IAM roles for talking to the target aws account
-					secretAccessKey: ` + KustomizeData.Halyard.DeploymentConfigurations.Providers.Aws.SecretAccessKey + `  # Only needed if cluster worker nodes don't have IAM roles for talking to the target aws account
-					defaultKeyPairTemplate: '` + KustomizeData.DeploymentConfigurations.Halyard.Providers.Aws.DefaultKeyPairTemplate + `'
-					defaultRegions:
-					- name: us-east-1
-					- name: us-east-2
-					- name: us-west-1
-					- name: us-west-2
-					defaults:
-					iamRole: BaseIAMRole
-					features:
-					cloudFormation:
-					enabled: true                       # (Default: false). Enable cloudformation support on this AWS account.
-				ecs:
-					enabled: true
-					accounts:
-					- name: aws-dev-ecs
-					requiredGroupMembership: []
-					providerVersion: V1
-					permissions: {}
-					awsAccount: XXXXX                   # Must be one of the configured AWS accounts
-					primaryAccount: aws-dev-ecs             # Must be one of the configured AWS ECS accounts
-	`*/
-
-	str = strings.Replace(str, "\t", "  ", -1)
+  spinnakerConfig:
+    config:
+      deploymentEnvironment:
+        customSizing:
+          # This applies sizings to the clouddriver container as well as any sidecar 
+          # containers running with clouddriver. (Use without spin- to only include the clouddriver container)
+          spin-clouddriver:
+            replicas: 1     # Set the number of replicas (pods) to be created for this service.
+            # limits:
+            #   cpu: 2        # Set the kubernetes CPU limits for each pod. For reference a m5.xlarge EC2 instance has a capacity of 4 cpu.
+            #   memory: 4Gi   # Set the kubernetes memory limits for each pod. For reference a m5.xlarge EC2 instance has a capacity of 16Gi of memory.
+            # requests:
+            #   cpu: 500m
+            #   memory: 2Gi
+          # This applies sizings to only the service container and not to any sidecar 
+          # containers running with service. (Use spin-<service> to include sidecars)
+          clouddriver:
+            limits:
+              cpu: 2        # Set the kubernetes CPU limits for each pod. For reference a m5.xlarge EC2 instance has a capacity of 4 cpu.
+              memory: 4Gi   # Set the kubernetes memory limits for each pod. For reference a m5.xlarge EC2 instance has a capacity of 16Gi of memory.
+            requests:
+              cpu: 500m
+              memory: 2Gi
+          deck:
+`
 
 	return str
 }
