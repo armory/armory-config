@@ -241,6 +241,7 @@ func (KustomizeData Kustomize) GetConfigPatch(header string) string {
   spinnakerConfig:
     # spec.spinnakerConfig.config - This section contains the contents of a deployment found in a halconfig .deploymentConfigurations[0]
     config:
+      # === General Config ===
       version: ` + "2.0" /*KustomizeData.Halyard.DeploymentConfiguration[KustomizeData.CurrentDeploymentPos].Version*/ + `  # the version of Spinnaker to be deployed
       timezone: ` + "America/Los_Angeles" /*KustomizeData.Halyard.DeploymentConfiguration[KustomizeData.CurrentDeploymentPos].Timezone*/ + `
 
@@ -251,17 +252,8 @@ func (KustomizeData Kustomize) GetConfigPatch(header string) string {
       metricStores:` +
 		GetMetricStores(KustomizeData) + `
       # === Notifications ===
-      notifications:
-        slack:
-          enabled: ` + "true" /*KustomizeData.Halyard.DeploymentConfiguration[KustomizeData.CurrentDeploymentPos].Notifications.Slack.Enable*/ + `
-          botName: spinnaker
-          token: XXXX
-        twilio:
-          enabled: false
-          baseUrl: https://api.twilio.com/
-        github-status:
-          enabled: false
-          token: encrypted:k8s!n:spin-secrets!k:github-token     # (Secret). Github authentication token.
+      notifications:` +
+		GetNotifications(KustomizeData) + `
 `
 
 	return str
