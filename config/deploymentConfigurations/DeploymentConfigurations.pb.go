@@ -7,7 +7,7 @@
 package deploymentConfigurations
 
 import (
-	deploymentEnv "github.com/austinthao5/golang_proto_test/config/deploymentconfigurations/deploymentEnv"
+	deploymentEnv "github.com/austinthao5/golang_proto_test/config/deploymentConfigurations/deploymentEnv"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"

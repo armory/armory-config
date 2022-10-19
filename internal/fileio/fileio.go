@@ -7,7 +7,7 @@ import (
 	"io/ioutil"
 	"os"
 
-	"github.com/austinthao5/golang_proto_test/config/deploymentconfigurations/providers"
+	"github.com/austinthao5/golang_proto_test/config/deploymentConfigurations/providers"
 )
 
 func ReadFile(filename string) ([]byte, error) {
