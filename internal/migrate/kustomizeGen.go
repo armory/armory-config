@@ -247,6 +247,9 @@ func (KustomizeData Kustomize) GetConfigPatch(header string) string {
       # === Persistent Storage ===
       persistentStorage:` +
 		GetPersistentStorage(KustomizeData) + `
+      # === Metric Stores ===
+      metricStores:` +
+		GetMetricStores(KustomizeData) + `
       # === Notifications ===
       notifications:
         slack:
