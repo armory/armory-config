@@ -4,14 +4,14 @@ import "strings"
 
 func GetMetricStores(KustomizeData Kustomize) string {
 
-	return GetDatadog(KustomizeData) +
-		GetPrometheus(KustomizeData) +
-		GetStackdriver(KustomizeData) +
-		GetNewrelic(KustomizeData) +
-		GetMetricStoresGen(KustomizeData)
+	return GetDatadogMetrics(KustomizeData) +
+		GetPrometheusgMetrics(KustomizeData) +
+		GetStackdrivergMetrics(KustomizeData) +
+		GetNewrelicgMetrics(KustomizeData) +
+		GetMetricStoresGengMetrics(KustomizeData)
 }
 
-func GetDatadog(KustomizeData Kustomize) string {
+func GetDatadogMetrics(KustomizeData Kustomize) string {
 	str := `
 	datadog:
 	  enabled: false
@@ -32,7 +32,7 @@ func GetDatadog(KustomizeData Kustomize) string {
 	return str
 }
 
-func GetPrometheus(KustomizeData Kustomize) string {
+func GetPrometheusgMetrics(KustomizeData Kustomize) string {
 	str := `
 	prometheus:
 	  enabled: false
@@ -43,7 +43,7 @@ func GetPrometheus(KustomizeData Kustomize) string {
 	// KustomizeData.Halyard.DeploymentConfiguration[KustomizeData.CurrentDeploymentPos].MetricStores.Prometheus
 }
 
-func GetStackdriver(KustomizeData Kustomize) string {
+func GetStackdrivergMetrics(KustomizeData Kustomize) string {
 	str := `
 	stackdriver:
 	  enabled: false
@@ -56,7 +56,7 @@ func GetStackdriver(KustomizeData Kustomize) string {
 	// KustomizeData.Halyard.DeploymentConfiguration[KustomizeData.CurrentDeploymentPos].MetricStores.Stackdriver
 }
 
-func GetNewrelic(KustomizeData Kustomize) string {
+func GetNewrelicgMetrics(KustomizeData Kustomize) string {
 	str := `
 	newrelic:
 	  tags: []`
@@ -66,7 +66,7 @@ func GetNewrelic(KustomizeData Kustomize) string {
 	// KustomizeData.Halyard.DeploymentConfiguration[KustomizeData.CurrentDeploymentPos].MetricStores.Newrelic
 }
 
-func GetMetricStoresGen(KustomizeData Kustomize) string {
+func GetMetricStoresGengMetrics(KustomizeData Kustomize) string {
 	str := `
 	period: 30` + /*KustomizeData.Halyard.DeploymentConfiguration[KustomizeData.CurrentDeploymentPos].MetricStores.Period + */ `
 	enabled: false` /*KustomizeData.Halyard.DeploymentConfiguration[KustomizeData.CurrentDeploymentPos].MetricStores.enabled + */

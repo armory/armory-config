@@ -5,11 +5,11 @@ import "strings"
 func GetPersistentStorage(KustomizeData Kustomize) string {
 
 	return GetPersistentStoreType(KustomizeData) +
-		GetAzs(KustomizeData) +
-		GetGcs(KustomizeData) +
-		GetRedis(KustomizeData) +
-		GetS3(KustomizeData) +
-		GetOracle(KustomizeData)
+		GetAzsStorage(KustomizeData) +
+		GetGcsStorage(KustomizeData) +
+		GetRedisStorage(KustomizeData) +
+		GetS3Storage(KustomizeData) +
+		GetOracleStorage(KustomizeData)
 }
 
 func GetPersistentStoreType(KustomizeData Kustomize) string {
@@ -20,7 +20,7 @@ func GetPersistentStoreType(KustomizeData Kustomize) string {
 	// return `persistentStoreType: ` + KustomizeData.Halyard.DeploymentConfiguration[KustomizeData.CurrentDeploymentPos].PersistentStorage.persistentStoreType
 }
 
-func GetAzs(KustomizeData Kustomize) string {
+func GetAzsStorage(KustomizeData Kustomize) string {
 	str := ""
 
 	/*if nil != KustomizeData.Halyard.DeploymentConfiguration[KustomizeData.CurrentDeploymentPos].PersistentStorage.Azs {
@@ -37,7 +37,7 @@ func GetAzs(KustomizeData Kustomize) string {
 	return str
 }
 
-func GetGcs(KustomizeData Kustomize) string {
+func GetGcsStorage(KustomizeData Kustomize) string {
 	str := ""
 
 	/*if nil != KustomizeData.Halyard.DeploymentConfiguration[KustomizeData.CurrentDeploymentPos].PersistentStorage.Gcs {
@@ -56,7 +56,7 @@ func GetGcs(KustomizeData Kustomize) string {
 	return str
 }
 
-func GetRedis(KustomizeData Kustomize) string {
+func GetRedisStorage(KustomizeData Kustomize) string {
 	str := ""
 
 	/*if nil != KustomizeData.Halyard.DeploymentConfiguration[KustomizeData.CurrentDeploymentPos].PersistentStorage.Redis {
@@ -73,7 +73,7 @@ func GetRedis(KustomizeData Kustomize) string {
 	return str
 }
 
-func GetS3(KustomizeData Kustomize) string {
+func GetS3Storage(KustomizeData Kustomize) string {
 	str := ""
 
 	/*if nil != KustomizeData.Halyard.DeploymentConfiguration[KustomizeData.CurrentDeploymentPos].PersistentStorage.S3 {
@@ -96,7 +96,7 @@ func GetS3(KustomizeData Kustomize) string {
 	return str
 }
 
-func GetOracle(KustomizeData Kustomize) string {
+func GetOracleStorage(KustomizeData Kustomize) string {
 	str := ""
 
 	/*if nil != KustomizeData.Halyard.DeploymentConfiguration[KustomizeData.CurrentDeploymentPos].PersistentStorage.Oracle {

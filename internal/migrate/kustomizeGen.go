@@ -34,6 +34,12 @@ func (KustomizeData Kustomize) CreateKustomization() error {
 	- service-settings-patch.yml    #Contains the config for each service's service-setting
 	- config-providers.yml          #Contains the providers configuration
 `
+
+	if "ARMORY" == KustomizeData.Spin_flavor {
+		str += `	- armory-patch.yml              #Contains Specific Armory config
+`
+	}
+
 	//Todo Check if patch-sizing not empty
 	KustomizeData.PatchSizing = true
 
@@ -65,6 +71,10 @@ func (KustomizeData Kustomize) CreateKustomization() error {
 		KustomizeData.CreateFilesPatch,
 		KustomizeData.CreateServiceSettingsPatch,
 		KustomizeData.CreateConfigProviders,
+	}
+
+	if "ARMORY" == KustomizeData.Spin_flavor {
+		functionCalls = append(functionCalls, KustomizeData.CreateArmoryPatch)
 	}
 
 	if KustomizeData.PatchSizing {
@@ -181,6 +191,16 @@ func (KustomizeData Kustomize) CreatePatchSizing(header string) error {
 	return nil
 }
 
+func (KustomizeData Kustomize) CreateArmoryPatch(header string) error {
+	ArmoryPatchStr := KustomizeData.GetArmoryPatch(header)
+
+	err := fileio.WriteConfigsTmp(KustomizeData.Output_dir+"/armory-patch.yml", ArmoryPatchStr)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 func (KustomizeData Kustomize) GetSpinnakerService(header string) string {
 
 	str := header + `
@@ -241,19 +261,46 @@ func (KustomizeData Kustomize) GetConfigPatch(header string) string {
   spinnakerConfig:
     # spec.spinnakerConfig.config - This section contains the contents of a deployment found in a halconfig .deploymentConfigurations[0]
     config:
-      # === General Config ===
+
+# === General Config ===
       version: ` + "2.0" /*KustomizeData.Halyard.DeploymentConfiguration[KustomizeData.CurrentDeploymentPos].Version*/ + `  # the version of Spinnaker to be deployed
       timezone: ` + "America/Los_Angeles" /*KustomizeData.Halyard.DeploymentConfiguration[KustomizeData.CurrentDeploymentPos].Timezone*/ + `
 
-      # === Persistent Storage ===
+# === Persistent Storage ===
       persistentStorage:` +
 		GetPersistentStorage(KustomizeData) + `
-      # === Metric Stores ===
+
+# === Metric Stores ===
       metricStores:` +
 		GetMetricStores(KustomizeData) + `
-      # === Notifications ===
+
+# === Notifications ===
       notifications:` +
 		GetNotifications(KustomizeData) + `
+
+# === Ci ===
+      ci:` +
+		GetCi(KustomizeData) + `
+
+# === Security ===
+      security:` +
+		GetSecurity(KustomizeData) + `
+
+# === Artifacts ===
+      artifacts:` +
+		GetArtifacts(KustomizeData) + `
+
+# === Pubsub ===
+      pubsub:` +
+		GetPubsub(KustomizeData) + `
+
+# === Canary ===
+      canary:` +
+		GetCanary(KustomizeData) + `
+
+# === Stats ===
+      stats:` +
+		GetStats(KustomizeData) + `
 `
 
 	return str
@@ -409,6 +456,45 @@ func (KustomizeData Kustomize) GetPatchSizing(header string) string {
               cpu: 500m
               memory: 2Gi
           deck:
+`
+
+	return str
+}
+
+func (KustomizeData Kustomize) GetArmoryPatch(header string) string {
+	str := header + `
+  spinnakerConfig:
+    config:
+      armory:
+        dinghy:
+          enabled: true
+          templateOrg: cloudtools
+          templateRepo: dinghy-templates
+          githubToken: XXXX
+          githubEndpoint: https://github.dev.dou.com/api/v3
+          repositoryRawdataProcessing: false
+          dinghyFilename: dinghyfile
+          autoLockPipelines: true
+          fiatUser: svc-spinnaker-dinghy
+          notifiers:
+            slack:
+              enabled: true
+              channel: pbd-spinnaker-slack-testing
+        diagnostics:
+          enabled: false
+          uuid: XXXX
+          logging:
+            enabled: false
+            endpoint: https://debug.armory.io/v1/logs
+        terraform:
+          enabled: true
+          git:
+            enabled: true
+            accessToken: XXXX
+        secrets:
+          vault:
+            enabled: false
+            path: kubernetes
 `
 
 	return str
