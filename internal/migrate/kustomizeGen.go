@@ -28,10 +28,11 @@ func (KustomizeData Kustomize) CreateKustomization() error {
 
 	# Apply the patches top down order
 	patchesStrategicMerge:
-	- config-patch.yml
-	- profiles-patch.yml
-	- files-patch.yml
-	- service-settings-patch.yml
+	- config-patch.yml              #Contains Spinnaker configuration (contents of a deployment)
+	- profiles-patch.yml            #Contains the YAML of each service's profile
+	- files-patch.yml               #Contains any other raw string files not handle in spinnakerConfig
+	- service-settings-patch.yml    #Contains the config for each service's service-setting
+	- config-providers.yml          #Contains the providers configuration
 `
 	//Todo Check if patch-sizing not empty
 	KustomizeData.PatchSizing = true
@@ -183,14 +184,14 @@ func (KustomizeData Kustomize) CreatePatchSizing(header string) error {
 func (KustomizeData Kustomize) GetSpinnakerService(header string) string {
 
 	str := header + `
-	spinnakerConfig:
+  spinnakerConfig:
     config:
       version: 0.0.0   # the version of Spinnaker to be deployed, see config-patch.yml
       persistentStorage:
-      persistentStoreType: s3
-      s3:
-        bucket: mybucket
-        rootFolder: front50
+        persistentStoreType: s3
+        s3:
+          bucket: mybucket
+          rootFolder: front50
     profiles:
       clouddriver:
       artifacts:
@@ -242,17 +243,22 @@ func (KustomizeData Kustomize) GetConfigPatch(header string) string {
     config:
       version: ` + "2.0" /*KustomizeData.Halyard.DeploymentConfiguration[KustomizeData.CurrentDeploymentPos].Version*/ + `  # the version of Spinnaker to be deployed
       timezone: ` + "America/Los_Angeles" /*KustomizeData.Halyard.DeploymentConfiguration[KustomizeData.CurrentDeploymentPos].Timezone*/ + `
-      persistentStorage:
-        persistentStoreType: s3
-        azs: {}
-        gcs:
-          rootFolder: front50
-          bucketLocation: ''
-        redis: {}
-        s3:
-          bucket: mybucket
-          rootFolder: front50
-        oracle: {}
+
+      # === Persistent Storage ===
+      persistentStorage:` +
+		GetPersistentStorage(KustomizeData) + `
+      # === Notifications ===
+      notifications:
+        slack:
+          enabled: ` + "true" /*KustomizeData.Halyard.DeploymentConfiguration[KustomizeData.CurrentDeploymentPos].Notifications.Slack.Enable*/ + `
+          botName: spinnaker
+          token: XXXX
+        twilio:
+          enabled: false
+          baseUrl: https://api.twilio.com/
+        github-status:
+          enabled: false
+          token: encrypted:k8s!n:spin-secrets!k:github-token     # (Secret). Github authentication token.
 `
 
 	return str
