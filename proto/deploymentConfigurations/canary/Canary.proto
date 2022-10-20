@@ -17,9 +17,20 @@ message Canary {
 message serviceIntegrations {
     string name = 1;
     bool enabled = 2;
+    repeated CanaryAccounts accounts = 3;
     
 
 }
+
+message CanaryAccounts {
+
+    // S3 Config
+    string name = 1;
+    string bucket = 2;
+    string region = 3;
+
+}
+
 
 
 /* 
