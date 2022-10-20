@@ -17,7 +17,50 @@ type Providers struct {
 	Tencentcloud   string
 	Oracle         string
 	Cloudfoundry   string
-	Enable         string
+	Enable         string //Which provider is currently enable
+}
+
+func GetProvidersData(KustomizeData Kustomize) string {
+
+	// KustomizeData.Halyard.DeploymentConfiguration[KustomizeData.CurrentDeploymentPos].Providers.Aws.GetAwsAcc()
+	// KustomizeData.Halyard.DeploymentConfiguration[KustomizeData.CurrentDeploymentPos].Providers.AppEngine
+	prob := Providers{}
+	prob.SetProvidersData(KustomizeData)
+
+	str := `
+  validation:
+    providers:
+      ` + prob.Enable + `:
+        enabled: true    # Default: true. Indicate if operator should do connectivity checks to configured kubernetes accounts before applying the manifest
+  spinnakerConfig:
+    config:
+      providers:
+        appengine:
+          ` + prob.AppEngine + `
+        aws:
+          ` + prob.Aws + `
+        ecs:
+          ` + prob.Ecs + `
+        azure:
+          ` + prob.Azure + `
+        dcos:
+          ` + prob.Dcos + `
+        dockerRegistry:
+          ` + prob.DockerRegistry + `
+        google:
+          ` + prob.Google + `
+        huaweicloud:
+          ` + prob.Huaweicloud + `
+        kubernetes:
+          ` + prob.Kubernetes + `
+        tencentcloud:
+          ` + prob.Tencentcloud + `
+        oracle:
+          ` + prob.Oracle + `
+        cloudfoundry:
+          ` + prob.Cloudfoundry
+
+	return str
 }
 
 // This function fills the Providers struct in a valid format

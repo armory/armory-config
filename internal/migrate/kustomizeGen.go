@@ -260,47 +260,8 @@ func (KustomizeData Kustomize) GetConfigPatch(header string) string {
   # spec.spinnakerConfig - This section is how to specify configuration spinnaker
   spinnakerConfig:
     # spec.spinnakerConfig.config - This section contains the contents of a deployment found in a halconfig .deploymentConfigurations[0]
-    config:
-
-# === General Config ===
-      version: ` + "2.0" /*KustomizeData.Halyard.DeploymentConfiguration[KustomizeData.CurrentDeploymentPos].Version*/ + `  # the version of Spinnaker to be deployed
-      timezone: ` + "America/Los_Angeles" /*KustomizeData.Halyard.DeploymentConfiguration[KustomizeData.CurrentDeploymentPos].Timezone*/ + `
-
-# === Persistent Storage ===
-      persistentStorage:` +
-		GetPersistentStorage(KustomizeData) + `
-
-# === Metric Stores ===
-      metricStores:` +
-		GetMetricStores(KustomizeData) + `
-
-# === Notifications ===
-      notifications:` +
-		GetNotifications(KustomizeData) + `
-
-# === Ci ===
-      ci:` +
-		GetCi(KustomizeData) + `
-
-# === Security ===
-      security:` +
-		GetSecurity(KustomizeData) + `
-
-# === Artifacts ===
-      artifacts:` +
-		GetArtifacts(KustomizeData) + `
-
-# === Pubsub ===
-      pubsub:` +
-		GetPubsub(KustomizeData) + `
-
-# === Canary ===
-      canary:` +
-		GetCanary(KustomizeData) + `
-
-# === Stats ===
-      stats:` +
-		GetStats(KustomizeData) + `
+    config:` +
+		GetConfigData(KustomizeData) + `
 `
 
 	return str
@@ -354,45 +315,8 @@ func (KustomizeData Kustomize) GetServiceSettingsPatch(header string) string {
 }
 
 func (KustomizeData Kustomize) GetConfigProvidersPatch(header string) string {
-
-	// KustomizeData.Halyard.DeploymentConfiguration[KustomizeData.CurrentDeploymentPos].Providers.Aws.GetAwsAcc()
-	// KustomizeData.Halyard.DeploymentConfiguration[KustomizeData.CurrentDeploymentPos].Providers.AppEngine
-
-	prob := Providers{}
-	prob.SetProvidersData(KustomizeData)
-
-	str := header + `
-  validation:
-    providers:
-      ` + prob.Enable + `:
-        enabled: true    # Default: true. Indicate if operator should do connectivity checks to configured kubernetes accounts before applying the manifest
-  spinnakerConfig:
-    config:
-      providers:
-        appengine:
-          ` + prob.AppEngine + `
-        aws:
-          ` + prob.Aws + `
-        ecs:
-          ` + prob.Ecs + `
-        azure:
-          ` + prob.Azure + `
-        dcos:
-          ` + prob.Dcos + `
-        dockerRegistry:
-          ` + prob.DockerRegistry + `
-        google:
-          ` + prob.Google + `
-        huaweicloud:
-          ` + prob.Huaweicloud + `
-        kubernetes:
-          ` + prob.Kubernetes + `
-        tencentcloud:
-          ` + prob.Tencentcloud + `
-        oracle:
-          ` + prob.Oracle + `
-        cloudfoundry:
-          ` + prob.Cloudfoundry + `
+	str := header +
+		GetProvidersData(KustomizeData) + `
 `
 
 	str = strings.Replace(str, "\t", "  ", -1)
