@@ -1,8 +1,12 @@
-package migrate
+package profile_patch
 
-import "strings"
+import (
+	"strings"
 
-func GetProfiles(KustomizeData Kustomize) string {
+	"github.com/austinthao5/golang_proto_test/internal/migrate/structs"
+)
+
+func GetProfiles(KustomizeData structs.Kustomize) string {
 
 	return GetClouddriverProfile(KustomizeData) +
 		GetDeckProfile(KustomizeData) +
@@ -16,7 +20,7 @@ func GetProfiles(KustomizeData Kustomize) string {
 		GetRoscoProfile(KustomizeData)
 }
 
-func GetClouddriverProfile(KustomizeData Kustomize) string {
+func GetClouddriverProfile(KustomizeData structs.Kustomize) string {
 	str := `
 	clouddriver: {} # is the contents of ~/.hal/default/profiles/clouddriver.yml`
 	/*KustomizeData.Halyard.DeploymentConfiguration[KustomizeData.CurrentDeploymentPos].Providers.Clouddriver*/
@@ -25,7 +29,7 @@ func GetClouddriverProfile(KustomizeData Kustomize) string {
 	return str
 }
 
-func GetDeckProfile(KustomizeData Kustomize) string {
+func GetDeckProfile(KustomizeData structs.Kustomize) string {
 	str := `
 	# deck has a special key "settings-local.js" for the contents of settings-local.js
 	deck:
@@ -39,7 +43,7 @@ func GetDeckProfile(KustomizeData Kustomize) string {
 	return str
 }
 
-func GetEchoProfile(KustomizeData Kustomize) string {
+func GetEchoProfile(KustomizeData structs.Kustomize) string {
 	str := `
 	echo: {}    # is the contents of ~/.hal/default/profiles/echo.yml`
 	/*KustomizeData.Halyard.DeploymentConfiguration[KustomizeData.CurrentDeploymentPos].Providers.Echo*/
@@ -48,7 +52,7 @@ func GetEchoProfile(KustomizeData Kustomize) string {
 	return str
 }
 
-func GetFiatProfile(KustomizeData Kustomize) string {
+func GetFiatProfile(KustomizeData structs.Kustomize) string {
 	str := `
 	fiat: {}    # is the contents of ~/.hal/default/profiles/fiat.yml`
 	/*KustomizeData.Halyard.DeploymentConfiguration[KustomizeData.CurrentDeploymentPos].Providers.Fiat*/
@@ -57,7 +61,7 @@ func GetFiatProfile(KustomizeData Kustomize) string {
 	return str
 }
 
-func GetFront50Profile(KustomizeData Kustomize) string {
+func GetFront50Profile(KustomizeData structs.Kustomize) string {
 	str := `
 	front50: {} # is the contents of ~/.hal/default/profiles/front50.yml`
 	/*KustomizeData.Halyard.DeploymentConfiguration[KustomizeData.CurrentDeploymentPos].Providers.Front50*/
@@ -66,7 +70,7 @@ func GetFront50Profile(KustomizeData Kustomize) string {
 	return str
 }
 
-func GetGateProfile(KustomizeData Kustomize) string {
+func GetGateProfile(KustomizeData structs.Kustomize) string {
 	str := `
 	gate: {}    # is the contents of ~/.hal/default/profiles/gate.yml`
 	/*KustomizeData.Halyard.DeploymentConfiguration[KustomizeData.CurrentDeploymentPos].Providers.Gate*/
@@ -75,7 +79,7 @@ func GetGateProfile(KustomizeData Kustomize) string {
 	return str
 }
 
-func GetIgorProfile(KustomizeData Kustomize) string {
+func GetIgorProfile(KustomizeData structs.Kustomize) string {
 	str := `
 	igor: {}    # is the contents of ~/.hal/default/profiles/igor.yml`
 	/*KustomizeData.Halyard.DeploymentConfiguration[KustomizeData.CurrentDeploymentPos].Providers.Igor*/
@@ -84,7 +88,7 @@ func GetIgorProfile(KustomizeData Kustomize) string {
 	return str
 }
 
-func GetKayentaProfile(KustomizeData Kustomize) string {
+func GetKayentaProfile(KustomizeData structs.Kustomize) string {
 	str := `
 	kayenta: {} # is the contents of ~/.hal/default/profiles/kayenta.yml`
 	/*KustomizeData.Halyard.DeploymentConfiguration[KustomizeData.CurrentDeploymentPos].Providers.Kayenta*/
@@ -93,7 +97,7 @@ func GetKayentaProfile(KustomizeData Kustomize) string {
 	return str
 }
 
-func GetOrcaProfile(KustomizeData Kustomize) string {
+func GetOrcaProfile(KustomizeData structs.Kustomize) string {
 	str := `
 	orca: {}    # is the contents of ~/.hal/default/profiles/orca.yml`
 	/*KustomizeData.Halyard.DeploymentConfiguration[KustomizeData.CurrentDeploymentPos].Providers.Orca*/
@@ -102,7 +106,7 @@ func GetOrcaProfile(KustomizeData Kustomize) string {
 	return str
 }
 
-func GetRoscoProfile(KustomizeData Kustomize) string {
+func GetRoscoProfile(KustomizeData structs.Kustomize) string {
 	str := `
 	rosco: {}   # is the contents of ~/.hal/default/profiles/rosco.yml`
 	/*KustomizeData.Halyard.DeploymentConfiguration[KustomizeData.CurrentDeploymentPos].Providers.Rosco*/

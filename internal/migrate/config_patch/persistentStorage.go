@@ -1,8 +1,12 @@
-package migrate
+package config_patch
 
-import "strings"
+import (
+	"strings"
 
-func GetPersistentStorage(KustomizeData Kustomize) string {
+	"github.com/austinthao5/golang_proto_test/internal/migrate/structs"
+)
+
+func GetPersistentStorage(KustomizeData structs.Kustomize) string {
 
 	return GetPersistentStoreType(KustomizeData) +
 		GetAzsStorage(KustomizeData) +
@@ -12,7 +16,7 @@ func GetPersistentStorage(KustomizeData Kustomize) string {
 		GetOracleStorage(KustomizeData)
 }
 
-func GetPersistentStoreType(KustomizeData Kustomize) string {
+func GetPersistentStoreType(KustomizeData structs.Kustomize) string {
 	str := `
 	persistentStoreType: s3`
 	str = strings.Replace(str, "\t", "        ", -1)
@@ -20,7 +24,7 @@ func GetPersistentStoreType(KustomizeData Kustomize) string {
 	// return `persistentStoreType: ` + KustomizeData.Halyard.DeploymentConfiguration[KustomizeData.CurrentDeploymentPos].PersistentStorage.persistentStoreType
 }
 
-func GetAzsStorage(KustomizeData Kustomize) string {
+func GetAzsStorage(KustomizeData structs.Kustomize) string {
 	str := ""
 
 	/*if nil != KustomizeData.Halyard.DeploymentConfiguration[KustomizeData.CurrentDeploymentPos].PersistentStorage.Azs {
@@ -37,7 +41,7 @@ func GetAzsStorage(KustomizeData Kustomize) string {
 	return str
 }
 
-func GetGcsStorage(KustomizeData Kustomize) string {
+func GetGcsStorage(KustomizeData structs.Kustomize) string {
 	str := ""
 
 	/*if nil != KustomizeData.Halyard.DeploymentConfiguration[KustomizeData.CurrentDeploymentPos].PersistentStorage.Gcs {
@@ -56,7 +60,7 @@ func GetGcsStorage(KustomizeData Kustomize) string {
 	return str
 }
 
-func GetRedisStorage(KustomizeData Kustomize) string {
+func GetRedisStorage(KustomizeData structs.Kustomize) string {
 	str := ""
 
 	/*if nil != KustomizeData.Halyard.DeploymentConfiguration[KustomizeData.CurrentDeploymentPos].PersistentStorage.Redis {
@@ -73,7 +77,7 @@ func GetRedisStorage(KustomizeData Kustomize) string {
 	return str
 }
 
-func GetS3Storage(KustomizeData Kustomize) string {
+func GetS3Storage(KustomizeData structs.Kustomize) string {
 	str := ""
 
 	/*if nil != KustomizeData.Halyard.DeploymentConfiguration[KustomizeData.CurrentDeploymentPos].PersistentStorage.S3 {
@@ -96,7 +100,7 @@ func GetS3Storage(KustomizeData Kustomize) string {
 	return str
 }
 
-func GetOracleStorage(KustomizeData Kustomize) string {
+func GetOracleStorage(KustomizeData structs.Kustomize) string {
 	str := ""
 
 	/*if nil != KustomizeData.Halyard.DeploymentConfiguration[KustomizeData.CurrentDeploymentPos].PersistentStorage.Oracle {

@@ -1,10 +1,12 @@
-package migrate
+package armory_patch
 
 import (
 	"strings"
+
+	"github.com/austinthao5/golang_proto_test/internal/migrate/structs"
 )
 
-func GetArmory(KustomizeData Kustomize) string {
+func GetArmory(KustomizeData structs.Kustomize) string {
 
 	return GetDinghyArmory(KustomizeData) +
 		GetDiagnosticsArmory(KustomizeData) +
@@ -12,7 +14,7 @@ func GetArmory(KustomizeData Kustomize) string {
 		GetSecretsArmory(KustomizeData)
 }
 
-func GetDinghyArmory(KustomizeData Kustomize) string {
+func GetDinghyArmory(KustomizeData structs.Kustomize) string {
 	str := `
 	dinghy:
 	  enabled: ` + "false" /*KustomizeData.Halyard.DeploymentConfiguration[KustomizeData.CurrentDeploymentPos].Armory.Dinghy.Enable */ + `
@@ -52,7 +54,7 @@ func GetDinghyArmory(KustomizeData Kustomize) string {
 	return str
 }*/
 
-func GetDiagnosticsArmory(KustomizeData Kustomize) string {
+func GetDiagnosticsArmory(KustomizeData structs.Kustomize) string {
 	str := `
 	diagnostics:
 	  enabled: ` + "false" /*KustomizeData.Halyard.DeploymentConfiguration[KustomizeData.CurrentDeploymentPos].Armory.Diagnostics.Enable */ + `
@@ -65,7 +67,7 @@ func GetDiagnosticsArmory(KustomizeData Kustomize) string {
 	return str
 }
 
-func GetTerraformArmory(KustomizeData Kustomize) string {
+func GetTerraformArmory(KustomizeData structs.Kustomize) string {
 	str := `
 	terraform:
 	  enabled: ` + "false" /*KustomizeData.Halyard.DeploymentConfiguration[KustomizeData.CurrentDeploymentPos].Armory.Terraform.Enable */ + `
@@ -78,7 +80,7 @@ func GetTerraformArmory(KustomizeData Kustomize) string {
 	return str
 }
 
-func GetSecretsArmory(KustomizeData Kustomize) string {
+func GetSecretsArmory(KustomizeData structs.Kustomize) string {
 	str := `
 	secrets:
 	  vault:

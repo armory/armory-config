@@ -1,8 +1,12 @@
-package migrate
+package service_settings_patch
 
-import "strings"
+import (
+	"strings"
 
-func GetServiceSettings(KustomizeData Kustomize) string {
+	"github.com/austinthao5/golang_proto_test/internal/migrate/structs"
+)
+
+func GetServiceSettings(KustomizeData structs.Kustomize) string {
 
 	return GetClouddriverServiceSettings(KustomizeData) +
 		GetDeckServiceSettings(KustomizeData) +
@@ -16,7 +20,7 @@ func GetServiceSettings(KustomizeData Kustomize) string {
 		GetRoscoServiceSettings(KustomizeData)
 }
 
-func GetClouddriverServiceSettings(KustomizeData Kustomize) string {
+func GetClouddriverServiceSettings(KustomizeData structs.Kustomize) string {
 	str := `
 	clouddriver: {}`
 	/*KustomizeData.Halyard.DeploymentConfiguration[KustomizeData.CurrentDeploymentPos].Providers.Clouddriver*/
@@ -25,7 +29,7 @@ func GetClouddriverServiceSettings(KustomizeData Kustomize) string {
 	return str
 }
 
-func GetDeckServiceSettings(KustomizeData Kustomize) string {
+func GetDeckServiceSettings(KustomizeData structs.Kustomize) string {
 	str := `
 	deck: {}`
 
@@ -33,7 +37,7 @@ func GetDeckServiceSettings(KustomizeData Kustomize) string {
 	return str
 }
 
-func GetEchoServiceSettings(KustomizeData Kustomize) string {
+func GetEchoServiceSettings(KustomizeData structs.Kustomize) string {
 	str := `
 	echo: {}`
 	/*KustomizeData.Halyard.DeploymentConfiguration[KustomizeData.CurrentDeploymentPos].Providers.Echo*/
@@ -42,7 +46,7 @@ func GetEchoServiceSettings(KustomizeData Kustomize) string {
 	return str
 }
 
-func GetFiatServiceSettings(KustomizeData Kustomize) string {
+func GetFiatServiceSettings(KustomizeData structs.Kustomize) string {
 	str := `
 	fiat: {}`
 	/*KustomizeData.Halyard.DeploymentConfiguration[KustomizeData.CurrentDeploymentPos].Providers.Fiat*/
@@ -51,7 +55,7 @@ func GetFiatServiceSettings(KustomizeData Kustomize) string {
 	return str
 }
 
-func GetFront50ServiceSettings(KustomizeData Kustomize) string {
+func GetFront50ServiceSettings(KustomizeData structs.Kustomize) string {
 	str := `
 	front50: {}`
 	/*KustomizeData.Halyard.DeploymentConfiguration[KustomizeData.CurrentDeploymentPos].Providers.Front50*/
@@ -60,7 +64,7 @@ func GetFront50ServiceSettings(KustomizeData Kustomize) string {
 	return str
 }
 
-func GetGateServiceSettings(KustomizeData Kustomize) string {
+func GetGateServiceSettings(KustomizeData structs.Kustomize) string {
 	str := `
 	gate: {}`
 	/*KustomizeData.Halyard.DeploymentConfiguration[KustomizeData.CurrentDeploymentPos].Providers.Gate*/
@@ -69,7 +73,7 @@ func GetGateServiceSettings(KustomizeData Kustomize) string {
 	return str
 }
 
-func GetIgorServiceSettings(KustomizeData Kustomize) string {
+func GetIgorServiceSettings(KustomizeData structs.Kustomize) string {
 	str := `
 	igor: {}`
 	/*KustomizeData.Halyard.DeploymentConfiguration[KustomizeData.CurrentDeploymentPos].Providers.Igor*/
@@ -78,7 +82,7 @@ func GetIgorServiceSettings(KustomizeData Kustomize) string {
 	return str
 }
 
-func GetKayentaServiceSettings(KustomizeData Kustomize) string {
+func GetKayentaServiceSettings(KustomizeData structs.Kustomize) string {
 	str := `
 	kayenta: {}`
 	/*KustomizeData.Halyard.DeploymentConfiguration[KustomizeData.CurrentDeploymentPos].Providers.Kayenta*/
@@ -87,7 +91,7 @@ func GetKayentaServiceSettings(KustomizeData Kustomize) string {
 	return str
 }
 
-func GetOrcaServiceSettings(KustomizeData Kustomize) string {
+func GetOrcaServiceSettings(KustomizeData structs.Kustomize) string {
 	str := `
 	orca: {}`
 	/*KustomizeData.Halyard.DeploymentConfiguration[KustomizeData.CurrentDeploymentPos].Providers.Orca*/
@@ -96,7 +100,7 @@ func GetOrcaServiceSettings(KustomizeData Kustomize) string {
 	return str
 }
 
-func GetRoscoServiceSettings(KustomizeData Kustomize) string {
+func GetRoscoServiceSettings(KustomizeData structs.Kustomize) string {
 	str := `
 	rosco: {}`
 	/*KustomizeData.Halyard.DeploymentConfiguration[KustomizeData.CurrentDeploymentPos].Providers.Rosco*/

@@ -1,7 +1,9 @@
-package migrate
+package providers_patch
 
 import (
 	"strings"
+
+	"github.com/austinthao5/golang_proto_test/internal/migrate/structs"
 )
 
 type Providers struct {
@@ -20,7 +22,7 @@ type Providers struct {
 	Enable         string //Which provider is currently enable
 }
 
-func GetProvidersData(KustomizeData Kustomize) string {
+func GetProvidersData(KustomizeData structs.Kustomize) string {
 
 	// KustomizeData.Halyard.DeploymentConfiguration[KustomizeData.CurrentDeploymentPos].Providers.Aws.GetAwsAcc()
 	// KustomizeData.Halyard.DeploymentConfiguration[KustomizeData.CurrentDeploymentPos].Providers.AppEngine
@@ -64,10 +66,10 @@ func GetProvidersData(KustomizeData Kustomize) string {
 }
 
 // This function fills the Providers struct in a valid format
-func (ProvidersData *Providers) SetProvidersData(KustomizeData Kustomize) error {
+func (ProvidersData *Providers) SetProvidersData(KustomizeData structs.Kustomize) error {
 
 	// Slice of function calls to fill all the Providers Data
-	functionCalls := []func(KustomizeData Kustomize) error{
+	functionCalls := []func(KustomizeData structs.Kustomize) error{
 		ProvidersData.SetAppEngineData,
 		ProvidersData.SetAwsData,
 		ProvidersData.SetEcs,
@@ -93,7 +95,7 @@ func (ProvidersData *Providers) SetProvidersData(KustomizeData Kustomize) error 
 	return nil
 }
 
-func (ProvidersData *Providers) SetAppEngineData(KustomizeData Kustomize) error {
+func (ProvidersData *Providers) SetAppEngineData(KustomizeData structs.Kustomize) error {
 
 	str := `enabled: false
 	accounts: []`
@@ -106,7 +108,7 @@ func (ProvidersData *Providers) SetAppEngineData(KustomizeData Kustomize) error 
 	return nil
 }
 
-func (ProvidersData *Providers) SetAwsData(KustomizeData Kustomize) error {
+func (ProvidersData *Providers) SetAwsData(KustomizeData structs.Kustomize) error {
 
 	str := `enabled: true
 	primaryAccount: ` + /* KustomizeData.Halyard.DeploymentConfiguration[KustomizeData.CurrentDeploymentPos].Providers.Aws.PrimaryAccount +*/ `                # Must be one of the configured AWS accounts
@@ -148,7 +150,7 @@ func (ProvidersData *Providers) SetAwsData(KustomizeData Kustomize) error {
 	return nil
 }
 
-func (ProvidersData *Providers) SetEcs(KustomizeData Kustomize) error {
+func (ProvidersData *Providers) SetEcs(KustomizeData structs.Kustomize) error {
 
 	str := `enabled: true
 	accounts:
@@ -167,7 +169,7 @@ func (ProvidersData *Providers) SetEcs(KustomizeData Kustomize) error {
 	return nil
 }
 
-func (ProvidersData *Providers) SetAzure(KustomizeData Kustomize) error {
+func (ProvidersData *Providers) SetAzure(KustomizeData structs.Kustomize) error {
 
 	str := `enabled: false
 	accounts: []
@@ -183,7 +185,7 @@ func (ProvidersData *Providers) SetAzure(KustomizeData Kustomize) error {
 	return nil
 }
 
-func (ProvidersData *Providers) SetDcos(KustomizeData Kustomize) error {
+func (ProvidersData *Providers) SetDcos(KustomizeData structs.Kustomize) error {
 
 	str := `enabled: false
 	accounts: []
@@ -197,7 +199,7 @@ func (ProvidersData *Providers) SetDcos(KustomizeData Kustomize) error {
 	return nil
 }
 
-func (ProvidersData *Providers) SetDockerRegistry(KustomizeData Kustomize) error {
+func (ProvidersData *Providers) SetDockerRegistry(KustomizeData structs.Kustomize) error {
 
 	str := `enabled: true
 	accounts:
@@ -226,7 +228,7 @@ func (ProvidersData *Providers) SetDockerRegistry(KustomizeData Kustomize) error
 	return nil
 }
 
-func (ProvidersData *Providers) SetGoogle(KustomizeData Kustomize) error {
+func (ProvidersData *Providers) SetGoogle(KustomizeData structs.Kustomize) error {
 
 	str := `enabled: false
 	accounts: []
@@ -245,7 +247,7 @@ func (ProvidersData *Providers) SetGoogle(KustomizeData Kustomize) error {
 	return nil
 }
 
-func (ProvidersData *Providers) SetHuaweicloud(KustomizeData Kustomize) error {
+func (ProvidersData *Providers) SetHuaweicloud(KustomizeData structs.Kustomize) error {
 
 	str := `enabled: false
 	accounts: []
@@ -260,7 +262,7 @@ func (ProvidersData *Providers) SetHuaweicloud(KustomizeData Kustomize) error {
 	return nil
 }
 
-func (ProvidersData *Providers) SetKubernetes(KustomizeData Kustomize) error {
+func (ProvidersData *Providers) SetKubernetes(KustomizeData structs.Kustomize) error {
 
 	//TODO check which one is enable
 	if true {
@@ -299,7 +301,7 @@ func (ProvidersData *Providers) SetKubernetes(KustomizeData Kustomize) error {
 	return nil
 }
 
-func (ProvidersData *Providers) SetTencentcloud(KustomizeData Kustomize) error {
+func (ProvidersData *Providers) SetTencentcloud(KustomizeData structs.Kustomize) error {
 
 	str := `enabled: false
 	accounts: []
@@ -314,7 +316,7 @@ func (ProvidersData *Providers) SetTencentcloud(KustomizeData Kustomize) error {
 	return nil
 }
 
-func (ProvidersData *Providers) SetOracle(KustomizeData Kustomize) error {
+func (ProvidersData *Providers) SetOracle(KustomizeData structs.Kustomize) error {
 
 	str := `enabled: false
 	accounts: []
@@ -330,7 +332,7 @@ func (ProvidersData *Providers) SetOracle(KustomizeData Kustomize) error {
 	return nil
 }
 
-func (ProvidersData *Providers) SetCloudfoundry(KustomizeData Kustomize) error {
+func (ProvidersData *Providers) SetCloudfoundry(KustomizeData structs.Kustomize) error {
 
 	str := `enabled: false
 	accounts: []`

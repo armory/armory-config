@@ -1,16 +1,18 @@
-package migrate
+package config_patch
 
 import (
 	"strings"
+
+	"github.com/austinthao5/golang_proto_test/internal/migrate/structs"
 )
 
-func GetConfigData(KustomizeData Kustomize) string {
+func GetConfigData(KustomizeData structs.Kustomize) string {
 
 	return GetGeneralConfig(KustomizeData) +
 		GetSpecificConfig(KustomizeData)
 }
 
-func GetGeneralConfig(KustomizeData Kustomize) string {
+func GetGeneralConfig(KustomizeData structs.Kustomize) string {
 	str := `
 # === General Config ===
 	  version: ` + "2.0" /*KustomizeData.Halyard.DeploymentConfiguration[KustomizeData.CurrentDeploymentPos].Version*/ + `  # the version of Spinnaker to be deployed
@@ -21,7 +23,7 @@ func GetGeneralConfig(KustomizeData Kustomize) string {
 	return str
 }
 
-func GetSpecificConfig(KustomizeData Kustomize) string {
+func GetSpecificConfig(KustomizeData structs.Kustomize) string {
 	str := `
 # === Persistent Storage ===
 	  persistentStorage:` +

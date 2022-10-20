@@ -1,13 +1,17 @@
-package migrate
+package files_patch
 
-import "strings"
+import (
+	"strings"
 
-func GetFiles(KustomizeData Kustomize) string {
+	"github.com/austinthao5/golang_proto_test/internal/migrate/structs"
+)
+
+func GetFiles(KustomizeData structs.Kustomize) string {
 
 	return GetFilesData(KustomizeData)
 }
 
-func GetFilesData(KustomizeData Kustomize) string {
+func GetFilesData(KustomizeData structs.Kustomize) string {
 	str := `
 	#  profiles__rosco__packer__example-packer-config.json: |
 	#    {

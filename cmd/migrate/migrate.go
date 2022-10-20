@@ -8,6 +8,7 @@ import (
 	"github.com/austinthao5/golang_proto_test/config/deploymentConfigurations"
 	"github.com/austinthao5/golang_proto_test/internal/fileio"
 	"github.com/austinthao5/golang_proto_test/internal/migrate"
+	"github.com/austinthao5/golang_proto_test/internal/migrate/structs"
 	"github.com/austinthao5/golang_proto_test/internal/parser"
 
 	"github.com/spf13/cobra"
@@ -129,14 +130,14 @@ func migrator(halconfig_dir string, output_dir string, deployment_dir string, sp
 }
 
 func output_config(output_dir string, spin_flavor string, halyard *deploymentConfigurations.HalFile) {
-	KustomizeData := migrate.Kustomize{Spin_flavor: spin_flavor, Output_dir: output_dir, Halyard: halyard}
+	KustomizeData := structs.Kustomize{Spin_flavor: spin_flavor, Output_dir: output_dir, Halyard: halyard}
 
 	err := fileio.EnsureDirectory(output_dir)
 	if err != nil {
 		log.Println(err)
 	}
 
-	err = KustomizeData.CreateKustomization()
+	err = migrate.CreateKustomization(&KustomizeData)
 	if err != nil {
 		log.Fatal(err)
 	}
