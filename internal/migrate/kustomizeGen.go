@@ -4,20 +4,21 @@ package migrate
 import (
 	"strings"
 
-	"github.com/austinthao5/golang_proto_test/config/deploymentConfigurations"
 	"github.com/austinthao5/golang_proto_test/internal/fileio"
+	"github.com/austinthao5/golang_proto_test/internal/migrate/armory_patch"
+	"github.com/austinthao5/golang_proto_test/internal/migrate/config_patch"
+	"github.com/austinthao5/golang_proto_test/internal/migrate/files_patch"
+	"github.com/austinthao5/golang_proto_test/internal/migrate/profile_patch"
+	"github.com/austinthao5/golang_proto_test/internal/migrate/providers_patch"
+	"github.com/austinthao5/golang_proto_test/internal/migrate/service_settings_patch"
+	"github.com/austinthao5/golang_proto_test/internal/migrate/sizing_patch"
+	"github.com/austinthao5/golang_proto_test/internal/migrate/structs"
 )
 
-type Kustomize struct {
-	Spin_flavor          string
-	Output_dir           string
-	Halyard              *deploymentConfigurations.HalFile
-	CurrentDeploymentPos int
-	PatchSizing          bool
-}
-
 // KustomizeData.Halyard.DeploymentConfiguration[KustomizeData.CurrentDeploymentPos].Providers.AppEngine.Enable
-func (KustomizeData Kustomize) CreateKustomization() error {
+func CreateKustomization(KustomizeData *structs.Kustomize) error {
+	// KustomizeData := structs.Kustomize{}
+
 	str := `apiVersion: kustomize.config.k8s.io/v1beta1
 	kind: Kustomization
 
@@ -32,7 +33,7 @@ func (KustomizeData Kustomize) CreateKustomization() error {
 	- profiles-patch.yml            #Contains the YAML of each service's profile
 	- files-patch.yml               #Contains any other raw string files not handle in spinnakerConfig
 	- service-settings-patch.yml    #Contains the config for each service's service-setting
-	- config-providers.yml          #Contains the providers configuration
+	- config-providers-patch.yml    #Contains the providers configuration
 `
 
 	if "ARMORY" == KustomizeData.Spin_flavor {
@@ -55,8 +56,8 @@ func (KustomizeData Kustomize) CreateKustomization() error {
 		return err
 	}
 
-	header := KustomizeData.GetHeaders()
-	KustomizeData.CurrentDeploymentPos = KustomizeData.GetCurrentDeploymentPosition()
+	SetHeaders(KustomizeData)
+	KustomizeData.CurrentDeploymentPos = GetCurrentDeploymentPosition(*KustomizeData)
 
 	//This should never ocurre because of the validation validateCurrentDeploymentExists
 	// if -1 == KustomizeData.CurrentDeploymentPos {
@@ -64,25 +65,25 @@ func (KustomizeData Kustomize) CreateKustomization() error {
 	// }
 
 	// Slice of function calls to generate all the kustomize files
-	functionCalls := []func(string) error{
-		KustomizeData.CreateSpinnakerService,
-		KustomizeData.CreateConfigPatch,
-		KustomizeData.CreateProfilesPatch,
-		KustomizeData.CreateFilesPatch,
-		KustomizeData.CreateServiceSettingsPatch,
-		KustomizeData.CreateConfigProviders,
+	functionCalls := []func(structs.Kustomize) error{
+		CreateSpinnakerService,
+		CreateConfigPatch,
+		CreateProfilesPatch,
+		CreateFilesPatch,
+		CreateServiceSettingsPatch,
+		CreateConfigProviders,
 	}
 
 	if "ARMORY" == KustomizeData.Spin_flavor {
-		functionCalls = append(functionCalls, KustomizeData.CreateArmoryPatch)
+		functionCalls = append(functionCalls, CreateArmoryPatch)
 	}
 
 	if KustomizeData.PatchSizing {
-		functionCalls = append(functionCalls, KustomizeData.CreatePatchSizing)
+		functionCalls = append(functionCalls, CreatePatchSizing)
 	}
 
 	for _, function := range functionCalls {
-		err = function(header)
+		err = function(*KustomizeData)
 		if err != nil {
 			return err
 			// return fmt.Errorf("Error while executing the function:%s Error:(%s)", function, err)
@@ -92,7 +93,7 @@ func (KustomizeData Kustomize) CreateKustomization() error {
 	return nil
 }
 
-func (KustomizeData Kustomize) GetHeaders() string {
+func SetHeaders(KustomizeData *structs.Kustomize) {
 	apiVersion := ""
 
 	if "OSS" == KustomizeData.Spin_flavor {
@@ -101,16 +102,15 @@ func (KustomizeData Kustomize) GetHeaders() string {
 		apiVersion = "apiVersion: spinnaker.armory.io/v1alpha2"
 	}
 
-	header := apiVersion + `
+	KustomizeData.Header = apiVersion + `
 kind: SpinnakerService
 metadata:
   name: spinnaker
 spec:`
 
-	return header
 }
 
-func (KustomizeData Kustomize) GetCurrentDeploymentPosition() int {
+func GetCurrentDeploymentPosition(KustomizeData structs.Kustomize) int {
 
 	for i, a := range KustomizeData.Halyard.GetDeploymentConfiguration() {
 		if KustomizeData.Halyard.GetCurrentDeployment() == a.Name {
@@ -121,8 +121,8 @@ func (KustomizeData Kustomize) GetCurrentDeploymentPosition() int {
 	return -1
 }
 
-func (KustomizeData Kustomize) CreateSpinnakerService(header string) error {
-	SpinnakerServiceStr := KustomizeData.GetSpinnakerServicePatch(header)
+func CreateSpinnakerService(KustomizeData structs.Kustomize) error {
+	SpinnakerServiceStr := GetSpinnakerServicePatch(KustomizeData)
 
 	err := fileio.WriteConfigsTmp(KustomizeData.Output_dir+"/SpinnakerService.yml", SpinnakerServiceStr)
 	if err != nil {
@@ -131,8 +131,8 @@ func (KustomizeData Kustomize) CreateSpinnakerService(header string) error {
 	return nil
 }
 
-func (KustomizeData Kustomize) CreateConfigPatch(header string) error {
-	ConfigPatchStr := KustomizeData.GetConfigPatch(header)
+func CreateConfigPatch(KustomizeData structs.Kustomize) error {
+	ConfigPatchStr := GetConfigPatch(KustomizeData)
 
 	err := fileio.WriteConfigsTmp(KustomizeData.Output_dir+"/config-patch.yml", ConfigPatchStr)
 	if err != nil {
@@ -141,8 +141,8 @@ func (KustomizeData Kustomize) CreateConfigPatch(header string) error {
 	return nil
 }
 
-func (KustomizeData Kustomize) CreateProfilesPatch(header string) error {
-	ProfilesPatchStr := KustomizeData.GetProfilesPatch(header)
+func CreateProfilesPatch(KustomizeData structs.Kustomize) error {
+	ProfilesPatchStr := GetProfilesPatch(KustomizeData)
 
 	err := fileio.WriteConfigsTmp(KustomizeData.Output_dir+"/profiles-patch.yml", ProfilesPatchStr)
 	if err != nil {
@@ -151,8 +151,8 @@ func (KustomizeData Kustomize) CreateProfilesPatch(header string) error {
 	return nil
 }
 
-func (KustomizeData Kustomize) CreateFilesPatch(header string) error {
-	FilesPatchStr := KustomizeData.GetFilesPatch(header)
+func CreateFilesPatch(KustomizeData structs.Kustomize) error {
+	FilesPatchStr := GetFilesPatch(KustomizeData)
 
 	err := fileio.WriteConfigsTmp(KustomizeData.Output_dir+"/files-patch.yml", FilesPatchStr)
 	if err != nil {
@@ -161,8 +161,8 @@ func (KustomizeData Kustomize) CreateFilesPatch(header string) error {
 	return nil
 }
 
-func (KustomizeData Kustomize) CreateServiceSettingsPatch(header string) error {
-	ServiceSettingsPatchStr := KustomizeData.GetServiceSettingsPatch(header)
+func CreateServiceSettingsPatch(KustomizeData structs.Kustomize) error {
+	ServiceSettingsPatchStr := GetServiceSettingsPatch(KustomizeData)
 
 	err := fileio.WriteConfigsTmp(KustomizeData.Output_dir+"/service-settings-patch.yml", ServiceSettingsPatchStr)
 	if err != nil {
@@ -171,18 +171,18 @@ func (KustomizeData Kustomize) CreateServiceSettingsPatch(header string) error {
 	return nil
 }
 
-func (KustomizeData Kustomize) CreateConfigProviders(header string) error {
-	ConfigProvidersStr := KustomizeData.GetConfigProvidersPatch(header)
+func CreateConfigProviders(KustomizeData structs.Kustomize) error {
+	ConfigProvidersStr := GetConfigProvidersPatch(KustomizeData)
 
-	err := fileio.WriteConfigsTmp(KustomizeData.Output_dir+"/config-providers.yml", ConfigProvidersStr)
+	err := fileio.WriteConfigsTmp(KustomizeData.Output_dir+"/config-providers-patch.yml", ConfigProvidersStr)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (KustomizeData Kustomize) CreatePatchSizing(header string) error {
-	PatchSizingStr := KustomizeData.GetPatchSizing(header)
+func CreatePatchSizing(KustomizeData structs.Kustomize) error {
+	PatchSizingStr := GetPatchSizing(KustomizeData)
 
 	err := fileio.WriteConfigsTmp(KustomizeData.Output_dir+"/patch-sizing.yml", PatchSizingStr)
 	if err != nil {
@@ -191,8 +191,8 @@ func (KustomizeData Kustomize) CreatePatchSizing(header string) error {
 	return nil
 }
 
-func (KustomizeData Kustomize) CreateArmoryPatch(header string) error {
-	ArmoryPatchStr := KustomizeData.GetArmoryPatch(header)
+func CreateArmoryPatch(KustomizeData structs.Kustomize) error {
+	ArmoryPatchStr := GetArmoryPatch(KustomizeData)
 
 	err := fileio.WriteConfigsTmp(KustomizeData.Output_dir+"/armory-patch.yml", ArmoryPatchStr)
 	if err != nil {
@@ -201,9 +201,9 @@ func (KustomizeData Kustomize) CreateArmoryPatch(header string) error {
 	return nil
 }
 
-func (KustomizeData Kustomize) GetSpinnakerServicePatch(header string) string {
+func GetSpinnakerServicePatch(KustomizeData structs.Kustomize) string {
 
-	str := header + `
+	str := KustomizeData.Header + `
   spinnakerConfig:
     config:
       version: 0.0.0   # the version of Spinnaker to be deployed, see config-patch.yml
@@ -254,35 +254,35 @@ func (KustomizeData Kustomize) GetSpinnakerServicePatch(header string) string {
 	return str
 }
 
-func (KustomizeData Kustomize) GetConfigPatch(header string) string {
+func GetConfigPatch(KustomizeData structs.Kustomize) string {
 
-	str := header + `
+	str := KustomizeData.Header + `
   # spec.spinnakerConfig - This section is how to specify configuration spinnaker
   spinnakerConfig:
     # spec.spinnakerConfig.config - This section contains the contents of a deployment found in a halconfig .deploymentConfigurations[0]
     config:` +
-		GetConfigData(KustomizeData) + `
+		config_patch.GetConfigData(KustomizeData) + `
 `
 
 	return str
 }
 
-func (KustomizeData Kustomize) GetProfilesPatch(header string) string {
+func GetProfilesPatch(KustomizeData structs.Kustomize) string {
 
-	str := header + `
+	str := KustomizeData.Header + `
   # spec.spinnakerConfig - This section is how to specify configuration spinnaker
   spinnakerConfig:
     # spec.spinnakerConfig.profiles - This section contains the YAML of each service's profile
     profiles:` +
-		GetProfiles(KustomizeData) + `
+		profile_patch.GetProfiles(KustomizeData) + `
 `
 
 	return str
 }
 
-func (KustomizeData Kustomize) GetFilesPatch(header string) string {
+func GetFilesPatch(KustomizeData structs.Kustomize) string {
 
-	str := header + `
+	str := KustomizeData.Header + `
   # spec.spinnakerConfig - This section is how to specify configuration spinnaker
   spinnakerConfig:
     # spec.spinnakerConfig.files - This section allows you to include any other raw string files not handle above.
@@ -294,29 +294,29 @@ func (KustomizeData Kustomize) GetFilesPatch(header string) string {
     #  - We currently only support string files
     #  - NOTE: Kubernetes has a manifest size limitation of 1MB
     files:` +
-		GetFiles(KustomizeData) + `
+		files_patch.GetFiles(KustomizeData) + `
 `
 
 	return str
 }
 
-func (KustomizeData Kustomize) GetServiceSettingsPatch(header string) string {
+func GetServiceSettingsPatch(KustomizeData structs.Kustomize) string {
 
-	str := header + `
+	str := KustomizeData.Header + `
   # spec.spinnakerConfig - This section is how to specify configuration spinnaker
   spinnakerConfig:
     # spec.spinnakerConfig.service-settings - This section contains the YAML of the service's service-setting
     # see https://www.spinnaker.io/reference/halyard/custom/#tweakable-service-settings for available settings
     service-settings:` +
-		GetServiceSettings(KustomizeData) + `
+		service_settings_patch.GetServiceSettings(KustomizeData) + `
 `
 
 	return str
 }
 
-func (KustomizeData Kustomize) GetConfigProvidersPatch(header string) string {
-	str := header +
-		GetProvidersData(KustomizeData) + `
+func GetConfigProvidersPatch(KustomizeData structs.Kustomize) string {
+	str := KustomizeData.Header +
+		providers_patch.GetProvidersData(KustomizeData) + `
 `
 
 	str = strings.Replace(str, "\t", "  ", -1)
@@ -324,23 +324,23 @@ func (KustomizeData Kustomize) GetConfigProvidersPatch(header string) string {
 	return str
 }
 
-func (KustomizeData Kustomize) GetPatchSizing(header string) string {
-	str := header + `
+func GetPatchSizing(KustomizeData structs.Kustomize) string {
+	str := KustomizeData.Header + `
   spinnakerConfig:
     config:
       deploymentEnvironment:` +
-		GetCustomSizing(KustomizeData) + `
+		sizing_patch.GetCustomSizing(KustomizeData) + `
 `
 
 	return str
 }
 
-func (KustomizeData Kustomize) GetArmoryPatch(header string) string {
-	str := header + `
+func GetArmoryPatch(KustomizeData structs.Kustomize) string {
+	str := KustomizeData.Header + `
   spinnakerConfig:
     config:
       armory:` +
-		GetArmory(KustomizeData) + `
+		armory_patch.GetArmory(KustomizeData) + `
 `
 
 	return str

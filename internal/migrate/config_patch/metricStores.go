@@ -1,8 +1,12 @@
-package migrate
+package config_patch
 
-import "strings"
+import (
+	"strings"
 
-func GetMetricStores(KustomizeData Kustomize) string {
+	"github.com/austinthao5/golang_proto_test/internal/migrate/structs"
+)
+
+func GetMetricStores(KustomizeData structs.Kustomize) string {
 
 	return GetDatadogMetrics(KustomizeData) +
 		GetPrometheusgMetrics(KustomizeData) +
@@ -11,7 +15,7 @@ func GetMetricStores(KustomizeData Kustomize) string {
 		GetMetricStoresGengMetrics(KustomizeData)
 }
 
-func GetDatadogMetrics(KustomizeData Kustomize) string {
+func GetDatadogMetrics(KustomizeData structs.Kustomize) string {
 	str := `
 	datadog:
 	  enabled: false
@@ -32,7 +36,7 @@ func GetDatadogMetrics(KustomizeData Kustomize) string {
 	return str
 }
 
-func GetPrometheusgMetrics(KustomizeData Kustomize) string {
+func GetPrometheusgMetrics(KustomizeData structs.Kustomize) string {
 	str := `
 	prometheus:
 	  enabled: false
@@ -43,7 +47,7 @@ func GetPrometheusgMetrics(KustomizeData Kustomize) string {
 	// KustomizeData.Halyard.DeploymentConfiguration[KustomizeData.CurrentDeploymentPos].MetricStores.Prometheus
 }
 
-func GetStackdrivergMetrics(KustomizeData Kustomize) string {
+func GetStackdrivergMetrics(KustomizeData structs.Kustomize) string {
 	str := `
 	stackdriver:
 	  enabled: false
@@ -56,7 +60,7 @@ func GetStackdrivergMetrics(KustomizeData Kustomize) string {
 	// KustomizeData.Halyard.DeploymentConfiguration[KustomizeData.CurrentDeploymentPos].MetricStores.Stackdriver
 }
 
-func GetNewrelicgMetrics(KustomizeData Kustomize) string {
+func GetNewrelicgMetrics(KustomizeData structs.Kustomize) string {
 	str := `
 	newrelic:
 	  tags: []`
@@ -66,7 +70,7 @@ func GetNewrelicgMetrics(KustomizeData Kustomize) string {
 	// KustomizeData.Halyard.DeploymentConfiguration[KustomizeData.CurrentDeploymentPos].MetricStores.Newrelic
 }
 
-func GetMetricStoresGengMetrics(KustomizeData Kustomize) string {
+func GetMetricStoresGengMetrics(KustomizeData structs.Kustomize) string {
 	str := `
 	period: 30` + /*KustomizeData.Halyard.DeploymentConfiguration[KustomizeData.CurrentDeploymentPos].MetricStores.Period + */ `
 	enabled: false` /*KustomizeData.Halyard.DeploymentConfiguration[KustomizeData.CurrentDeploymentPos].MetricStores.enabled + */

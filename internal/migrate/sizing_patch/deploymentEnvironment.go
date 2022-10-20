@@ -1,13 +1,17 @@
-package migrate
+package sizing_patch
 
-import "strings"
+import (
+	"strings"
 
-func GetDeploymentEnvironment(KustomizeData Kustomize) string {
+	"github.com/austinthao5/golang_proto_test/internal/migrate/structs"
+)
+
+func GetDeploymentEnvironment(KustomizeData structs.Kustomize) string {
 
 	return GetCustomSizing(KustomizeData)
 }
 
-func GetCustomSizing(KustomizeData Kustomize) string {
+func GetCustomSizing(KustomizeData structs.Kustomize) string {
 	str := `
 	customSizing:
 	  # This applies sizings to the clouddriver container as well as any sidecar 

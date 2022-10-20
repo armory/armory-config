@@ -1,15 +1,19 @@
-package migrate
+package config_patch
 
-import "strings"
+import (
+	"strings"
 
-func GetNotifications(KustomizeData Kustomize) string {
+	"github.com/austinthao5/golang_proto_test/internal/migrate/structs"
+)
+
+func GetNotifications(KustomizeData structs.Kustomize) string {
 
 	return GetSlack(KustomizeData) +
 		GetTwilio(KustomizeData) +
 		GetGithubStatus(KustomizeData)
 }
 
-func GetSlack(KustomizeData Kustomize) string {
+func GetSlack(KustomizeData structs.Kustomize) string {
 	str := `
 	slack:
 	  enabled: ` + "true" /*KustomizeData.Halyard.DeploymentConfiguration[KustomizeData.CurrentDeploymentPos].Notifications.Slack.Enable*/ + `
@@ -20,7 +24,7 @@ func GetSlack(KustomizeData Kustomize) string {
 	return str
 }
 
-func GetTwilio(KustomizeData Kustomize) string {
+func GetTwilio(KustomizeData structs.Kustomize) string {
 	str := `
 	twilio:
 	  enabled: true
@@ -33,7 +37,7 @@ func GetTwilio(KustomizeData Kustomize) string {
 	return str
 }
 
-func GetGithubStatus(KustomizeData Kustomize) string {
+func GetGithubStatus(KustomizeData structs.Kustomize) string {
 	str := `
 	github-status:
 	  enabled: false

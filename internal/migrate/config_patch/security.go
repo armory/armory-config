@@ -1,17 +1,19 @@
-package migrate
+package config_patch
 
 import (
 	"strings"
+
+	"github.com/austinthao5/golang_proto_test/internal/migrate/structs"
 )
 
-func GetSecurity(KustomizeData Kustomize) string {
+func GetSecurity(KustomizeData structs.Kustomize) string {
 
 	return GetUiApiSecurity(KustomizeData) +
 		GetAuthnSecurity(KustomizeData) +
 		GetAuthzSecurity(KustomizeData)
 }
 
-func GetUiApiSecurity(KustomizeData Kustomize) string {
+func GetUiApiSecurity(KustomizeData structs.Kustomize) string {
 	str := `
 	apiSecurity:
 	  ssl:
@@ -33,7 +35,7 @@ func GetUiApiSecurity(KustomizeData Kustomize) string {
 	return str
 }
 
-func GetAuthnSecurity(KustomizeData Kustomize) string {
+func GetAuthnSecurity(KustomizeData structs.Kustomize) string {
 	str := `
 	authn:
 	  oauth2:
@@ -75,7 +77,7 @@ func GetAuthnSecurity(KustomizeData Kustomize) string {
 	return str
 }
 
-func GetAuthzSecurity(KustomizeData Kustomize) string {
+func GetAuthzSecurity(KustomizeData structs.Kustomize) string {
 	str := `
 	authz:
 	  groupMembership:

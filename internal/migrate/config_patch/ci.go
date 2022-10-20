@@ -1,10 +1,12 @@
-package migrate
+package config_patch
 
 import (
 	"strings"
+
+	"github.com/austinthao5/golang_proto_test/internal/migrate/structs"
 )
 
-func GetCi(KustomizeData Kustomize) string {
+func GetCi(KustomizeData structs.Kustomize) string {
 
 	return GetJenkinsCi(KustomizeData) +
 		GetTravisCi(KustomizeData) +
@@ -14,7 +16,7 @@ func GetCi(KustomizeData Kustomize) string {
 		GetCodebuildCi(KustomizeData)
 }
 
-func GetJenkinsCi(KustomizeData Kustomize) string {
+func GetJenkinsCi(KustomizeData structs.Kustomize) string {
 	str := `
 	jenkins:
 	  enabled: ` + "false" /*KustomizeData.Halyard.DeploymentConfiguration[KustomizeData.CurrentDeploymentPos].Ci.Jenkins.Enable +
@@ -49,7 +51,7 @@ func GetJenkinsCi(KustomizeData Kustomize) string {
 	return str
 }*/
 
-func GetTravisCi(KustomizeData Kustomize) string {
+func GetTravisCi(KustomizeData structs.Kustomize) string {
 	str := `
 	travis:
 	  enabled: ` + "false" /*KustomizeData.Halyard.DeploymentConfiguration[KustomizeData.CurrentDeploymentPos].Ci.Travis.Enable*/ + `
@@ -59,7 +61,7 @@ func GetTravisCi(KustomizeData Kustomize) string {
 	return str
 }
 
-func GetWerckerCi(KustomizeData Kustomize) string {
+func GetWerckerCi(KustomizeData structs.Kustomize) string {
 	str := `
 	wercker:
 	  enabled: ` + "false" /*KustomizeData.Halyard.DeploymentConfiguration[KustomizeData.CurrentDeploymentPos].Ci.Wercker.Enable*/ + `
@@ -69,7 +71,7 @@ func GetWerckerCi(KustomizeData Kustomize) string {
 	return str
 }
 
-func GetConcourseCi(KustomizeData Kustomize) string {
+func GetConcourseCi(KustomizeData structs.Kustomize) string {
 	str := `
 	concourse:
 	  enabled: ` + "false" /*KustomizeData.Halyard.DeploymentConfiguration[KustomizeData.CurrentDeploymentPos].Ci.Concourse.Enable*/ + `
@@ -79,7 +81,7 @@ func GetConcourseCi(KustomizeData Kustomize) string {
 	return str
 }
 
-func GetGcbCi(KustomizeData Kustomize) string {
+func GetGcbCi(KustomizeData structs.Kustomize) string {
 	str := `
 	gcb:
 	  enabled: ` + "false" /*KustomizeData.Halyard.DeploymentConfiguration[KustomizeData.CurrentDeploymentPos].Ci.Gcb.Enable*/ + `
@@ -89,7 +91,7 @@ func GetGcbCi(KustomizeData Kustomize) string {
 	return str
 }
 
-func GetCodebuildCi(KustomizeData Kustomize) string {
+func GetCodebuildCi(KustomizeData structs.Kustomize) string {
 	str := `
 	codebuild:
 	  enabled: ` + "false" /*KustomizeData.Halyard.DeploymentConfiguration[KustomizeData.CurrentDeploymentPos].Ci.Codebuild.Enable*/ + `

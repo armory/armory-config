@@ -1,10 +1,12 @@
-package migrate
+package config_patch
 
 import (
 	"strings"
+
+	"github.com/austinthao5/golang_proto_test/internal/migrate/structs"
 )
 
-func GetArtifacts(KustomizeData Kustomize) string {
+func GetArtifacts(KustomizeData structs.Kustomize) string {
 
 	return GetBitbucketArtifacts(KustomizeData) +
 		GetGcsArtifacts(KustomizeData) +
@@ -18,7 +20,7 @@ func GetArtifacts(KustomizeData Kustomize) string {
 		GetMavenArtifacts(KustomizeData)
 }
 
-func GetBitbucketArtifacts(KustomizeData Kustomize) string {
+func GetBitbucketArtifacts(KustomizeData structs.Kustomize) string {
 	str := `
 	bitbucket:
 	  enabled: ` + "false" /*KustomizeData.Halyard.DeploymentConfiguration[KustomizeData.CurrentDeploymentPos].Artifacts.Bitbucket.Enable +
@@ -54,7 +56,7 @@ func GetBitbucketArtifacts(KustomizeData Kustomize) string {
 	return str
 }*/
 
-func GetGcsArtifacts(KustomizeData Kustomize) string {
+func GetGcsArtifacts(KustomizeData structs.Kustomize) string {
 	str := `
 	gcs:
 	  enabled: ` + "false" /*KustomizeData.Halyard.DeploymentConfiguration[KustomizeData.CurrentDeploymentPos].Artifacts.Gcs.Enable */ + `
@@ -64,7 +66,7 @@ func GetGcsArtifacts(KustomizeData Kustomize) string {
 	return str
 }
 
-func GetOracleArtifacts(KustomizeData Kustomize) string {
+func GetOracleArtifacts(KustomizeData structs.Kustomize) string {
 	str := `
 	oracle:
 	  enabled: ` + "false" /*KustomizeData.Halyard.DeploymentConfiguration[KustomizeData.CurrentDeploymentPos].Artifacts.Oracle.Enable */ + `
@@ -74,7 +76,7 @@ func GetOracleArtifacts(KustomizeData Kustomize) string {
 	return str
 }
 
-func GetGithubArtifacts(KustomizeData Kustomize) string {
+func GetGithubArtifacts(KustomizeData structs.Kustomize) string {
 	str := `
 	github:
 	  enabled: ` + "false" /*KustomizeData.Halyard.DeploymentConfiguration[KustomizeData.CurrentDeploymentPos].Artifacts.Github.Enable */ + `
@@ -84,7 +86,7 @@ func GetGithubArtifacts(KustomizeData Kustomize) string {
 	return str
 }
 
-func GetGitlabArtifacts(KustomizeData Kustomize) string {
+func GetGitlabArtifacts(KustomizeData structs.Kustomize) string {
 	str := `
 	gitlab:
 	  enabled: ` + "false" /*KustomizeData.Halyard.DeploymentConfiguration[KustomizeData.CurrentDeploymentPos].Artifacts.Gitlab.Enable */ + `
@@ -94,7 +96,7 @@ func GetGitlabArtifacts(KustomizeData Kustomize) string {
 	return str
 }
 
-func GetGitrepoArtifacts(KustomizeData Kustomize) string {
+func GetGitrepoArtifacts(KustomizeData structs.Kustomize) string {
 	str := `
 	gitrepo:
 	  enabled: ` + "false" /*KustomizeData.Halyard.DeploymentConfiguration[KustomizeData.CurrentDeploymentPos].Artifacts.Gitrepo.Enable */ + `
@@ -104,7 +106,7 @@ func GetGitrepoArtifacts(KustomizeData Kustomize) string {
 	return str
 }
 
-func GetHttpArtifacts(KustomizeData Kustomize) string {
+func GetHttpArtifacts(KustomizeData structs.Kustomize) string {
 	str := `
 	http:
 	  enabled: ` + "false" /*KustomizeData.Halyard.DeploymentConfiguration[KustomizeData.CurrentDeploymentPos].Artifacts.Http.Enable */ + `
@@ -114,7 +116,7 @@ func GetHttpArtifacts(KustomizeData Kustomize) string {
 	return str
 }
 
-func GetHelmArtifacts(KustomizeData Kustomize) string {
+func GetHelmArtifacts(KustomizeData structs.Kustomize) string {
 	str := `
 	helm:
 	  enabled: ` + "false" /*KustomizeData.Halyard.DeploymentConfiguration[KustomizeData.CurrentDeploymentPos].Artifacts.Helm.Enable */ + `
@@ -124,7 +126,7 @@ func GetHelmArtifacts(KustomizeData Kustomize) string {
 	return str
 }
 
-func GetS3Artifacts(KustomizeData Kustomize) string {
+func GetS3Artifacts(KustomizeData structs.Kustomize) string {
 	str := `
 	s3:
 	  enabled: ` + "false" /*KustomizeData.Halyard.DeploymentConfiguration[KustomizeData.CurrentDeploymentPos].Artifacts.S3.Enable */ + `
@@ -134,7 +136,7 @@ func GetS3Artifacts(KustomizeData Kustomize) string {
 	return str
 }
 
-func GetMavenArtifacts(KustomizeData Kustomize) string {
+func GetMavenArtifacts(KustomizeData structs.Kustomize) string {
 	str := `
 	maven:
 	  enabled: ` + "false" /*KustomizeData.Halyard.DeploymentConfiguration[KustomizeData.CurrentDeploymentPos].Artifacts.Maven.Enable */ + `

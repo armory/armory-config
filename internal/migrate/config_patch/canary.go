@@ -1,15 +1,17 @@
-package migrate
+package config_patch
 
 import (
 	"strings"
+
+	"github.com/austinthao5/golang_proto_test/internal/migrate/structs"
 )
 
-func GetCanary(KustomizeData Kustomize) string {
+func GetCanary(KustomizeData structs.Kustomize) string {
 
 	return GetCanaryConfig(KustomizeData)
 }
 
-func GetCanaryConfig(KustomizeData Kustomize) string {
+func GetCanaryConfig(KustomizeData structs.Kustomize) string {
 	str := `
 	enabled: ` + "false" /*KustomizeData.Halyard.DeploymentConfiguration[KustomizeData.CurrentDeploymentPos].pubsub.Enable */ + `
 	serviceIntegrations:
