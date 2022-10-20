@@ -122,7 +122,7 @@ func (KustomizeData Kustomize) GetCurrentDeploymentPosition() int {
 }
 
 func (KustomizeData Kustomize) CreateSpinnakerService(header string) error {
-	SpinnakerServiceStr := KustomizeData.GetSpinnakerService(header)
+	SpinnakerServiceStr := KustomizeData.GetSpinnakerServicePatch(header)
 
 	err := fileio.WriteConfigsTmp(KustomizeData.Output_dir+"/SpinnakerService.yml", SpinnakerServiceStr)
 	if err != nil {
@@ -172,7 +172,7 @@ func (KustomizeData Kustomize) CreateServiceSettingsPatch(header string) error {
 }
 
 func (KustomizeData Kustomize) CreateConfigProviders(header string) error {
-	ConfigProvidersStr := KustomizeData.GetConfigProviders(header)
+	ConfigProvidersStr := KustomizeData.GetConfigProvidersPatch(header)
 
 	err := fileio.WriteConfigsTmp(KustomizeData.Output_dir+"/config-providers.yml", ConfigProvidersStr)
 	if err != nil {
@@ -201,7 +201,7 @@ func (KustomizeData Kustomize) CreateArmoryPatch(header string) error {
 	return nil
 }
 
-func (KustomizeData Kustomize) GetSpinnakerService(header string) string {
+func (KustomizeData Kustomize) GetSpinnakerServicePatch(header string) string {
 
 	str := header + `
   spinnakerConfig:
@@ -312,23 +312,8 @@ func (KustomizeData Kustomize) GetProfilesPatch(header string) string {
   # spec.spinnakerConfig - This section is how to specify configuration spinnaker
   spinnakerConfig:
     # spec.spinnakerConfig.profiles - This section contains the YAML of each service's profile
-    profiles:
-      clouddriver: {} # is the contents of ~/.hal/default/profiles/clouddriver.yml
-      # deck has a special key "settings-local.js" for the contents of settings-local.js
-      deck:
-        # settings-local.js - contents of ~/.hal/default/profiles/settings-local.js
-        # Use the | YAML symbol to indicate a block-style multiline string
-        settings-local.js: |
-          window.spinnakerSettings.feature.kustomizeEnabled = true;
-          window.spinnakerSettings.feature.artifactsRewrite = true;
-      echo: {}    # is the contents of ~/.hal/default/profiles/echo.yml
-      fiat: {}    # is the contents of ~/.hal/default/profiles/fiat.yml
-      front50: {} # is the contents of ~/.hal/default/profiles/front50.yml
-      gate: {}    # is the contents of ~/.hal/default/profiles/gate.yml
-      igor: {}    # is the contents of ~/.hal/default/profiles/igor.yml
-      kayenta: {} # is the contents of ~/.hal/default/profiles/kayenta.yml
-      orca: {}    # is the contents of ~/.hal/default/profiles/orca.yml
-      rosco: {}   # is the contents of ~/.hal/default/profiles/rosco.yml
+    profiles:` +
+		GetProfiles(KustomizeData) + `
 `
 
 	return str
@@ -347,14 +332,8 @@ func (KustomizeData Kustomize) GetFilesPatch(header string) string {
     #  - Use the | YAML symbol to indicate a block-style multiline string
     #  - We currently only support string files
     #  - NOTE: Kubernetes has a manifest size limitation of 1MB
-    files:
-    #  profiles__rosco__packer__example-packer-config.json: |
-    #    {
-    #      "packerSetting": "someValue"
-    #    }
-    #  profiles__rosco__packer__my_custom_script.sh: |
-    #    #!/bin/bash -e
-    #    echo "hello world!"
+    files:` +
+		GetFiles(KustomizeData) + `
 `
 
 	return str
@@ -367,23 +346,14 @@ func (KustomizeData Kustomize) GetServiceSettingsPatch(header string) string {
   spinnakerConfig:
     # spec.spinnakerConfig.service-settings - This section contains the YAML of the service's service-setting
     # see https://www.spinnaker.io/reference/halyard/custom/#tweakable-service-settings for available settings
-    service-settings:
-      clouddriver: {}
-      deck: {}
-      echo: {}
-      fiat: {}
-      front50: {}
-      gate: {}
-      igor: {}
-      kayenta: {}
-      orca: {}
-      rosco: {}
+    service-settings:` +
+		GetServiceSettings(KustomizeData) + `
 `
 
 	return str
 }
 
-func (KustomizeData Kustomize) GetConfigProviders(header string) string {
+func (KustomizeData Kustomize) GetConfigProvidersPatch(header string) string {
 
 	// KustomizeData.Halyard.DeploymentConfiguration[KustomizeData.CurrentDeploymentPos].Providers.Aws.GetAwsAcc()
 	// KustomizeData.Halyard.DeploymentConfiguration[KustomizeData.CurrentDeploymentPos].Providers.AppEngine
@@ -434,28 +404,8 @@ func (KustomizeData Kustomize) GetPatchSizing(header string) string {
 	str := header + `
   spinnakerConfig:
     config:
-      deploymentEnvironment:
-        customSizing:
-          # This applies sizings to the clouddriver container as well as any sidecar 
-          # containers running with clouddriver. (Use without spin- to only include the clouddriver container)
-          spin-clouddriver:
-            replicas: 1     # Set the number of replicas (pods) to be created for this service.
-            # limits:
-            #   cpu: 2        # Set the kubernetes CPU limits for each pod. For reference a m5.xlarge EC2 instance has a capacity of 4 cpu.
-            #   memory: 4Gi   # Set the kubernetes memory limits for each pod. For reference a m5.xlarge EC2 instance has a capacity of 16Gi of memory.
-            # requests:
-            #   cpu: 500m
-            #   memory: 2Gi
-          # This applies sizings to only the service container and not to any sidecar 
-          # containers running with service. (Use spin-<service> to include sidecars)
-          clouddriver:
-            limits:
-              cpu: 2        # Set the kubernetes CPU limits for each pod. For reference a m5.xlarge EC2 instance has a capacity of 4 cpu.
-              memory: 4Gi   # Set the kubernetes memory limits for each pod. For reference a m5.xlarge EC2 instance has a capacity of 16Gi of memory.
-            requests:
-              cpu: 500m
-              memory: 2Gi
-          deck:
+      deploymentEnvironment:` +
+		GetCustomSizing(KustomizeData) + `
 `
 
 	return str
@@ -465,36 +415,8 @@ func (KustomizeData Kustomize) GetArmoryPatch(header string) string {
 	str := header + `
   spinnakerConfig:
     config:
-      armory:
-        dinghy:
-          enabled: true
-          templateOrg: cloudtools
-          templateRepo: dinghy-templates
-          githubToken: XXXX
-          githubEndpoint: https://github.dev.dou.com/api/v3
-          repositoryRawdataProcessing: false
-          dinghyFilename: dinghyfile
-          autoLockPipelines: true
-          fiatUser: svc-spinnaker-dinghy
-          notifiers:
-            slack:
-              enabled: true
-              channel: pbd-spinnaker-slack-testing
-        diagnostics:
-          enabled: false
-          uuid: XXXX
-          logging:
-            enabled: false
-            endpoint: https://debug.armory.io/v1/logs
-        terraform:
-          enabled: true
-          git:
-            enabled: true
-            accessToken: XXXX
-        secrets:
-          vault:
-            enabled: false
-            path: kubernetes
+      armory:` +
+		GetArmory(KustomizeData) + `
 `
 
 	return str
