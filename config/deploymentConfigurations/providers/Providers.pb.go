@@ -27,6 +27,7 @@ const (
 //Docker Registry - Needs some touching up to ensure it covers all possible configs
 //Google provider - Need to review later
 //Huawei Cloud - Does anyone even use this? Will revisit later
+//
 type Providers struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
