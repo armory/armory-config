@@ -5,7 +5,6 @@ import (
 	"log"
 	"os"
 
-	"github.com/austinthao5/golang_proto_test/config/deploymentConfigurations"
 	"github.com/austinthao5/golang_proto_test/internal/fileio"
 	"github.com/austinthao5/golang_proto_test/internal/migrate"
 	"github.com/austinthao5/golang_proto_test/internal/migrate/structs"
@@ -41,50 +40,6 @@ func init() {
 	convertCmd.Flags().StringVar(&spin_flavor, "spin_flavor", "ARMORY", "Select Spinnaker Operator flavor to use (ARMORY, OSS)")
 }
 
-func getProfiles(profilesDir string, currentSubDir string) (map[string]string, error) {
-	config_files := make(map[string]string)
-
-	profiles_files, err := fileio.GetListOfFiles(profilesDir)
-	if err != nil {
-		return nil, err
-	}
-
-	for _, profiles_files := range profiles_files {
-
-		isDir, err := fileio.IsDirectory(profilesDir + "/" + profiles_files.Name())
-		if isDir {
-			config_maps, err := getProfiles(profilesDir+"/"+profiles_files.Name(), currentSubDir+"/"+profiles_files.Name())
-			if err != nil {
-				return nil, err
-			}
-
-			for fileName, config_map := range config_maps {
-				config_files[fileName] = config_map
-				// fmt.Println("fileName:" + fileName + " config_file: " + config_file)
-			}
-			continue
-		}
-
-		local_file, err := fileio.ReadFile(profilesDir + "/" + profiles_files.Name())
-		if err != nil {
-			fmt.Println(err)
-			os.Exit(1)
-		}
-
-		var buf = string(local_file)
-
-		if "" != currentSubDir {
-			config_files[currentSubDir+"/"+profiles_files.Name()] = buf
-		} else {
-			config_files[profiles_files.Name()] = buf
-		}
-
-		fmt.Println("Found " + profiles_files.Name())
-	}
-
-	return config_files, nil
-}
-
 // Read contents of halconfig and setup profiles patches for each service.
 func migrator(halconfig_dir string, output_dir string, deployment_dir string, spin_flavor string) {
 
@@ -109,35 +64,47 @@ func migrator(halconfig_dir string, output_dir string, deployment_dir string, sp
 	// Profiles stuff
 	fmt.Println("Reading " + halconfig_dir + "/" + deployment_dir + "/profiles")
 
-	config_files, err = getProfiles(halconfig_dir+"/"+deployment_dir+"/profiles", "")
+	profiles_config_files, err = fileio.GetFilesAndData(halconfig_dir+"/"+deployment_dir+"/profiles", "")
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)
 	}
 
-	// for fileName, config_file := range config_files {
+	// for fileName, config_file := range profiles_config_files {
 	// 	fmt.Println("fileName:" + fileName + "\nconfig_file:" + config_file)
 	// }
+
+	service_settings_config_files, err = fileio.GetFilesAndData(halconfig_dir+"/"+deployment_dir+"/service-settings", "")
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
 
 	// profile_settings :=
 
 	// fmt.Println(halconfig)
 	// fmt.Println(output)
 
+	//Create Kustomize struct with current info
+	KustomizeData := structs.Kustomize{
+		Spin_flavor:                spin_flavor,
+		Output_dir:                 output_dir,
+		Halyard:                    halyard,
+		ProfilesConfigFiles:        profiles_config_files,
+		ServiceSettingsConfigFiles: service_settings_config_files,
+	}
 	// Create output files
-	output_config(output_dir, spin_flavor, halyard)
-
+	output_config(&KustomizeData)
 }
 
-func output_config(output_dir string, spin_flavor string, halyard *deploymentConfigurations.HalFile) {
-	KustomizeData := structs.Kustomize{Spin_flavor: spin_flavor, Output_dir: output_dir, Halyard: halyard}
+func output_config(KustomizeData *structs.Kustomize) {
 
 	err := fileio.EnsureDirectory(output_dir)
 	if err != nil {
 		log.Println(err)
 	}
 
-	err = migrate.CreateKustomization(&KustomizeData)
+	err = migrate.CreateKustomization(KustomizeData)
 	if err != nil {
 		log.Fatal(err)
 	}

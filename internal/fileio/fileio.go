@@ -123,3 +123,48 @@ func FindFileInDir(dirToSearch string, fileToFind string) (string, error) {
 
 	return "", fmt.Errorf("File:[%s] not found inside:[%s]", fileToFind, dirToSearch)
 }
+
+// This function returns a map that uses the full file path as a key and as value the files data
+func GetFilesAndData(profilesDir string, currentSubDir string) (map[string]string, error) {
+	profiles_config_files := make(map[string]string)
+
+	profiles_files, err := GetListOfFiles(profilesDir)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, profiles_files := range profiles_files {
+
+		isDir, err := IsDirectory(profilesDir + "/" + profiles_files.Name())
+		if isDir {
+			config_maps, err := GetFilesAndData(profilesDir+"/"+profiles_files.Name(), currentSubDir+"/"+profiles_files.Name())
+			if err != nil {
+				return nil, err
+			}
+
+			for fileName, config_map := range config_maps {
+				profiles_config_files[fileName] = config_map
+				// fmt.Println("fileName:" + fileName + " config_file: " + config_file)
+			}
+			continue
+		}
+
+		local_file, err := ReadFile(profilesDir + "/" + profiles_files.Name())
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
+
+		var buf = string(local_file)
+
+		if "" != currentSubDir {
+			profiles_config_files[currentSubDir+"/"+profiles_files.Name()] = buf
+		} else {
+			profiles_config_files[profiles_files.Name()] = buf
+		}
+
+		fmt.Println("Found " + profiles_files.Name())
+	}
+
+	return profiles_config_files, nil
+}
