@@ -3,7 +3,7 @@ package proto.providers;
 
 option go_package = "config/deploymentConfigurations/providers";
 
-import "proto/deploymentConfigurations/Permissions.proto";
+import "proto/deploymentConfigurations/permissions/Permissions.proto";
 // Configuration for the clouddriver microservice.
 message Ecs {
 
@@ -17,7 +17,7 @@ message EcsAcc {
 
     string name = 1;
     repeated string requiredGroupMembership = 2;
-    config.Permissions permissions = 3;
+    permissions.Permissions permissions = 3;
     string awsAccount = 4;
     string environment = 5;
 

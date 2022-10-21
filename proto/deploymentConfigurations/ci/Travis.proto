@@ -3,7 +3,7 @@ package proto.ci;
 
 option go_package = "config/deploymentConfigurations/ci";
 
-import "proto/deploymentConfigurations/Permissions.proto";
+import "proto/deploymentConfigurations/permissions/Permissions.proto";
 // Configuration for the clouddriver microservice.
 message Travis {
 
@@ -14,7 +14,7 @@ message Travis {
 
 message TravisMasters {
     string name = 1;
-    config.Permissions permission = 2;
+    permissions.Permissions permission = 2;
     string address = 3;
     string baseUrl = 4;
     string githubToken = 5;

@@ -3,7 +3,7 @@ package proto.providers;
 
 option go_package = "config/deploymentConfigurations/providers";
 
-import "proto/deploymentConfigurations/Permissions.proto";
+import "proto/deploymentConfigurations/permissions/Permissions.proto";
 // Configuration for the clouddriver microservice.
 message DockerRegistry {
 
@@ -17,7 +17,7 @@ message DockerRegistryAcc {
 
     string name = 1;
     repeated string requiredGroupMembership = 2;
-    config.Permissions permissions = 3;
+    permissions.Permissions permissions = 3;
     string address = 4;
     string username = 5;
     string email = 6;

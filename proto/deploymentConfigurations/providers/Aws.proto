@@ -3,7 +3,7 @@ package proto.providers;
 
 option go_package = "config/deploymentConfigurations/providers";
 
-import "proto/deploymentConfigurations/Permissions.proto";
+import "proto/deploymentConfigurations/permissions/Permissions.proto";
 // Configuration for the clouddriver microservice.
 message Aws {
 
@@ -26,7 +26,7 @@ message AwsAcc {
     string name = 1;
     string environment = 2;
     repeated string requiredGroupMembership = 3;
-    config.Permissions permissions = 4;
+    permissions.Permissions permissions = 4;
     string defaultKeyPair = 5;
     string edda = 6;
     string discovery = 7;

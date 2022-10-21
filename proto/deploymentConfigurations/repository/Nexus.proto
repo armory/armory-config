@@ -3,7 +3,7 @@ package proto.repository;
 
 option go_package = "config/deploymentConfigurations/repository";
 
-import "proto/deploymentConfigurations/Permissions.proto";
+import "proto/deploymentConfigurations/permissions/Permissions.proto";
 // Configuration for the clouddriver microservice.
 message Nexus {
 
@@ -14,7 +14,7 @@ message Nexus {
 
 message NexusSearch {
     string name = 1;
-    config.Permissions permissions = 2;
+    permissions.Permissions permissions = 2;
     string baseUrl = 3;
     string repo = 4;
     string nodeId = 5;

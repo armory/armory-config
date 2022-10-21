@@ -3,7 +3,7 @@ package proto.providers;
 
 option go_package = "config/deploymentConfigurations/providers";
 
-import "proto/deploymentConfigurations/Permissions.proto";
+import "proto/deploymentConfigurations/permissions/Permissions.proto";
 // Configuration for the clouddriver microservice.
 message AppEngine {
 
@@ -34,7 +34,7 @@ message AppEngineAcc {
     repeated string omitServices = 17;
     repeated string omitVersions = 18;
     int32 cachingIntervalSeconds = 19;
-    config.Permissions permissions = 20;
+    permissions.Permissions permissions = 20;
 }
 
 
