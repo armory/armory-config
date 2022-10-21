@@ -1,0 +1,39 @@
+syntax = "proto3";
+package proto.stats;
+
+option go_package = "config/deploymentConfigurations/stats";
+
+// Configuration for the clouddriver microservice.
+message Stats {
+    bool enabled = 1;
+    string endpoint = 2;
+    string instanceId = 3;
+    int32 connectionTimeoutMillis = 4;
+    int32 readTimeoutMillis = 5;
+    DeploymentMethod deploymentMethod = 6;
+
+}
+
+message DeploymentMethod {
+    
+}
+
+/* 
+
+Example Config
+
+  stats:
+    enabled: true
+    endpoint: https://stats.spinnaker.io
+    instanceId: 01GFV9S15QE2KEW6J8F2VX6TCG
+    deploymentMethod: {}
+    connectionTimeoutMillis: 3000
+    readTimeoutMillis: 5000
+
+
+*/
+
+
+
+
+

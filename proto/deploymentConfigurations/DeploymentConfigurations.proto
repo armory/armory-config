@@ -14,6 +14,12 @@ import "proto/deploymentConfigurations/notifications/Notifications.proto";
 import "proto/deploymentConfigurations/ci/Ci.proto";
 import "proto/deploymentConfigurations/repository/Repository.proto";
 import "proto/deploymentConfigurations/security/Security.proto";
+import "proto/deploymentConfigurations/artifacts/Artifacts.proto";
+import "proto/deploymentConfigurations/pubsub/Pubsub.proto";
+import "proto/deploymentConfigurations/spinnaker/Spinnaker.proto";
+import "proto/deploymentConfigurations/webhook/Webhook.proto";
+import "proto/deploymentConfigurations/canary/Canary.proto";
+import "proto/deploymentConfigurations/stats/Stats.proto";
 // Configuration for the clouddriver microservice.
 message DeploymentConfigurations {
 
@@ -28,11 +34,13 @@ message DeploymentConfigurations {
     ci.Ci ci = 9;
     repository.Repository repository = 10;
     security.Security security = 11;
-    // Artifacts artifacts = 12;
-    // Pubsub pubsub = 13;
-    // Canary canary = 14;
-    // Spinnaker spinnaker = 15;
-    // Webhook webhook = 16;
+    artifacts.Artifacts artifacts = 12;
+    pubsub.Pubsub pubsub = 13;
+    canary.Canary canary = 14;
+    spinnaker.Spinnaker spinnaker = 15;
+    webhook.Webhook webhook = 16;
+    string timezone = 17;
+    stats.Stats stats = 18;
     // Armory armory = 17;
 
 }
@@ -42,9 +50,17 @@ message DeploymentConfigurations {
 
 ToDo:
 
-- Review Providers
+- Missing from Providers
+    - Oracle
+    - tencentcloud
+    - Cloudfoundry
+    - Huaweicloud
+    - dcos
 - Review PersistentStorage
 - Check ci.gcb permission structure
 - Check ci.Codebuild permission structure (Should be the same as ci.gcb)
 - Revisit the oauth2 proto struct
+    - Need more info on userInfoRequirements
+- Adding plugin configs in the Spinnaker.proto file is not viable since anyone can make a custom plugin and there's no way
+we'd know what config fields should go there. For now, we are setting it to an empty object as a standard.
 */

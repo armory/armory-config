@@ -8,20 +8,10 @@ message Oauth2 {
 
     bool enabled = 1;
     Oauth2Client client = 2;
-    message userInfoRequirements {
-        // Need to revisit this struct
-        string kvpair = 1;
-    }
-    message resource {
-        string userInfoUri = 1;
-    }
-    message userInfoMapping {
-        string email = 1;
-        string firstname = 2;
-        string lastname = 3;
-        string username = 4;
-    }
     string provider = 3;
+    resource resource = 4;
+    userInfoMapping userInfoMapping = 5;
+    userInfoRequirements userInfoRequirements = 6;
 }
 
 message Oauth2Client {
@@ -33,6 +23,22 @@ message Oauth2Client {
     string scope = 6;
     string preEstablishedRedirectUri = 7;
     bool useCurrentUri = 8;
+}
+
+message userInfoRequirements {
+  // Need to revisit this struct
+  repeated string kvpair = 1;
+}
+
+message resource {
+  string userInfoUri = 1;
+}
+
+message userInfoMapping {
+  string email = 1;
+  string firstname = 2;
+  string lastname = 3;
+  string username = 4;
 }
 
 /* 

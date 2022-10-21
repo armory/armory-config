@@ -3,6 +3,7 @@ package proto.providers;
 
 option go_package = "config/deploymentConfigurations/providers";
 
+import "proto/deploymentConfigurations/Permissions.proto";
 // Configuration for the clouddriver microservice.
 message Kubernetes {
 
@@ -16,8 +17,8 @@ message KubernetesAcc {
 
     string name = 1;
     repeated string requiredGroupMembership = 2;
-    repeated string permissions = 3;
-    repeated string dockerRegistries = 4;
+    config.Permissions permissions = 3;
+    KubeDockerRegistries dockerRegistries = 4;
     string providerVersion = 5;
     bool configureImagePullSecrets = 6;
     bool serviceAccount = 7;
@@ -31,9 +32,23 @@ message KubernetesAcc {
     repeated string cachingPolicies = 15;
     repeated string oauthScopes = 16;
     bool onlySpinnakerManaged = 17;
+    string environment = 18;
+    bool checkPermissionsOnStartup = 19;
+    bool liveManifestCalls = 20;
+    RawResourcesEndpointConfig rawResourcesEndpointConfig = 21;
 
 }
 
+message KubeDockerRegistries {
+  string accountName = 1;
+  repeated string namespaces = 2;
+
+}
+
+message RawResourcesEndpointConfig {
+  repeated string kindExpressions = 1;
+  repeated string omitKindExpressions = 2;
+}
 
 
 
@@ -42,26 +57,50 @@ message KubernetesAcc {
 
 Example Config
 
-kubernetes:
-enabled: true
-accounts:
-- name: spinnaker
-  requiredGroupMembership: []
-  permissions: {}
-  dockerRegistries: []
-  providerVersion: V2
-  configureImagePullSecrets: true
-  serviceAccount: true
-  cacheThreads: 1
-  namespaces:
-  - spinnaker
-  kubeconfigFile: 
-  omitNamespaces: []
-  kinds: []
-  omitKinds: []
-  customResources: []
-  cachingPolicies: []
-  oAuthScopes: []
-  onlySpinnakerManaged: true
+    kubernetes:
+      enabled: false
+      accounts:
+      - name: kube
+        environment: dev
+        requiredGroupMembership:
+        - dev
+        - test
+        permissions:
+          READ:
+          - dev,test
+          WRITE:
+          - dev,test
+        dockerRegistries:
+        - accountName: one
+          namespaces: []
+        - accountName: two
+          namespaces: []
+        providerVersion: V1
+        context: current-context
+        configureImagePullSecrets: false
+        serviceAccount: true
+        cacheThreads: 2
+        namespaces:
+        - test
+        - prod
+        omitNamespaces:
+        - dev
+        - admin
+        kinds:
+        - pods
+        - deployments
+        omitKinds:
+        - jobs
+        - services
+        customResources: []
+        cachingPolicies: []
+        checkPermissionsOnStartup: true
+        liveManifestCalls: true
+        rawResourcesEndpointConfig:
+          kindExpressions: []
+          omitKindExpressions: []
+        oAuthScopes: []
+        onlySpinnakerManaged: true
+      primaryAccount: kube
 
 */

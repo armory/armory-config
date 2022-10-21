@@ -1,0 +1,78 @@
+syntax = "proto3";
+package proto.spinnaker;
+
+option go_package = "config/deploymentConfigurations/spinnaker";
+
+// import "proto/deploymentConfigurations/persistentStorage/S3.proto";
+// import "proto/deploymentConfigurations/persistentStorage/Azs.proto";
+// import "proto/deploymentConfigurations/persistentStorage/Oracle.proto";
+// import "proto/deploymentConfigurations/persistentStorage/Gcs.proto";
+// Configuration for the clouddriver microservice.
+message Spinnaker {
+
+    Extensibility extensibility = 1;
+}
+
+message Extensibility {
+
+    repeated Plugins plugins = 1;
+    repeated Repositories repository = 2;
+
+
+}
+
+message Plugins {
+    string name = 1;
+    string id = 2;
+    bool enabled = 3;
+    string version = 4;
+    Config config = 5;
+    repeated Extensions extensions = 6;
+
+}
+
+message Extensions {
+    string name = 1;
+    string id = 2;
+    bool enabled = 3;
+    Config config = 4;
+}
+
+message Config {
+    // Unable to set due to an unlimited amount of possible config options.
+}
+
+
+message Repositories {
+    string name = 1;
+    string id = 2;
+    string url = 3;
+}
+
+
+/*
+
+Example Config
+
+  spinnaker:
+    extensibility:
+      plugins:
+        PLUGIN:
+          id: PLUGIN
+          enabled: true
+          version: '1'
+          config: {}
+          extensions:
+            ext2:
+              id: ext2
+              enabled: true
+              config: {}
+            ext1:
+              id: ext1
+              enabled: true
+              config: {}
+      repositories:
+        REPOSITORY:
+          id: REPOSITORY
+          url: http://localhost:9090
+*/

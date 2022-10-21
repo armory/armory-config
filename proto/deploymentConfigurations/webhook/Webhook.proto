@@ -1,0 +1,32 @@
+syntax = "proto3";
+package proto.webhook;
+
+option go_package = "config/deploymentConfigurations/webhook";
+
+// import "proto/deploymentConfigurations/persistentStorage/S3.proto";
+// import "proto/deploymentConfigurations/persistentStorage/Azs.proto";
+// import "proto/deploymentConfigurations/persistentStorage/Oracle.proto";
+// import "proto/deploymentConfigurations/persistentStorage/Gcs.proto";
+// Configuration for the clouddriver microservice.
+message Webhook {
+
+    Trust trust = 1;
+}
+
+message Trust {
+    bool enabled = 1;
+    string trustStore = 2;
+    string trustStorePassword = 3;
+}
+
+
+/*
+
+Example Config
+
+  webhook:
+    trust:
+      enabled: true
+      trustStore: /.hal/config
+      trustStorePassword: '12345'
+*/
