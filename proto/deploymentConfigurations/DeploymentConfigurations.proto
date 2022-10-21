@@ -11,15 +11,15 @@ import "proto/deploymentConfigurations/persistentStorage/PersistentStorage.proto
 import "proto/deploymentConfigurations/features/Features.proto";
 import "proto/deploymentConfigurations/metricStores/MetricStores.proto";
 import "proto/deploymentConfigurations/notifications/Notifications.proto";
-// import "proto/deploymentConfigurations/ci/Ci.proto";
-// import "proto/deploymentConfigurations/repository/Repository.proto";
+import "proto/deploymentConfigurations/ci/Ci.proto";
+import "proto/deploymentConfigurations/repository/Repository.proto";
 import "proto/deploymentConfigurations/security/Security.proto";
 import "proto/deploymentConfigurations/artifacts/Artifacts.proto";
 import "proto/deploymentConfigurations/pubsub/Pubsub.proto";
-// import "proto/deploymentConfigurations/spinnaker/Spinnaker.proto";
-// import "proto/deploymentConfigurations/webhook/Webhook.proto";
-// import "proto/deploymentConfigurations/canary/Canary.proto";
-// import "proto/deploymentConfigurations/stats/Stats.proto";
+import "proto/deploymentConfigurations/spinnaker/Spinnaker.proto";
+import "proto/deploymentConfigurations/webhook/Webhook.proto";
+import "proto/deploymentConfigurations/canary/Canary.proto";
+import "proto/deploymentConfigurations/stats/Stats.proto";
 // Configuration for the clouddriver microservice.
 message DeploymentConfigurations {
 
@@ -31,16 +31,16 @@ message DeploymentConfigurations {
     features.Features features = 6;
     metricStores.MetricStores metricStores = 7;
     notifications.Notifications notifications = 8;
-    // ci.Ci ci = 9;
-    // repository.Repository repository = 10;
+    ci.Ci ci = 9;
+    repository.Repository repository = 10;
     security.Security security = 11;
     artifacts.Artifacts artifacts = 12;
     pubsub.Pubsub pubsub = 13;
-    // canary.Canary canary = 14;
-    // spinnaker.Spinnaker spinnaker = 15;
-    // webhook.Webhook webhook = 16;
-    // string timezone = 17;
-    // stats.Stats stats = 18;
+    canary.Canary canary = 14;
+    spinnaker.Spinnaker spinnaker = 15;
+    webhook.Webhook webhook = 16;
+    string timezone = 17;
+    stats.Stats stats = 18;
     // Armory armory = 17;
 
 }
