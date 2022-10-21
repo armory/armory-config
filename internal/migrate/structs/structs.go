@@ -6,6 +6,7 @@ type Kustomize struct {
 	Spin_flavor          string
 	Output_dir           string
 	Halyard              *deploymentConfigurations.HalFile
+	ProfilesConfigFiles  map[string]string
 	CurrentDeploymentPos int
 	PatchSizing          bool
 	Header               string

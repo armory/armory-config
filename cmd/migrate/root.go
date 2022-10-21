@@ -8,12 +8,12 @@ import (
 )
 
 var (
-	halconfig_dir  string
-	output_dir     string
-	deployment_dir string
-	spin_flavor    string
-	halconfig      string
-	config_files   map[string]string
+	halconfig_dir         string
+	output_dir            string
+	deployment_dir        string
+	spin_flavor           string
+	halconfig             string
+	profiles_config_files map[string]string
 )
 
 var rootCmd = &cobra.Command{

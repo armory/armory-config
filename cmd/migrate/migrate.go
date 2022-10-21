@@ -5,7 +5,6 @@ import (
 	"log"
 	"os"
 
-	"github.com/austinthao5/golang_proto_test/config/deploymentConfigurations"
 	"github.com/austinthao5/golang_proto_test/internal/fileio"
 	"github.com/austinthao5/golang_proto_test/internal/migrate"
 	"github.com/austinthao5/golang_proto_test/internal/migrate/structs"
@@ -42,7 +41,7 @@ func init() {
 }
 
 func getProfiles(profilesDir string, currentSubDir string) (map[string]string, error) {
-	config_files := make(map[string]string)
+	profiles_config_files := make(map[string]string)
 
 	profiles_files, err := fileio.GetListOfFiles(profilesDir)
 	if err != nil {
@@ -59,7 +58,7 @@ func getProfiles(profilesDir string, currentSubDir string) (map[string]string, e
 			}
 
 			for fileName, config_map := range config_maps {
-				config_files[fileName] = config_map
+				profiles_config_files[fileName] = config_map
 				// fmt.Println("fileName:" + fileName + " config_file: " + config_file)
 			}
 			continue
@@ -74,15 +73,15 @@ func getProfiles(profilesDir string, currentSubDir string) (map[string]string, e
 		var buf = string(local_file)
 
 		if "" != currentSubDir {
-			config_files[currentSubDir+"/"+profiles_files.Name()] = buf
+			profiles_config_files[currentSubDir+"/"+profiles_files.Name()] = buf
 		} else {
-			config_files[profiles_files.Name()] = buf
+			profiles_config_files[profiles_files.Name()] = buf
 		}
 
 		fmt.Println("Found " + profiles_files.Name())
 	}
 
-	return config_files, nil
+	return profiles_config_files, nil
 }
 
 // Read contents of halconfig and setup profiles patches for each service.
@@ -109,13 +108,13 @@ func migrator(halconfig_dir string, output_dir string, deployment_dir string, sp
 	// Profiles stuff
 	fmt.Println("Reading " + halconfig_dir + "/" + deployment_dir + "/profiles")
 
-	config_files, err = getProfiles(halconfig_dir+"/"+deployment_dir+"/profiles", "")
+	profiles_config_files, err = getProfiles(halconfig_dir+"/"+deployment_dir+"/profiles", "")
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)
 	}
 
-	// for fileName, config_file := range config_files {
+	// for fileName, config_file := range profiles_config_files {
 	// 	fmt.Println("fileName:" + fileName + "\nconfig_file:" + config_file)
 	// }
 
@@ -124,20 +123,25 @@ func migrator(halconfig_dir string, output_dir string, deployment_dir string, sp
 	// fmt.Println(halconfig)
 	// fmt.Println(output)
 
+	//Create Kustomize struct with current info
+	KustomizeData := structs.Kustomize{
+		Spin_flavor:         spin_flavor,
+		Output_dir:          output_dir,
+		Halyard:             halyard,
+		ProfilesConfigFiles: profiles_config_files,
+	}
 	// Create output files
-	output_config(output_dir, spin_flavor, halyard)
-
+	output_config(&KustomizeData)
 }
 
-func output_config(output_dir string, spin_flavor string, halyard *deploymentConfigurations.HalFile) {
-	KustomizeData := structs.Kustomize{Spin_flavor: spin_flavor, Output_dir: output_dir, Halyard: halyard}
+func output_config(KustomizeData *structs.Kustomize) {
 
 	err := fileio.EnsureDirectory(output_dir)
 	if err != nil {
 		log.Println(err)
 	}
 
-	err = migrate.CreateKustomization(&KustomizeData)
+	err = migrate.CreateKustomization(KustomizeData)
 	if err != nil {
 		log.Fatal(err)
 	}
