@@ -17,21 +17,47 @@ message Canary {
 message serviceIntegrations {
     string name = 1;
     bool enabled = 2;
-    repeated CanaryAccounts accounts = 3;
+    CanaryAccounts canaryAccounts = 3;
+    bool gcsEnabled = 4;
+    bool stackDriver = 5;
+    bool s3Enabled = 6;
     
 
 }
 
 message CanaryAccounts {
 
-    // S3 Config
-    string name = 1;
-    string bucket = 2;
-    string region = 3;
+  string name = 1;
+  string project = 2;
+  string jsonPath = 3;
+  string bucket = 4;
+  string bucketLocation = 5;
+  string rootFolder = 6;
+  repeated string supportedTypes = 7;
+
+  Endpoint baseUrlEndpoint = 8;
+  string username = 9;
+  string password = 10;
+  string usernamePasswordFile = 11;
+
+  string apiKey = 12;
+  string applicationKey = 13;
+
+  string accessToken = 14;
+  string defaultScopeKey = 15;
+  string defaultLocationKey = 16;
+
+  string region = 17;
+  string profileName = 18;
+  string endpoint = 19;
+  string accessKeyId = 20;
+  string secretAccessKey = 21;
 
 }
 
-
+message Endpoint {
+  string baseUrl = 1;
+}
 
 /* 
 
@@ -42,25 +68,71 @@ Example Config
     serviceIntegrations:
     - name: google
       enabled: false
-      accounts: []
+      accounts:
+      - name: GOOGLE_ACCOUNT
+        project: project
+        jsonPath: /home/spinnaker/.hal/config
+        bucket: bucket
+        bucketLocation: us-central-1
+        rootFolder: folder
+        supportedTypes: []
       gcsEnabled: false
       stackdriverEnabled: false
     - name: prometheus
       enabled: false
-      accounts: []
+      accounts:
+      - name: pr_account
+        endpoint:
+          baseUrl: http://localhost:9090
+        username: name
+        password: password
+        usernamePasswordFile: /home/spinnaker/.hal/config
+        supportedTypes:
+        - METRICS_STORE
     - name: datadog
       enabled: false
-      accounts: []
+      accounts:
+      - name: DATADOG_ACCOUNT
+        endpoint:
+          baseUrl: http://localhost:9090
+        apiKey: api12345
+        applicationKey: app12345
+        supportedTypes:
+        - METRICS_STORE
     - name: signalfx
       enabled: false
-      accounts: []
+      accounts:
+      - name: SFX
+        accessToken: token
+        endpoint:
+          baseUrl: http://localhost:9090
+        defaultScopeKey: test
+        defaultLocationKey: test
+        supportedTypes:
+        - METRICS_STORE
     - name: aws
       enabled: false
-      accounts: []
+      accounts:
+      - name: AWS_ACCOUNT
+        bucket: bucket
+        region: us-west-1
+        rootFolder: folder
+        profileName: default
+        endpoint: http://localhost:9090
+        accessKeyId: '12345'
+        secretAccessKey: secret
+        supportedTypes: []
       s3Enabled: false
     - name: newrelic
       enabled: false
-      accounts: []
+      accounts:
+      - name: NR_ACCOUNT
+        endpoint:
+          baseUrl: http://localhost:9090
+        apiKey: api12345
+        applicationKey: app12345
+        supportedTypes:
+        - METRICS_STORE
     reduxLoggerEnabled: true
     defaultJudge: NetflixACAJudge-v1.0
     stagesEnabled: true

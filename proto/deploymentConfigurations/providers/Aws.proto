@@ -3,6 +3,7 @@ package proto.providers;
 
 option go_package = "config/deploymentConfigurations/providers";
 
+import "proto/deploymentConfigurations/Permissions.proto";
 // Configuration for the clouddriver microservice.
 message Aws {
 
@@ -15,16 +16,32 @@ message Aws {
     string defaultKeyPairTemplate = 7;
     repeated string defaultRegions = 8;
     AwsDefaults defaults = 9;
+    AwsFeatures features = 10;
+    Lambda lambda = 11;
     
 }
 
 message AwsAcc {
 
     string name = 1;
-    string accountId = 2;
-    string assumeRole = 3;
-    string providerVersion = 4;
-    repeated string regions = 5;
+    string environment = 2;
+    repeated string requiredGroupMembership = 3;
+    config.Permissions permissions = 4;
+    string defaultKeyPair = 5;
+    string edda = 6;
+    string discovery = 7;
+    string accountId = 8;
+    repeated string regions = 9;
+    repeated LifecycleHooks lifecycleHooks = 10;
+
+}
+
+message LifecycleHooks {
+    string defaultResult = 1;
+    int32 heartbeatTimeout = 2;
+    string lifecycleTransition = 3;
+    string notificationTargetARN = 4;
+    string roleARN = 5;
 
 }
 
@@ -33,13 +50,159 @@ message AwsBakeryDefaults {
     string templateFile = 1;
     string awsAccessKey = 2;
     string awsSecretKey = 3;
-    repeated string baseImages = 4;
+    AWSBaseImages baseImages = 4;
     bool awsAssociatePublicIpAddress = 5;
     string defaultVirtualizationType = 6;
-
+    string awsSubnetId = 7;
+    string awsVpcId = 8;
 }
-
 
 message AwsDefaults {
-    string iamBaseRole = 1;
+    string iamRole = 1;
 }
+
+message AwsFeatures {
+    Cloudformation cloudformation = 1;
+    Lambda lambda = 2;
+}
+
+message Cloudformation {
+    bool enabled = 1;
+}
+
+message Lambda {
+    bool enabled = 1;
+}
+
+message AWSBaseImages {
+
+    repeated AWSBaseImage baseImage = 1;
+
+}
+
+message AWSBaseImage {
+    string detailedDescription = 1;
+    string id = 2;
+    string shortDescription = 3;
+    string packageType = 4;
+    string templateFile = 5;
+    repeated AWSVirtualizationSettings virtualizationSettings  = 6;
+}
+
+message AWSVirtualizationSettings {
+    string instanceType = 1;
+    string region = 2;
+    string sourceAmi = 3;
+    string spotPrice = 4;
+    string spotPriceAutoProduct = 5;
+    string sshUserName = 6;
+    string virtualizationType = 7;
+}
+/*
+
+Example config from Operator:
+
+            - baseImage:
+                detailedDescription: debian11
+                id: debian
+                shortDescription: v11
+                packageType: deb
+                templateFile: aws-ebs.json
+              virtualizationSettings:
+              - instanceType: t2.small
+                region: us-west-2
+                # sourceAmi: ami-0d70546e43a941d70 #ubuntu
+                sourceAmi: ami-071e6cafc48327ca2
+                # spotPrice: “0”
+                spotPriceAutoProduct: Linux/UNIX (Amazon VPC)
+                sshUserName: admin
+                virtualizationType: hvm
+            - baseImage:
+                detailedDescription: Ubuntu Focal Fossa v20.04
+                id: focal
+                shortDescription: v20.04
+                packageType: deb
+                templateFile: aws-ebs.json
+              virtualizationSettings:
+              - instanceType: t3a.micro
+                region: us-east-1
+                sourceAmi: ami-0ddbdea833a8d2f0d
+                spotPrice: "0"
+                spotPriceAutoProduct: Linux/UNIX (Amazon VPC)
+                sshUserName: ubuntu
+                virtualizationType: hvm
+              - instanceType: t3a.micro
+                region: eu-west-1
+                sourceAmi: ami-09c60c18b634a5e00
+                spotPrice: "0"
+                spotPriceAutoProduct: Linux/UNIX (Amazon VPC)
+                sshUserName: ubuntu
+                virtualizationType: hvm
+              - instanceType: t3a.micro
+                region: us-west-2
+                sourceAmi: ami-0554443e7f55d3eeb
+                spotPrice: "0"
+                spotPriceAutoProduct: Linux/UNIX (Amazon VPC)
+                sshUserName: ubuntu
+                virtualizationType: hvm
+
+Example Config from Halyard:
+
+    aws:
+      enabled: false
+      accounts:
+      - name: AWS_ACCOUNT
+        environment: dev
+        requiredGroupMembership:
+        - dev
+        - test
+        permissions:
+          READ:
+          - dev,test
+          WRITE:
+          - dev,test
+        defaultKeyPair: test
+        edda: http://localhost:9090
+        discovery: http://localhost:9090
+        accountId: '12345'
+        regions:
+        - name: us-east-1
+        - name: us-west-1
+        assumeRole: assumeRole
+        lifecycleHooks:
+        - defaultResult: ABANDON
+          heartbeatTimeout: 3600
+          lifecycleTransition: autoscaling:EC2_INSTANCE_LAUNCHING
+          notificationTargetARN: arn::1234
+          roleARN: arn::1234
+        - defaultResult: ABANDON
+          heartbeatTimeout: 3600
+          lifecycleTransition: autoscaling:EC2_INSTANCE_TERMINATING
+          notificationTargetARN: arn::1234
+          roleARN: arn::1234
+      primaryAccount: AWS_ACCOUNT
+      bakeryDefaults:
+        templateFile: template.json
+        baseImages: []
+        awsAccessKey: '12345'
+        awsSecretKey: secret
+        awsSubnetId: subnet-12345def
+        awsVpcId: vpc-1234
+        awsAssociatePublicIpAddress: true
+        defaultVirtualizationType: hvm
+      accessKeyId: '12345'
+      secretAccessKey: '12345'
+      defaultKeyPairTemplate: '{{name}}-keypair'
+      defaultRegions:
+      - name: us-west-2
+      defaults:
+        iamRole: BaseIAMRole
+      features:
+        cloudFormation:
+          enabled: true
+        lambda:
+          enabled: true
+      lambda:
+        enabled: true
+
+*/

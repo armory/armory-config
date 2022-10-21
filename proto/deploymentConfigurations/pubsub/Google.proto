@@ -1,7 +1,7 @@
 syntax = "proto3";
 package proto.pubsub;
 
-option go_package = "config/deploymentConfigurations/pubsub";
+option go_package = "config/deploymentConfigurations/artifacts";
 
 // Configuration for the clouddriver microservice.
 message Google {

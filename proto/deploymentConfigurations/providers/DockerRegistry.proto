@@ -3,18 +3,13 @@ package proto.providers;
 
 option go_package = "config/deploymentConfigurations/providers";
 
+import "proto/deploymentConfigurations/Permissions.proto";
 // Configuration for the clouddriver microservice.
 message DockerRegistry {
 
     bool enabled = 1;
     string primaryAccount = 2;
     repeated DockerRegistryAcc Account = 3;
-    // BakeryDefaults bakeryDefault = 4;
-    // string accessKey = 5;
-    // string secretAccessKey = 6;
-    // string defaultKeyPairTemplate = 7;
-    // repeated string defaultRegions = 8;
-    // AwsDefaults defaults = 9;
     
 }
 
@@ -22,7 +17,7 @@ message DockerRegistryAcc {
 
     string name = 1;
     repeated string requiredGroupMembership = 2;
-    repeated string permissions = 3;
+    config.Permissions permissions = 3;
     string address = 4;
     string username = 5;
     string email = 6;
@@ -33,27 +28,50 @@ message DockerRegistryAcc {
     bool sortTagsByDate = 11;
     bool trackDigests = 12;
     bool insecureRegistry = 13;
+    string environment = 14;
+    string password = 15;
+    string passwordCommand = 16;
+    repeated string repositories = 17;
+    string passwordFile = 18;
 
 
 }
 
 
+/*
 
-// dockerRegistry:
-// enabled: true
-// accounts:
-// - name: my-docker-registry
-//   requiredGroupMembership: []
-//   permissions: {}
-//   address: https://some.address
-//   username: jsonKey
-//   email: fake.email@spinnaker.io
-//   cacheIntervalSeconds: 30
-//   clientTimeoutMillis: 60000
-//   cacheThreads: 1
-//   paginateSize: 100
-//   sortTagsByDate: false
-//   trackDigests: false
-//   insecureRegistry: false
-//   repositories: []
-// primaryAccount: my-docker-registry
+Example Config
+
+    dockerRegistry:
+      enabled: false
+      accounts:
+      - name: DOCKER
+        environment: dev
+        requiredGroupMembership:
+        - dev
+        - test
+        permissions:
+          READ:
+          - dev,test
+          WRITE:
+          - dev,test
+        address: http://localhost:9090
+        username: user
+        password: pass
+        passwordCommand: test
+        email: fake@mail.com
+        cacheIntervalSeconds: 25
+        clientTimeoutMillis: 50000
+        cacheThreads: 2
+        paginateSize: 120
+        sortTagsByDate: true
+        trackDigests: true
+        insecureRegistry: true
+        repositories:
+        - dev
+        - test
+        - repo
+        passwordFile: /home/spinnaker/.hal/config
+      primaryAccount: DOCKER
+
+*/

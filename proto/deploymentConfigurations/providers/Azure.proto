@@ -3,24 +3,98 @@ package proto.providers;
 
 option go_package = "config/deploymentConfigurations/providers";
 
+import "proto/deploymentConfigurations/Permissions.proto";
 // Configuration for the clouddriver microservice.
 message Azure {
 
     bool enabled = 1;
     string primaryAccount = 2;
     repeated AzureAcc Account = 3;
-    // BakeryDefaults bakeryDefault = 4;
-    // string accessKey = 5;
-    // string secretAccessKey = 6;
-    // string defaultKeyPairTemplate = 7;
-    // repeated string defaultRegions = 8;
-    // AwsDefaults defaults = 9;
-    
+    AzureBakeryDefaults bakeryDefault = 4;
+
 }
 
 message AzureAcc {
 
     string name = 1;
+    string environment = 2;
+    repeated string requiredGroupMembership = 3;
+    config.Permissions permissions = 4;
+    string clientId = 5;
+    string appKey = 6;
+    string tenantId = 7;
+    string subscriptionId = 8;
+    string objectId = 9;
+    string defaultResourceGroup = 10;
+    string defaultKeyVault = 11;
+    string packerResourceGroup = 12;
+    string packerStorageAccount = 13;
+    repeated string regions = 14;
+    bool useSshPublicKey = 15;
 
 }
+
+message AzureBakeryDefaults {
+    string templateFile = 1;
+    repeated AzureBaseImages baseImages = 2;
+
+}
+
+message AzureBaseImages {
+    string id = 1;
+    string shortDescription = 2;
+    string packageType = 3;
+    string templateFile = 4;
+    string publisher = 5;
+    string offer = 6;
+    string sku = 7;
+    string version = 8;
+}
+
+/*
+
+Example Config
+
+
+    azure:
+      enabled: false
+      accounts:
+      - name: AZURE
+        environment: dev
+        requiredGroupMembership:
+        - dev
+        permissions:
+          READ:
+          - test
+          WRITE:
+          - dev
+        clientId: id
+        appKey: '12345'
+        tenantId: '1234'
+        subscriptionId: '1234'
+        objectId: '12345'
+        defaultResourceGroup: group
+        defaultKeyVault: vault
+        packerResourceGroup: group
+        packerStorageAccount: test
+        regions:
+        - westus
+        - eastus
+        useSshPublicKey: 'true'
+      primaryAccount: AZURE
+      bakeryDefaults:
+        templateFile: azure-linux.json
+        baseImages:
+        - baseImage:
+            id: world
+            shortDescription: hello
+            detailedDescription: test
+            packageType: deb
+            templateFile: template.json
+            publisher: me
+            offer: test
+            sku: '1234'
+            version: '1'
+
+*/
 

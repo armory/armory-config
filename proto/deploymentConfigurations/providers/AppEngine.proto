@@ -3,22 +3,78 @@ package proto.providers;
 
 option go_package = "config/deploymentConfigurations/providers";
 
+import "proto/deploymentConfigurations/Permissions.proto";
 // Configuration for the clouddriver microservice.
 message AppEngine {
 
     bool enabled = 1;
     string primaryAccount = 2;
-    repeated AppEngineAcc Account = 3;
+    repeated AppEngineAcc account = 3;
 
 }
 
 message AppEngineAcc {
 
     string name = 1;
-    repeated string requiredGroupMembership = 2;
-    repeated string permissions = 3;
+    string environment = 2;
+    repeated string requiredGroupMembership = 3;
     string project = 4;
     string jsonPath = 5;
     string localRepositoryDirectory = 6;
-    bool sshTrustUnknownHosts = 7;
+    string gitHttpUsername = 7;
+    string gitHttpsPassword = 8;
+    string githubOAuthAccessToken = 9;
+    string sshPrivateKeyFilePath = 10;
+    string sshPrivateKeyPassphrase = 11;
+    string sshKnownHostsFilePath = 12;
+    bool sshTrustUnknownHosts = 13;
+    string gcloudReleaseTrack = 14;
+    repeated string services = 15;
+    repeated string versions = 16;
+    repeated string omitServices = 17;
+    repeated string omitVersions = 18;
+    int32 cachingIntervalSeconds = 19;
+    config.Permissions permissions = 20;
 }
+
+
+/*
+
+Example Config
+
+    appengine:
+      enabled: true
+      accounts:
+      - name: ACCOUNT
+        environment: dev
+        requiredGroupMembership:
+        - dev
+        - test
+        permissions:
+          READ:
+          - dev,test
+          WRITE:
+          - dev,test
+        project: project
+        jsonPath: /home/spinnaker/.hal/config
+        localRepositoryDirectory: /var/tmp
+        gitHttpsUsername: name
+        gitHttpsPassword: test
+        githubOAuthAccessToken: token
+        sshPrivateKeyFilePath: /home/spinnaker/.hal/config
+        sshPrivateKeyPassphrase: password
+        sshKnownHostsFilePath: /home/spinnaker/.hal/config
+        sshTrustUnknownHosts: false
+        gcloudReleaseTrack: ALPHA
+        services:
+        - .*
+        versions:
+        - .*
+        omitServices:
+        - .*
+        omitVersions:
+        - .*
+        cachingIntervalSeconds: 10
+      primaryAccount: ACCOUNT
+
+*/
