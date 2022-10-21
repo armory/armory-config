@@ -1,7 +1,7 @@
 syntax = "proto3";
-package proto.config;
+package proto.permissions;
 
-option go_package = "config/deploymentConfigurations";
+option go_package = "config/deploymentConfigurations/permissions";
 
 // Configuration for the clouddriver microservice.
 message Permissions {
