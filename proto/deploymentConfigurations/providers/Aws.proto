@@ -9,12 +9,12 @@ message Aws {
 
     bool enabled = 1;
     string primaryAccount = 2;
-    repeated AwsAcc Account = 3;
+    repeated AwsAcc accounts = 3;
     AwsBakeryDefaults bakeryDefault = 4;
     string accessKey = 5;
     string secretAccessKey = 6;
     string defaultKeyPairTemplate = 7;
-    repeated string defaultRegions = 8;
+    repeated AwsRegions defaultRegions = 8;
     AwsDefaults defaults = 9;
     AwsFeatures features = 10;
     Lambda lambda = 11;
@@ -31,9 +31,14 @@ message AwsAcc {
     string edda = 6;
     string discovery = 7;
     string accountId = 8;
-    repeated string regions = 9;
+    repeated AwsRegions regions = 9;
     repeated LifecycleHooks lifecycleHooks = 10;
 
+}
+
+message AwsRegions {
+    string name = 1;
+    string region = 2;
 }
 
 message LifecycleHooks {

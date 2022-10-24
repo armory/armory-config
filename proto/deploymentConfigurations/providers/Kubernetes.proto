@@ -9,7 +9,7 @@ message Kubernetes {
 
     bool enabled = 1;
     string primaryAccount = 2;
-    repeated KubernetesAcc Account = 3;
+    repeated KubernetesAcc accounts = 3;
     
 }
 
@@ -18,7 +18,7 @@ message KubernetesAcc {
     string name = 1;
     repeated string requiredGroupMembership = 2;
     permissions.Permissions permissions = 3;
-    KubeDockerRegistries dockerRegistries = 4;
+    repeated KubeDockerRegistries dockerRegistries = 4;
     string providerVersion = 5;
     bool configureImagePullSecrets = 6;
     bool serviceAccount = 7;
@@ -104,3 +104,4 @@ Example Config
       primaryAccount: kube
 
 */
+
