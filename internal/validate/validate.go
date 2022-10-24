@@ -19,7 +19,7 @@ type validator func(*structs.Kustomize) []validationFailure
 func getValidators() []validator {
 	return []validator{
 		validateKindsAndOmitKinds,
-		// validateCurrentDeploymentExists,
+		validateCurrentDeploymentExists,
 		// validateProfilesExists,
 		validateProfilesFileHasData,
 	}
@@ -64,7 +64,7 @@ func validateCurrentDeploymentExists(KustomizeData *structs.Kustomize) []validat
 	ok := false
 
 	for _, a := range KustomizeData.Halyard.GetDeploymentConfigurations() {
-		if KustomizeData.Halyard.Name == a.Name {
+		if KustomizeData.Halyard.CurrentDeployment == a.Name {
 			ok = true
 		}
 	}

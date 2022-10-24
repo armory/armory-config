@@ -70,17 +70,16 @@ func migrator(halconfig_dir string, output_dir string, deployment_dir string, sp
 		ServiceSettingsConfigFiles: service_settings_config_files,
 	}
 
+	fmt.Printf("\nKustomizeData: %#v \n\n", KustomizeData)
+	fmt.Printf("\nHalyard: %#v \n\n", KustomizeData.Halyard)
+	// fmt.Println("Aws.AccessKey: " + KustomizeData.Halyard.DeploymentConfigurations[0].Name)
+
 	if "Y" != KustomizeData.Skip_validations {
 		if err := validate.KustomizeConfig(&KustomizeData); err != nil {
 			fmt.Println(err)
 			os.Exit(1)
 		}
 	}
-
-	// fmt.Println("Account: " + halyard.PrimaryAccount)
-	fmt.Printf("\nHalyard: %#v \n\n", halyard)
-	// fmt.Println("Aws.AccessKey: " + halyard.DeploymentConfigurations.providers.Aws.AccessKey)
-	// fmt.Println("Aws.AccessKey: " + halyard.DeploymentConfiguration[0].Name)
 
 	// Profiles stuff
 	fmt.Println("Reading " + halconfig_dir + "/" + deployment_dir + "/profiles")
