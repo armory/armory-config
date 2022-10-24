@@ -8,5 +8,5 @@ import "proto/deploymentConfigurations/DeploymentConfigurations.proto";
 message HalFile {
     string currentDeployment = 1;
     string name = 2;
-    repeated DeploymentConfigurations deploymentConfiguration = 3;
+    repeated DeploymentConfigurations deploymentConfigurations = 3;
 }
