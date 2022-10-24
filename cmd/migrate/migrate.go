@@ -4,11 +4,13 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strings"
 
 	"github.com/austinthao5/golang_proto_test/internal/fileio"
 	"github.com/austinthao5/golang_proto_test/internal/migrate"
 	"github.com/austinthao5/golang_proto_test/internal/migrate/structs"
 	"github.com/austinthao5/golang_proto_test/internal/parser"
+	"github.com/austinthao5/golang_proto_test/internal/validate"
 
 	"github.com/spf13/cobra"
 )
@@ -25,7 +27,7 @@ var convertCmd = &cobra.Command{
 
 		if len(halconfig_dir) > 0 && len(output_dir) > 0 {
 
-			migrator(halconfig_dir, output_dir, deployment_dir, spin_flavor)
+			migrator(halconfig_dir, output_dir, deployment_dir, spin_flavor, skip_validations)
 
 		}
 	},
@@ -38,10 +40,11 @@ func init() {
 	convertCmd.Flags().StringVar(&output_dir, "output", "./operatorConfig", "Select an output directory")
 	convertCmd.Flags().StringVar(&deployment_dir, "deployment", "default", "Select the deployment name being used by Halyard. This is the subdirectory in the ./hal folder where the profiles and service-settings live")
 	convertCmd.Flags().StringVar(&spin_flavor, "spin_flavor", "ARMORY", "Select Spinnaker Operator flavor to use (ARMORY, OSS)")
+	convertCmd.Flags().StringVar(&skip_validations, "skip_validations", "N", "Toggle Validations of using Y, by default N (N,Y)")
 }
 
 // Read contents of halconfig and setup profiles patches for each service.
-func migrator(halconfig_dir string, output_dir string, deployment_dir string, spin_flavor string) {
+func migrator(halconfig_dir string, output_dir string, deployment_dir string, spin_flavor string, skip_validations string) {
 
 	// Halconfig stuff
 	halconfig_file, err := fileio.FindFileInDir(halconfig_dir, "config")
@@ -50,10 +53,28 @@ func migrator(halconfig_dir string, output_dir string, deployment_dir string, sp
 		os.Exit(1)
 	}
 
+	//Create halyard Struct
 	halyard, err := parser.ParseHalConfig(halconfig_file)
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)
+	}
+
+	//Create Kustomize struct with current info
+	KustomizeData := structs.Kustomize{
+		Skip_validations:           strings.ToUpper(skip_validations),
+		Spin_flavor:                spin_flavor,
+		Output_dir:                 output_dir,
+		Halyard:                    halyard,
+		ProfilesConfigFiles:        profiles_config_files,
+		ServiceSettingsConfigFiles: service_settings_config_files,
+	}
+
+	if "Y" != KustomizeData.Skip_validations {
+		if err := validate.KustomizeConfig(&KustomizeData); err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
 	}
 
 	// fmt.Println("Account: " + halyard.PrimaryAccount)
@@ -85,14 +106,6 @@ func migrator(halconfig_dir string, output_dir string, deployment_dir string, sp
 	// fmt.Println(halconfig)
 	// fmt.Println(output)
 
-	//Create Kustomize struct with current info
-	KustomizeData := structs.Kustomize{
-		Spin_flavor:                spin_flavor,
-		Output_dir:                 output_dir,
-		Halyard:                    halyard,
-		ProfilesConfigFiles:        profiles_config_files,
-		ServiceSettingsConfigFiles: service_settings_config_files,
-	}
 	// Create output files
 	output_config(&KustomizeData)
 }

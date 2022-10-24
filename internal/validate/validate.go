@@ -4,27 +4,33 @@ package validate
 
 import (
 	"errors"
+	"fmt"
 	"strings"
 
-	"github.com/austinthao5/golang_proto_test/config/deploymentConfigurations"
+	"github.com/austinthao5/golang_proto_test/internal/migrate/structs"
 )
 
 type validationFailure struct {
 	msg string
 }
 
-type halConfigValidator func(*deploymentConfigurations.HalFile) []validationFailure
+type validator func(*structs.Kustomize) []validationFailure
 
-func getValidators() []halConfigValidator {
-	return []halConfigValidator{
+func getValidators() []validator {
+	return []validator{
 		validateKindsAndOmitKinds,
 		// validateCurrentDeploymentExists,
+		// validateProfilesExists,
+		validateProfilesFileHasData,
 	}
 }
 
-// HalConfig validates the supplied *config.Hal, returning any errors encountered.
-func HalConfig(h *deploymentConfigurations.HalFile) error {
-	messages := getValidationMessages(h, getValidators())
+// KustomizeConfig validates the supplied *structs.Kustomize, returning any errors encountered.
+func KustomizeConfig(KustomizeData *structs.Kustomize) error {
+
+	fmt.Println("Running Validations")
+
+	messages := getValidationMessages(KustomizeData, getValidators())
 	if len(messages) > 0 {
 		msg := strings.Join(messages, "\n")
 		return errors.New(msg)
@@ -32,10 +38,10 @@ func HalConfig(h *deploymentConfigurations.HalFile) error {
 	return nil
 }
 
-func getValidationMessages(h *deploymentConfigurations.HalFile, fa []halConfigValidator) []string {
+func getValidationMessages(KustomizeData *structs.Kustomize, fa []validator) []string {
 	var messages []string
 	for _, f := range fa {
-		rs := f(h)
+		rs := f(KustomizeData)
 		for _, r := range rs {
 			messages = append(messages, r.msg)
 		}
@@ -43,7 +49,7 @@ func getValidationMessages(h *deploymentConfigurations.HalFile, fa []halConfigVa
 	return messages
 }
 
-func validateKindsAndOmitKinds(h *deploymentConfigurations.HalFile) []validationFailure {
+func validateKindsAndOmitKinds(KustomizeData *structs.Kustomize) []validationFailure {
 	var messages []validationFailure
 	// for _, a := range h.GetProviders().GetKubernetes().GetAccounts() {
 	// 	if !(len(a.GetKinds()) == 0) && !(len(a.GetOmitKinds()) == 0) {
@@ -53,18 +59,32 @@ func validateKindsAndOmitKinds(h *deploymentConfigurations.HalFile) []validation
 	return messages
 }
 
-func validateCurrentDeploymentExists(h *deploymentConfigurations.HalFile) []validationFailure {
+func validateCurrentDeploymentExists(KustomizeData *structs.Kustomize) []validationFailure {
 	var messages []validationFailure
 	ok := false
 
-	for _, a := range h.GetDeploymentConfiguration() {
-		if h.Name == a.Name {
+	for _, a := range KustomizeData.Halyard.GetDeploymentConfiguration() {
+		if KustomizeData.Halyard.Name == a.Name {
 			ok = true
 		}
 	}
 
 	if !ok {
 		messages = append(messages, fatalResult("Cannot find current deployment"))
+	}
+
+	return messages
+}
+
+func validateProfilesFileHasData(KustomizeData *structs.Kustomize) []validationFailure {
+	var messages []validationFailure
+
+	for key, value := range KustomizeData.ProfilesConfigFiles {
+		if _, isMapContainsKey := KustomizeData.ProfilesConfigFiles[key]; isMapContainsKey {
+			if "" != value {
+				messages = append(messages, fatalResult(key+" is empty"))
+			}
+		}
 	}
 
 	return messages

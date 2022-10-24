@@ -163,7 +163,7 @@ func GetFilesAndData(profilesDir string, currentSubDir string) (map[string]strin
 			profiles_config_files[profiles_files.Name()] = buf
 		}
 
-		fmt.Println("Found " + profiles_files.Name())
+		// fmt.Println("Found " + profiles_files.Name())
 	}
 
 	return profiles_config_files, nil

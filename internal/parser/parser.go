@@ -6,7 +6,6 @@ import (
 
 	"github.com/austinthao5/golang_proto_test/config/deploymentConfigurations"
 	"github.com/austinthao5/golang_proto_test/internal/fileio"
-	"github.com/austinthao5/golang_proto_test/internal/validate"
 	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/proto"
 	"sigs.k8s.io/yaml"
@@ -59,10 +58,6 @@ func ParseHalConfig(halPath string) (*deploymentConfigurations.HalFile, error) {
 	hal := &deploymentConfigurations.HalFile{}
 	if err := Unmarshal(data, hal); err != nil {
 		return nil, fmt.Errorf("unable to unmarshal %q: %v", halPath, err)
-	}
-
-	if err := validate.HalConfig(hal); err != nil {
-		return nil, fmt.Errorf("unable to validate %q: %v", halPath, err)
 	}
 
 	return hal, nil
