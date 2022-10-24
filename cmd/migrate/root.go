@@ -13,6 +13,7 @@ var (
 	deployment_dir                string
 	spin_flavor                   string
 	halconfig                     string
+	skip_validations              string
 	profiles_config_files         map[string]string
 	service_settings_config_files map[string]string
 )
