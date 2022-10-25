@@ -9,7 +9,7 @@ message Google {
 
     bool enabled = 1;
     string primaryAccount = 2;
-    repeated GoogleAcc Account = 3;
+    repeated GoogleAcc accounts = 3;
     GoogleBakeryDefaults bakeryDefault = 4;
     
 }

@@ -9,7 +9,7 @@ message Ecs {
 
     bool enabled = 1;
     string primaryAccount = 2;
-    repeated EcsAcc Account = 3;
+    repeated EcsAcc accounts = 3;
     
 }
 

@@ -23,7 +23,7 @@ Huawei Cloud - Does anyone even use this? Will revisit later
 */
 message Providers {
 
-    AppEngine appEngine = 1;
+    AppEngine appengine = 1;
     Aws aws = 2;
     Ecs ecs = 3;
     Azure azure = 4;

@@ -9,7 +9,7 @@ message AppEngine {
 
     bool enabled = 1;
     string primaryAccount = 2;
-    repeated AppEngineAcc account = 3;
+    repeated AppEngineAcc accounts = 3;
 
 }
 

@@ -1,14 +1,20 @@
 syntax = "proto3";
 package proto.deploymentEnvironment;
 
-option go_package = "config/deploymentConfigurations";
+option go_package = "config/deploymentConfigurations/deploymentEnv";
 
-import "proto/deploymentConfigurations/Containers.proto";
+import "proto/deploymentConfigurations/deploymentEnv/Containers.proto";
 
 // Configuration for the clouddriver microservice.
 message InitContainers {
 
-    repeated Service service = 1;
+    Service front50 = 1;
+    Service clouddriver = 2;
+    Service orca = 3;
+    Service rosco = 4;
+    Service gate = 5;
+    Service deck = 6;
+    Service igor = 7;
 
 }
 

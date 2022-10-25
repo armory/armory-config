@@ -3,7 +3,8 @@ package proto.deploymentEnvironment;
 
 option go_package = "config/deploymentConfigurations/deploymentEnv";
 
-import "proto/deploymentConfigurations/deploymentEnv/Containers.proto";
+// import "proto/deploymentConfigurations/deploymentEnv/Containers.proto";
+import "proto/deploymentConfigurations/deploymentEnv/InitContainers.proto";
 import "proto/deploymentConfigurations/deploymentEnv/CustomSizing.proto";
 // import "proto/deploymentConfigurations/deploymentEnv/Volumes.proto";
 
@@ -14,8 +15,8 @@ message DeploymentEnvironment {
     string type = 2;
     string accountName = 3;
     string imageVariant = 4;
-    string bootstrapOnly = 5;
-    string updateVersions = 6;
+    bool bootstrapOnly = 5;
+    bool updateVersions = 6;
     Consul consul = 7;
     Vault vault = 8;
     string location = 9;
@@ -25,13 +26,23 @@ message DeploymentEnvironment {
     // HostAliases hostAliases = 13;
     // Tolerations tolerations = 14;
     // NodeSelectors nodeSelectors = 15;
-    // GitConfig gitConfig = 16;
-    // LivenessProbeConfig livenessProbeConfig = 17;
+    GitConfig gitConfig = 16;
+    LivenessProbeConfig livenessProbeConfig = 17;
     HaServices haServices = 18;
 
     // repeated Containers container = 11;
     // repeated Volumes volumes = 13;
 
+}
+
+message LivenessProbeConfig {
+    bool enabled = 1;
+    int32 initialDelaySeconds = 2;
+}
+
+message GitConfig {
+    string upstreamUser = 1;
+    string originUser = 2;
 }
 
 
