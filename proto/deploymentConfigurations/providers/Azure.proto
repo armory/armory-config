@@ -9,7 +9,7 @@ message Azure {
 
     bool enabled = 1;
     string primaryAccount = 2;
-    repeated AzureAcc Account = 3;
+    repeated AzureAcc accounts = 3;
     AzureBakeryDefaults bakeryDefault = 4;
 
 }
@@ -30,7 +30,7 @@ message AzureAcc {
     string packerResourceGroup = 12;
     string packerStorageAccount = 13;
     repeated string regions = 14;
-    bool useSshPublicKey = 15;
+    string useSshPublicKey = 15;
 
 }
 

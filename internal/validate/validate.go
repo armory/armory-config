@@ -63,7 +63,7 @@ func validateCurrentDeploymentExists(KustomizeData *structs.Kustomize) []validat
 	var messages []validationFailure
 	ok := false
 
-	for _, a := range KustomizeData.Halyard.GetDeploymentConfiguration() {
+	for _, a := range KustomizeData.Halyard.GetDeploymentConfigurations() {
 		if KustomizeData.Halyard.Name == a.Name {
 			ok = true
 		}

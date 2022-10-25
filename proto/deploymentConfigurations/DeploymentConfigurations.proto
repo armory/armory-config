@@ -64,4 +64,9 @@ ToDo:
 - Adding plugin configs in the Spinnaker.proto file is not viable since anyone can make a custom plugin and there's no way
 we'd know what config fields should go there. For now, we are setting it to an empty object as a standard.
 
+
+After testing ToDo:
+- Revisit DeploymentEnvironment (Missing some structs like nodeAffinity, sidecars, etc)
+- Revisit AppEngine
+
 */

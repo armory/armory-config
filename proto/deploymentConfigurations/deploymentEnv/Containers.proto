@@ -28,13 +28,6 @@ message VolumeMounts {
 
 }
 
-
-message InitContainers {
-
-    repeated ContainerService service = 1;
-
-}
-
 message ContainerService {
 
     string name = 1;

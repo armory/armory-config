@@ -9,7 +9,7 @@ message DockerRegistry {
 
     bool enabled = 1;
     string primaryAccount = 2;
-    repeated DockerRegistryAcc Account = 3;
+    repeated DockerRegistryAcc accounts = 3;
     
 }
 

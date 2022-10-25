@@ -3,14 +3,485 @@ package proto.deploymentEnvironment;
 
 option go_package = "config/deploymentConfigurations/deploymentEnv";
 
-import "proto/deploymentConfigurations/deploymentEnv/Containers.proto";
-import "proto/deploymentConfigurations/deploymentEnv/Volumes.proto";
+// import "proto/deploymentConfigurations/deploymentEnv/Containers.proto";
+import "proto/deploymentConfigurations/deploymentEnv/InitContainers.proto";
+import "proto/deploymentConfigurations/deploymentEnv/CustomSizing.proto";
+// import "proto/deploymentConfigurations/deploymentEnv/Volumes.proto";
 
 // Configuration for the clouddriver microservice.
 message DeploymentEnvironment {
 
-    repeated Containers container = 1;
-    repeated InitContainers initContainers =2;
-    repeated Volumes volumes = 3;
+    string size = 1;
+    string type = 2;
+    string accountName = 3;
+    string imageVariant = 4;
+    bool bootstrapOnly = 5;
+    bool updateVersions = 6;
+    Consul consul = 7;
+    Vault vault = 8;
+    string location = 9;
+    CustomSizing customSizing = 10;
+    // Sidecar sidecars = 11;
+    InitContainers initContainers = 12;
+    // HostAliases hostAliases = 13;
+    // Tolerations tolerations = 14;
+    // NodeSelectors nodeSelectors = 15;
+    GitConfig gitConfig = 16;
+    LivenessProbeConfig livenessProbeConfig = 17;
+    HaServices haServices = 18;
+
+    // repeated Containers container = 11;
+    // repeated Volumes volumes = 13;
 
 }
+
+message LivenessProbeConfig {
+    bool enabled = 1;
+    int32 initialDelaySeconds = 2;
+}
+
+message GitConfig {
+    string upstreamUser = 1;
+    string originUser = 2;
+}
+
+
+message Consul {
+    string address = 1;
+    bool enabled = 2;
+}
+
+message Vault {
+    string address = 1;
+    bool enabled = 2;
+}
+
+
+message HaServices {
+    ClouddriverHA clouddriver = 1;
+    EchoHA echo = 2;
+
+}
+
+message ClouddriverHA {
+    bool enabled = 1;
+    bool disableClouddriverRoDeck = 2;
+}
+
+message EchoHA {
+    bool enabled = 1;
+
+}
+/*
+Example Config:
+
+
+  deploymentEnvironment:
+    size: SMALL
+    type: LocalDebian
+    accountName: spinnaker
+    imageVariant: SLIM
+    bootstrapOnly: true
+    updateVersions: true
+    consul:
+      address: http://localhost:9090
+      enabled: true
+    vault:
+      address: http://localhost:9090
+      enabled: true
+    location: spinnaker
+    customSizing:
+      spin-clouddriver:
+        replicas: 10
+        requests:
+          memory: 4Gi
+          cpu: '10'
+        limits:
+          memory: 4Gi
+          cpu: '10'
+      spin-vault-server:
+        replicas: 10
+        requests:
+          memory: 4Gi
+          cpu: '10'
+        limits:
+          memory: 4Gi
+          cpu: '10'
+      deck:
+        requests:
+          memory: 4Gi
+          cpu: '10'
+        limits:
+          memory: 4Gi
+          cpu: '10'
+      echo:
+        requests:
+          memory: 4Gi
+          cpu: '10'
+        limits:
+          memory: 4Gi
+          cpu: '10'
+      spin-rosco:
+        replicas: 10
+        requests:
+          memory: 4Gi
+          cpu: '10'
+        limits:
+          memory: 4Gi
+          cpu: '10'
+      redis:
+        requests:
+          memory: 4Gi
+          cpu: '10'
+        limits:
+          memory: 4Gi
+          cpu: '10'
+      redis-bootstrap:
+        requests:
+          memory: 4Gi
+          cpu: '10'
+        limits:
+          memory: 4Gi
+          cpu: '10'
+      clouddriver:
+        requests:
+          memory: 4Gi
+          cpu: '10'
+        limits:
+          memory: 4Gi
+          cpu: '10'
+      front50:
+        requests:
+          memory: 4Gi
+          cpu: '10'
+        limits:
+          memory: 4Gi
+          cpu: '10'
+      fiat:
+        requests:
+          memory: 4Gi
+          cpu: '10'
+        limits:
+          memory: 4Gi
+          cpu: '10'
+      consul-server:
+        requests:
+          memory: 4Gi
+          cpu: '10'
+        limits:
+          memory: 4Gi
+          cpu: '10'
+      kayenta:
+        requests:
+          memory: 4Gi
+          cpu: '10'
+        limits:
+          memory: 4Gi
+          cpu: '10'
+      clouddriver-rw:
+        requests:
+          memory: 4Gi
+          cpu: '10'
+        limits:
+          memory: 4Gi
+          cpu: '10'
+      igor:
+        requests:
+          memory: 4Gi
+          cpu: '10'
+        limits:
+          memory: 4Gi
+          cpu: '10'
+      orca:
+        requests:
+          memory: 4Gi
+          cpu: '10'
+        limits:
+          memory: 4Gi
+          cpu: '10'
+      spin-clouddriver-ro-deck:
+        replicas: 10
+        requests:
+          memory: 4Gi
+          cpu: '10'
+        limits:
+          memory: 4Gi
+          cpu: '10'
+      rosco:
+        requests:
+          memory: 4Gi
+          cpu: '10'
+        limits:
+          memory: 4Gi
+          cpu: '10'
+      spin-orca-bootstrap:
+        replicas: 10
+        requests:
+          memory: 4Gi
+          cpu: '10'
+        limits:
+          memory: 4Gi
+          cpu: '10'
+      clouddriver-ro:
+        requests:
+          memory: 4Gi
+          cpu: '10'
+        limits:
+          memory: 4Gi
+          cpu: '10'
+      spin-igor:
+        replicas: 10
+        requests:
+          memory: 4Gi
+          cpu: '10'
+        limits:
+          memory: 4Gi
+          cpu: '10'
+      spin-kayenta:
+        replicas: 10
+        requests:
+          memory: 4Gi
+          cpu: '10'
+        limits:
+          memory: 4Gi
+          cpu: '10'
+      spin-orca:
+        replicas: 10
+        requests:
+          memory: 4Gi
+          cpu: '10'
+        limits:
+          memory: 4Gi
+          cpu: '10'
+      vault-server:
+        requests:
+          memory: 4Gi
+          cpu: '10'
+        limits:
+          memory: 4Gi
+          cpu: '10'
+      echo-scheduler:
+        requests:
+          memory: 4Gi
+          cpu: '10'
+        limits:
+          memory: 4Gi
+          cpu: '10'
+      spin-clouddriver-ro:
+        replicas: 10
+        requests:
+          memory: 4Gi
+          cpu: '10'
+        limits:
+          memory: 4Gi
+          cpu: '10'
+      spin-redis:
+        replicas: 10
+        requests:
+          memory: 4Gi
+          cpu: '10'
+        limits:
+          memory: 4Gi
+          cpu: '10'
+      vault-client:
+        requests:
+          memory: 4Gi
+          cpu: '10'
+        limits:
+          memory: 4Gi
+          cpu: '10'
+      echo-worker:
+        requests:
+          memory: 4Gi
+          cpu: '10'
+        limits:
+          memory: 4Gi
+          cpu: '10'
+      orca-bootstrap:
+        requests:
+          memory: 4Gi
+          cpu: '10'
+        limits:
+          memory: 4Gi
+          cpu: '10'
+      spin-redis-bootstrap:
+        replicas: 10
+        requests:
+          memory: 4Gi
+          cpu: '10'
+        limits:
+          memory: 4Gi
+          cpu: '10'
+      spin-consul-client:
+        replicas: 10
+        requests:
+          memory: 4Gi
+          cpu: '10'
+        limits:
+          memory: 4Gi
+          cpu: '10'
+      spin-monitoring-daemon:
+        replicas: 10
+        requests:
+          memory: 4Gi
+          cpu: '10'
+        limits:
+          memory: 4Gi
+          cpu: '10'
+      clouddriver-ro-deck:
+        requests:
+          memory: 4Gi
+          cpu: '10'
+        limits:
+          memory: 4Gi
+          cpu: '10'
+      spin-deck:
+        replicas: 10
+        requests:
+          memory: 4Gi
+          cpu: '10'
+        limits:
+          memory: 4Gi
+          cpu: '10'
+      spin-echo:
+        replicas: 10
+        requests:
+          memory: 4Gi
+          cpu: '10'
+        limits:
+          memory: 4Gi
+          cpu: '10'
+      clouddriver-bootstrap:
+        requests:
+          memory: 4Gi
+          cpu: '10'
+        limits:
+          memory: 4Gi
+          cpu: '10'
+      spin-echo-scheduler:
+        replicas: 10
+        requests:
+          memory: 4Gi
+          cpu: '10'
+        limits:
+          memory: 4Gi
+          cpu: '10'
+      spin-clouddriver-caching:
+        replicas: 10
+        requests:
+          memory: 4Gi
+          cpu: '10'
+        limits:
+          memory: 4Gi
+          cpu: '10'
+      spin-clouddriver-bootstrap:
+        replicas: 10
+        requests:
+          memory: 4Gi
+          cpu: '10'
+        limits:
+          memory: 4Gi
+          cpu: '10'
+      spin-fiat:
+        replicas: 10
+        requests:
+          memory: 4Gi
+          cpu: '10'
+        limits:
+          memory: 4Gi
+          cpu: '10'
+      spin-vault-client:
+        replicas: 10
+        requests:
+          memory: 4Gi
+          cpu: '10'
+        limits:
+          memory: 4Gi
+          cpu: '10'
+      spin-front50:
+        replicas: 10
+        requests:
+          memory: 4Gi
+          cpu: '10'
+        limits:
+          memory: 4Gi
+          cpu: '10'
+      spin-echo-worker:
+        replicas: 10
+        requests:
+          memory: 4Gi
+          cpu: '10'
+        limits:
+          memory: 4Gi
+          cpu: '10'
+      consul-client:
+        requests:
+          memory: 4Gi
+          cpu: '10'
+        limits:
+          memory: 4Gi
+          cpu: '10'
+      spin-gate:
+        replicas: 10
+        requests:
+          memory: 4Gi
+          cpu: '10'
+        limits:
+          memory: 4Gi
+          cpu: '10'
+      clouddriver-caching:
+        requests:
+          memory: 4Gi
+          cpu: '10'
+        limits:
+          memory: 4Gi
+          cpu: '10'
+      spin-consul-server:
+        replicas: 10
+        requests:
+          memory: 4Gi
+          cpu: '10'
+        limits:
+          memory: 4Gi
+          cpu: '10'
+      gate:
+        requests:
+          memory: 4Gi
+          cpu: '10'
+        limits:
+          memory: 4Gi
+          cpu: '10'
+      monitoring-daemon:
+        requests:
+          memory: 4Gi
+          cpu: '10'
+        limits:
+          memory: 4Gi
+          cpu: '10'
+      spin-clouddriver-rw:
+        replicas: 10
+        requests:
+          memory: 4Gi
+          cpu: '10'
+        limits:
+          memory: 4Gi
+          cpu: '10'
+    sidecars: {}
+    initContainers: {}
+    hostAliases: {}
+    affinity: {}
+    tolerations: {}
+    nodeSelectors: {}
+    gitConfig:
+      upstreamUser: upUser
+      originUser: user
+    livenessProbeConfig:
+      enabled: true
+      initialDelaySeconds: 10
+    haServices:
+      clouddriver:
+        enabled: false
+        disableClouddriverRoDeck: false
+      echo:
+        enabled: false
+*/

@@ -112,7 +112,7 @@ spec:`
 
 func GetCurrentDeploymentPosition(KustomizeData structs.Kustomize) int {
 
-	for i, a := range KustomizeData.Halyard.GetDeploymentConfiguration() {
+	for i, a := range KustomizeData.Halyard.GetDeploymentConfigurations() {
 		if KustomizeData.Halyard.GetCurrentDeployment() == a.Name {
 			return i
 		}
