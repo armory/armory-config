@@ -5,6 +5,7 @@ option go_package = "config/deploymentConfigurations/canary";
 
 // Configuration for the clouddriver microservice.
 message Canary {
+
     bool enabled = 1;
     repeated serviceIntegrations serviceIntegrations = 2;
     bool reduxLogger = 3;
@@ -12,20 +13,22 @@ message Canary {
     bool stagesEnabled = 5;
     bool templatesEnabled = 6;
     bool showAllConfigsEnabled = 7;
+
 }
 
 message serviceIntegrations {
     string name = 1;
     bool enabled = 2;
-    CanaryAccounts canaryAccounts = 3;
+    repeated CanaryAccounts accounts = 3;
     bool gcsEnabled = 4;
-    bool stackDriver = 5;
+    bool stackdriverEnabled = 5;
     bool s3Enabled = 6;
     
 
 }
 
 message CanaryAccounts {
+
 
   string name = 1;
   string project = 2;
@@ -35,7 +38,7 @@ message CanaryAccounts {
   string rootFolder = 6;
   repeated string supportedTypes = 7;
 
-  Endpoint baseUrlEndpoint = 8;
+  Endpoint endpoint = 8;
   string username = 9;
   string password = 10;
   string usernamePasswordFile = 11;
@@ -49,15 +52,17 @@ message CanaryAccounts {
 
   string region = 17;
   string profileName = 18;
-  string endpoint = 19;
+  // string Awsendpoint = 19;
   string accessKeyId = 20;
   string secretAccessKey = 21;
+
 
 }
 
 message Endpoint {
   string baseUrl = 1;
 }
+
 
 /* 
 
