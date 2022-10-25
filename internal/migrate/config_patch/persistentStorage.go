@@ -8,13 +8,17 @@ import (
 )
 
 func GetPersistentStorage(KustomizeData structs.Kustomize) string {
+	str := ""
 
-	return GetPersistentStoreType(KustomizeData) +
-		GetAzsStorage(KustomizeData) +
-		GetGcsStorage(KustomizeData) +
-		GetRedisStorage(KustomizeData) +
-		GetS3Storage(KustomizeData) +
-		GetOracleStorage(KustomizeData)
+	if nil != KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].PersistentStorage {
+		str = GetPersistentStoreType(KustomizeData) +
+			GetAzsStorage(KustomizeData) +
+			GetGcsStorage(KustomizeData) +
+			GetRedisStorage(KustomizeData) +
+			GetS3Storage(KustomizeData) +
+			GetOracleStorage(KustomizeData)
+	}
+	return str
 }
 
 func GetPersistentStoreType(KustomizeData structs.Kustomize) string {
