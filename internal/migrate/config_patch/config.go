@@ -7,16 +7,20 @@ import (
 )
 
 func GetConfigData(KustomizeData structs.Kustomize) string {
+	str := ""
 
-	return GetGeneralConfig(KustomizeData) +
-		GetSpecificConfig(KustomizeData)
+	if nil != KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos] {
+		str = GetGeneralConfig(KustomizeData) +
+			GetSpecificConfig(KustomizeData)
+	}
+	return str
 }
 
 func GetGeneralConfig(KustomizeData structs.Kustomize) string {
 	str := `
 # === General Config ===
-	  version: ` + "2.0" /*KustomizeData.Halyard.DeploymentConfiguration[KustomizeData.CurrentDeploymentPos].Version*/ + `  # the version of Spinnaker to be deployed
-	  timezone: ` + "America/Los_Angeles" /*KustomizeData.Halyard.DeploymentConfiguration[KustomizeData.CurrentDeploymentPos].Timezone*/ + `
+	  version: ` + KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Version + `  # the version of Spinnaker to be deployed
+	  timezone: ` + KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Timezone + `
 `
 
 	str = strings.Replace(str, "\t", "    ", -1)
