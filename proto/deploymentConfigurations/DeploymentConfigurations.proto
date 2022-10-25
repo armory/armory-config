@@ -65,8 +65,11 @@ ToDo:
 we'd know what config fields should go there. For now, we are setting it to an empty object as a standard.
 
 
-After testing ToDo:
-- Revisit DeploymentEnvironment (Missing some structs like nodeAffinity, sidecars, etc)
-- Revisit AppEngine
 
+
+The major areas that need more accuracy are
+    - DeploymentEnvironment
+    - Canary
+    - Spinnaker (For plugins and such)
+    - Providers (Just to add the missing ones)
 */
