@@ -63,20 +63,17 @@ message Authz {
 message GroupMembership {
 
     string service = 1;
-    message google {
-        string roleProviderType = 1;
-    }
-    message github {
-        string roleProviderType = 1;
-    }
-    message file {
-        string roleProviderType = 1;
-    }
-    message ldap {
-        string roleProviderType = 1;
-    }
-    bool enabled = 2;
+    RoleType google = 2;
+    RoleType github = 3;
+    RoleType file = 4;
+    RoleType ldap = 5;
+    bool enabled = 6;
 
+}
+
+message RoleType {
+  string roleProviderType = 1;
+  string path = 2;
 }
 
 /* 
