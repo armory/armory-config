@@ -10,7 +10,7 @@ message Oauth2 {
     Oauth2Client client = 2;
     string provider = 3;
     resource resource = 4;
-    userInfoMapping userInfoMapping = 5;
+    OauthuserInfoMapping userInfoMapping = 5;
     userInfoRequirements userInfoRequirements = 6;
 }
 
@@ -34,7 +34,7 @@ message resource {
   string userInfoUri = 1;
 }
 
-message userInfoMapping {
+message OauthuserInfoMapping {
   string email = 1;
   string firstname = 2;
   string lastname = 3;

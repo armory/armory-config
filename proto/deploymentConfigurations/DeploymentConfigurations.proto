@@ -20,7 +20,9 @@ import "proto/deploymentConfigurations/spinnaker/Spinnaker.proto";
 import "proto/deploymentConfigurations/webhook/Webhook.proto";
 import "proto/deploymentConfigurations/canary/Canary.proto";
 import "proto/deploymentConfigurations/stats/Stats.proto";
-// Configuration for the clouddriver microservice.
+
+// All available configurations for Spinnaker Halyard
+
 message DeploymentConfigurations {
 
     string name = 1;
@@ -57,6 +59,7 @@ ToDo:
     - Huaweicloud
     - dcos
 - Review PersistentStorage
+    - Need to add Redis
 - Check ci.gcb permission structure
 - Check ci.Codebuild permission structure (Should be the same as ci.gcb)
 - Revisit the oauth2 proto struct
@@ -69,7 +72,7 @@ we'd know what config fields should go there. For now, we are setting it to an e
 
 The major areas that need more accuracy are
     - DeploymentEnvironment
-    - Canary
+    - Canary (AWS Acocunts aren't working but everything else is)
     - Spinnaker (For plugins and such)
     - Providers (Just to add the missing ones)
 */

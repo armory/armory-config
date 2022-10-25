@@ -67,7 +67,7 @@ func main() {
 	if err != nil {
 		fmt.Println(err)
 	} else {
-		fmt.Println(test.DeploymentConfigurations[0].Providers)
+		fmt.Println(test.DeploymentConfigurations[0].Security.Authn)
 	}
 
 	migrate.Execute()
