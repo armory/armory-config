@@ -34,6 +34,14 @@ message UiSecurity {
 
 message Ssl {
     bool enabled = 1;
+    string keyAlias = 2;
+    string keyStore = 3;
+    string keyStoreType = 4;
+    string keyStorePassword = 5;
+    string trustStore = 6;
+    string trustStoreType = 7;
+    string trustStorePassword = 8;
+    
 
 }
 
@@ -78,7 +86,14 @@ Example Config
   security:
     apiSecurity:
       ssl:
-        enabled: false
+        enabled: true
+        keyAlias: gate
+        keyStore: encryptedFile:s3!r:us-west-2!b:xero-ps-spinnaker-svc-halyard-secrets!f:x509/gate.jks
+        keyStoreType: jks
+        keyStorePassword: encrypted:s3!r:us-west-2!b:xero-ps-spinnaker-svc-halyard-secrets!f:spinnaker-secrets.yml!k:x509.passphrase
+        trustStore: encryptedFile:s3!r:us-west-2!b:xero-ps-spinnaker-svc-halyard-secrets!f:x509/gate.jks
+        trustStoreType: jks
+        trustStorePassword: encrypted:s3!r:us-west-2!b:xero-ps-spinnaker-svc-halyard-secrets!f:spinnaker-secrets.yml!k:x509.passphrase
       overrideBaseUrl: http://localhost:9090
     uiSecurity:
       ssl:

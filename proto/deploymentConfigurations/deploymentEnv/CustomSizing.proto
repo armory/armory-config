@@ -1,0 +1,70 @@
+syntax = "proto3";
+package proto.deploymentEnvironment;
+
+option go_package = "config/deploymentConfigurations/deploymentEnv";
+
+message CustomSizing {
+    ServiceSizing spin_clouddriver = 1;
+    ServiceSizing spin_vault_server = 2;
+    ServiceSizing deck = 3;
+    ServiceSizing echo = 4;
+    ServiceSizing spin_rosco = 5;
+    ServiceSizing redis = 6;
+    ServiceSizing redis_bootstrap = 7;
+    ServiceSizing clouddriver = 8;
+    ServiceSizing front50 = 9;
+    ServiceSizing consul_server = 10;
+    ServiceSizing kayenta = 11;
+    ServiceSizing clouddriver_rw = 12;
+    ServiceSizing spin_clouddriver_ro_deck = 13;
+    ServiceSizing spin_orca_bootstrap = 14;
+    ServiceSizing clouddriver_ro = 15;
+    ServiceSizing spin_igor = 16;
+    ServiceSizing spin_kayenta = 17;
+    ServiceSizing spin_orca = 18;
+    ServiceSizing vault_server = 19;
+    ServiceSizing vault_client = 20;
+    ServiceSizing echo_scheduler = 21;
+    ServiceSizing spin_clouddriver_ro = 22;
+    ServiceSizing spin_redis = 23;
+    ServiceSizing echo_worker = 24;
+    ServiceSizing orca_bootstrap = 25;
+    ServiceSizing spin_redis_bootstrap = 26;
+    ServiceSizing spin_consul_client = 27;
+    ServiceSizing spin_monitoring_daemon = 28;
+    ServiceSizing clouddriver_ro_deck = 29;
+    ServiceSizing spin_deck = 30;
+    ServiceSizing spin_echo = 31;
+    ServiceSizing clouddriver_bootstrap = 32;
+    ServiceSizing spin_echo_scheduler = 33;
+    ServiceSizing spin_clouddriver_caching = 34;
+    ServiceSizing spin_clouddriver_bootstrap = 35;
+    ServiceSizing spin_vault_client = 36;
+    ServiceSizing spin_fiat = 37;
+    ServiceSizing spin_echo_worker = 38;
+    ServiceSizing consul_client = 39;
+    ServiceSizing spin_gate = 40;
+    ServiceSizing clouddriver_caching = 41;
+    ServiceSizing spin_consul_server = 42;
+    ServiceSizing gate = 43;
+    ServiceSizing monitoring_daemon = 44;
+    ServiceSizing spin_clouddriver_rw = 45;
+    ServiceSizing fiat = 46;
+    ServiceSizing igor = 47;
+    ServiceSizing orca = 48;
+    ServiceSizing rosco = 49;
+    ServiceSizing spin_front50 = 50;
+}
+
+
+message ServiceSizing {
+    int32 replicas = 1;
+    Sizing requests = 2;
+    Sizing limits = 3;
+    
+}
+
+message Sizing {
+    string memory = 1;
+    string cpu = 2;
+}

@@ -67,7 +67,7 @@ func main() {
 	if err != nil {
 		fmt.Println(err)
 	} else {
-		fmt.Println(test.DeploymentConfigurations[0].Providers.Kubernetes.Accounts)
+		fmt.Println(test.DeploymentConfigurations[0].DeploymentEnvironment)
 	}
 
 	migrate.Execute()
