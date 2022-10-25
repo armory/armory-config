@@ -49,6 +49,7 @@ func UnmarshalStrict(b []byte, m proto.Message) error {
 // in error and *config.Hal will be nil.
 func ParseHalConfig(halPath string) (*deploymentConfigurations.HalFile, error) {
 	data, err := fileio.ReadFile(halPath)
+
 	if err != nil {
 		return nil, err
 	}

@@ -12,15 +12,21 @@ message Saml {
     string keyStorePassword = 5;
     string keyStoreAliasName = 6;
     string serviceAddress = 7;
-    message userInfoMapping {
-        string email = 1;
-        string firstname = 2;
-        string lastname = 3;
-        string username = 4;
-        string roles = 5;
-        string rolesDelimiter = 6;
-    }
+    SamluserInfoMapping userInfoMapping = 8;
+    string metadataLocal = 9;
 }
+
+message SamluserInfoMapping {
+  string email = 1;
+  string firstname = 2;
+  string lastname = 3;
+  string username = 4;
+  string roles = 5;
+  string rolesDelimiter = 6;
+}
+
+
+
 /* 
 
 Example Config
