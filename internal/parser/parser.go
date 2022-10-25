@@ -3,6 +3,7 @@ package parser
 
 import (
 	"fmt"
+	"regexp"
 
 	"github.com/austinthao5/golang_proto_test/config/deploymentConfigurations"
 	"github.com/austinthao5/golang_proto_test/internal/fileio"
@@ -51,6 +52,10 @@ func ParseHalConfig(halPath string) (*deploymentConfigurations.HalFile, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	//Convert spin- to spin_ because go doesn't allow variables to be have - and the proto files cannot parse the customSizing data
+	reg := regexp.MustCompile(`(\n)      spin-(.*)`)
+	data = []byte(reg.ReplaceAllString(string(data), `$1      spin_$2`))
 
 	// Debug
 	// fmt.Println("===RAW hal data START===\n" + string(data) + "\n===RAW hal data END===")
