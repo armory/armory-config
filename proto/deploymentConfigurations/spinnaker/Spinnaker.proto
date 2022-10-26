@@ -15,14 +15,14 @@ message Spinnaker {
 
 message Extensibility {
 
-    repeated Plugins plugins = 1;
-    repeated Repositories repository = 2;
-
+    // map<string, Plugins> plugins = 1;
+    Plugins plugins = 1;
+    Repositories repositories = 2;
 
 }
 
 message Plugins {
-    string name = 1;
+    // string name = 1;
     string id = 2;
     bool enabled = 3;
     string version = 4;
@@ -48,7 +48,6 @@ message Repositories {
     string id = 2;
     string url = 3;
 }
-
 
 /*
 
