@@ -3,9 +3,10 @@ package proto.deploymentEnvironment;
 
 option go_package = "config/deploymentConfigurations/deploymentEnv";
 
-// import "proto/deploymentConfigurations/deploymentEnv/Containers.proto";
+import "proto/deploymentConfigurations/deploymentEnv/Containers.proto";
 import "proto/deploymentConfigurations/deploymentEnv/InitContainers.proto";
 import "proto/deploymentConfigurations/deploymentEnv/CustomSizing.proto";
+import "proto/deploymentConfigurations/deploymentEnv/Affinity.proto";
 // import "proto/deploymentConfigurations/deploymentEnv/Volumes.proto";
 
 // Configuration for the clouddriver microservice.
@@ -23,15 +24,31 @@ message DeploymentEnvironment {
     CustomSizing customSizing = 10;
     // Sidecar sidecars = 11;
     InitContainers initContainers = 12;
-    // HostAliases hostAliases = 13;
-    // Tolerations tolerations = 14;
+    HostAliases hostAliases = 13;
+    Tolerations tolerations = 14;
     // NodeSelectors nodeSelectors = 15;
     GitConfig gitConfig = 16;
     LivenessProbeConfig livenessProbeConfig = 17;
     HaServices haServices = 18;
+    Affinity affinity = 19;
 
     // repeated Containers container = 11;
     // repeated Volumes volumes = 13;
+
+}
+
+message HostAliases {
+  // Doesn't look like HostAliases are currently supported. Only reference to this I see is below
+  // https://github.com/spinnaker/spinnaker/issues/2010
+}
+
+message Tolerations {
+// Pulled from https://github.com/spinnaker/halyard/blob/master/halyard-config/src/main/java/com/netflix/spinnaker/halyard/config/model/v1/node/Toleration.java
+
+  string key = 1;
+  string Operator = 2;
+  string value = 3;
+  string effect = 4;
 
 }
 
@@ -70,6 +87,10 @@ message ClouddriverHA {
 
 message EchoHA {
     bool enabled = 1;
+    string image = 2;
+    repeated string args = 3;
+    repeated VolumeMounts volumeMounts = 4;
+
 
 }
 /*

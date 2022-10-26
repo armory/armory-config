@@ -8,13 +8,13 @@ import "proto/deploymentConfigurations/deploymentEnv/Containers.proto";
 // Configuration for the clouddriver microservice.
 message InitContainers {
 
-    Service front50 = 1;
-    Service clouddriver = 2;
-    Service orca = 3;
-    Service rosco = 4;
-    Service gate = 5;
-    Service deck = 6;
-    Service igor = 7;
+    repeated Service front50 = 1;
+    repeated Service clouddriver = 2;
+    repeated Service orca = 3;
+    repeated Service rosco = 4;
+    repeated Service gate = 5;
+    repeated Service deck = 6;
+    repeated Service igor = 7;
 
 }
 
@@ -22,18 +22,51 @@ message Service {
 
     string name = 1;
     string image = 2;
-    repeated VolumeMounts volumeMounts = 3;
+    repeated string args = 3;
+    repeated VolumeMounts volumeMounts = 4;
 
 }
 
-// initContainers:
-//     clouddriver:
-//       - name: eap
-//         image: docker.io/armory/eap-plugin:<PLUGIN_VERSION>
-//         volumeMounts:
-//           - mountPath: /opt/eap/target
-//             name: eap-plugin
-//       - name: clouddriver
-//         volumeMounts:
-//           - mountPath: /opt/spinnaker/lib/local-plugins
-//             name: eap-plugin
+/*
+
+Example Config:
+
+   initContainers:
+      front50:
+      - name: policy-engine-install
+        image: docker.io/armory/policy-engine-plugin:0.0.19
+        args:
+        - -install-path
+        - /opt/policy-engine-plugin/target
+        volumeMounts:
+        - mountPath: /opt/policy-engine-plugin/target
+          name: policy-engine-install
+      clouddriver:
+      - name: policy-engine-install
+        image: docker.io/armory/policy-engine-plugin:0.0.19
+        args:
+        - -install-path
+        - /opt/policy-engine-plugin/target
+        volumeMounts:
+        - mountPath: /opt/policy-engine-plugin/target
+          name: policy-engine-install
+      gate:
+      - name: policy-engine-install
+        image: docker.io/armory/policy-engine-plugin:0.0.19
+        args:
+        - -install-path
+        - /opt/policy-engine-plugin/target
+        volumeMounts:
+        - mountPath: /opt/policy-engine-plugin/target
+          name: policy-engine-install
+      orca:
+      - name: policy-engine-install
+        image: docker.io/armory/policy-engine-plugin:0.0.19
+        args:
+        - -install-path
+        - /opt/policy-engine-plugin/target
+        volumeMounts:
+        - mountPath: /opt/policy-engine-plugin/target
+          name: policy-engine-install
+
+*/
