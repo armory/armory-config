@@ -26,7 +26,7 @@ message DeploymentEnvironment {
     InitContainers initContainers = 12;
     HostAliases hostAliases = 13;
     Tolerations tolerations = 14;
-    // NodeSelectors nodeSelectors = 15;
+    NodeSelectors nodeSelectors = 15;
     GitConfig gitConfig = 16;
     LivenessProbeConfig livenessProbeConfig = 17;
     HaServices haServices = 18;
@@ -35,6 +35,11 @@ message DeploymentEnvironment {
     // repeated Containers container = 11;
     // repeated Volumes volumes = 13;
 
+}
+
+message NodeSelectors {
+  // I'm not sure if this functionality works
+  // https://github.com/spinnaker/spinnaker/issues/5916
 }
 
 message HostAliases {
