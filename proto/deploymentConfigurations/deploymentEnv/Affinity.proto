@@ -1,0 +1,322 @@
+syntax = "proto3";
+package proto.deploymentEnvironment;
+
+option go_package = "config/deploymentConfigurations/deploymentEnv";
+
+// Configuration for deploymentConfigurations.deploymentEnvironment.affinity
+
+message Affinity {
+
+    ServiceAffinity spin_clouddriver = 1;
+    ServiceAffinity spin_clouddriver_caching = 2;
+    ServiceAffinity spin_clouddriver_ro = 3;
+    ServiceAffinity spin_clouddriver_ro_deck = 4;
+    ServiceAffinity spin_clouddriver_rw = 5;
+    ServiceAffinity spin_deck = 6;
+    ServiceAffinity spin_echo = 7;
+    ServiceAffinity spin_fiat = 8;
+    ServiceAffinity spin_front50 = 9;
+    ServiceAffinity spin_gate = 10;
+    ServiceAffinity spin_igor = 11;
+    ServiceAffinity spin_orca = 12;
+    ServiceAffinity spin_redis = 13;
+    ServiceAffinity spin_rosco = 14;
+
+}
+
+message ServiceAffinity {
+
+    NodeAffinity nodeAffinity = 1;
+    PodAntiAffinity podAntiAffinity = 2;
+
+}
+
+message PodAntiAffinity {
+    repeated PAARDSIDE requiredDuringSchedulingIgnoredDuringExecution = 1;
+    string topologyKey = 2;
+}
+
+message NodeAffinity {
+    NARDSIDE requiredDuringSchedulingIgnoredDuringExecution = 1;
+}
+
+// PAARDSIDE = Pod Anti Affinity's requiredDuringSchedulingIgnoredDuringExecution
+
+message PAARDSIDE {
+    LabelSelector labelSelector = 1;
+
+}
+
+// NARDSIDE = Node Affinity's requiredDuringSchedulingIgnoredDuringExecution
+
+message NARDSIDE {
+    repeated NodeSelectorTerms nodeSelectorTerms = 1;
+
+}
+
+message NodeSelectorTerms {
+    repeated MatchExpressions matchExpressions = 1;
+
+}
+
+message LabelSelector {
+    repeated MatchExpressions matchExpressions = 1;
+
+}
+
+message MatchExpressions {
+    string key = 1;
+    string operator = 2;
+    repeated string values = 3;
+}
+
+
+/*
+
+Example config taken from 
+https://github.com/spinnaker/spinnaker/issues/5916#issuecomment-867360777
+Example Config:
+
+  deploymentEnvironment:
+    affinity:
+      spin-clouddriver:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: spinnaker
+                operator: In
+                values:
+                - 'true'
+      spin-clouddriver-caching:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: cluster
+                operator: In
+                values:
+                - spin-clouddriver-caching
+            topologyKey: kubernetes.io/hostname
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: spinnaker
+                operator: In
+                values:
+                - 'true'
+      spin-clouddriver-ro:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: cluster
+                operator: In
+                values:
+                - spin-clouddriver-caching
+                - spin-clouddriver-ro
+            topologyKey: kubernetes.io/hostname
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: spinnaker
+                operator: In
+                values:
+                - 'true'
+      spin-clouddriver-ro-deck:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: cluster
+                operator: In
+                values:
+                - spin-clouddriver-caching
+                - spin-clouddriver-ro-deck
+            topologyKey: kubernetes.io/hostname
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: spinnaker
+                operator: In
+                values:
+                - 'true'
+      spin-clouddriver-rw:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: cluster
+                operator: In
+                values:
+                - spin-clouddriver-caching
+                - spin-clouddriver-rw
+            topologyKey: kubernetes.io/hostname
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: spinnaker
+                operator: In
+                values:
+                - 'true'
+      spin-deck:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: cluster
+                operator: In
+                values:
+                - spin-clouddriver-caching
+            topologyKey: kubernetes.io/hostname
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: spinnaker
+                operator: In
+                values:
+                - 'true'
+      spin-echo:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: cluster
+                operator: In
+                values:
+                - spin-clouddriver-caching
+            topologyKey: kubernetes.io/hostname
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: spinnaker
+                operator: In
+                values:
+                - 'true'
+      spin-fiat:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: cluster
+                operator: In
+                values:
+                - spin-clouddriver-caching
+            topologyKey: kubernetes.io/hostname
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: spinnaker
+                operator: In
+                values:
+                - 'true'
+      spin-front50:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: cluster
+                operator: In
+                values:
+                - spin-clouddriver-caching
+            topologyKey: kubernetes.io/hostname
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: spinnaker
+                operator: In
+                values:
+                - 'true'
+      spin-gate:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: cluster
+                operator: In
+                values:
+                - spin-clouddriver-caching
+            topologyKey: kubernetes.io/hostname
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: spinnaker
+                operator: In
+                values:
+                - 'true'
+      spin-igor:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: cluster
+                operator: In
+                values:
+                - spin-clouddriver-caching
+            topologyKey: kubernetes.io/hostname
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: spinnaker
+                operator: In
+                values:
+                - 'true'
+      spin-orca:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: cluster
+                operator: In
+                values:
+                - spin-clouddriver-caching
+                - spin-orca
+            topologyKey: kubernetes.io/hostname
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: spinnaker
+                operator: In
+                values:
+                - 'true'
+      spin-redis:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: spinnaker
+                operator: In
+                values:
+                - 'true'
+      spin-rosco:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: cluster
+                operator: In
+                values:
+                - spin-clouddriver-caching
+            topologyKey: kubernetes.io/hostname
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: spinnaker
+                operator: In
+                values:
+                - 'true'
+
+
+*/
