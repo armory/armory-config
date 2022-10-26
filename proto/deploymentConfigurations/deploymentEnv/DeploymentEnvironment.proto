@@ -7,7 +7,7 @@ import "proto/deploymentConfigurations/deploymentEnv/Containers.proto";
 import "proto/deploymentConfigurations/deploymentEnv/InitContainers.proto";
 import "proto/deploymentConfigurations/deploymentEnv/CustomSizing.proto";
 import "proto/deploymentConfigurations/deploymentEnv/Affinity.proto";
-// import "proto/deploymentConfigurations/deploymentEnv/Volumes.proto";
+import "proto/deploymentConfigurations/deploymentEnv/Volumes.proto";
 
 // Configuration for the clouddriver microservice.
 message DeploymentEnvironment {
@@ -31,9 +31,8 @@ message DeploymentEnvironment {
     LivenessProbeConfig livenessProbeConfig = 17;
     HaServices haServices = 18;
     Affinity affinity = 19;
-
-    // repeated Containers container = 11;
-    // repeated Volumes volumes = 13;
+    repeated Containers container = 20;
+    repeated Volumes volumes = 21;
 
 }
 
