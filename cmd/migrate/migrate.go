@@ -60,27 +60,6 @@ func migrator(halconfig_dir string, output_dir string, deployment_dir string, sp
 		os.Exit(1)
 	}
 
-	//Create Kustomize struct with current info
-	KustomizeData := structs.Kustomize{
-		Skip_validations:           strings.ToUpper(skip_validations),
-		Spin_flavor:                spin_flavor,
-		Output_dir:                 output_dir,
-		Halyard:                    halyard,
-		ProfilesConfigFiles:        profiles_config_files,
-		ServiceSettingsConfigFiles: service_settings_config_files,
-	}
-
-	fmt.Printf("\nKustomizeData: %#v \n\n", KustomizeData)
-	fmt.Printf("\nHalyard: %#v \n\n", KustomizeData.Halyard)
-	// fmt.Println("Aws.AccessKey: " + KustomizeData.Halyard.DeploymentConfigurations[0].Name)
-
-	if "Y" != KustomizeData.Skip_validations {
-		if err := validate.KustomizeConfig(&KustomizeData); err != nil {
-			fmt.Println(err)
-			os.Exit(1)
-		}
-	}
-
 	// Profiles stuff
 	fmt.Println("Reading " + halconfig_dir + "/" + deployment_dir + "/profiles")
 
@@ -100,10 +79,26 @@ func migrator(halconfig_dir string, output_dir string, deployment_dir string, sp
 		os.Exit(1)
 	}
 
-	// profile_settings :=
+	//Create Kustomize struct with current info
+	KustomizeData := structs.Kustomize{
+		Skip_validations:           strings.ToUpper(skip_validations),
+		Spin_flavor:                spin_flavor,
+		Output_dir:                 output_dir,
+		Halyard:                    halyard,
+		ProfilesConfigFiles:        profiles_config_files,
+		ServiceSettingsConfigFiles: service_settings_config_files,
+	}
 
-	// fmt.Println(halconfig)
-	// fmt.Println(output)
+	// fmt.Printf("\nKustomizeData: %#v \n\n", KustomizeData)
+	// fmt.Printf("\nHalyard: %#v \n\n", KustomizeData.Halyard)
+	// fmt.Println("Aws.AccessKey: " + KustomizeData.Halyard.DeploymentConfigurations[0].Name)
+
+	if "Y" != KustomizeData.Skip_validations {
+		if err := validate.KustomizeConfig(&KustomizeData); err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
+	}
 
 	// Create output files
 	output_config(&KustomizeData)

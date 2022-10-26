@@ -21,7 +21,7 @@ func getValidators() []validator {
 		validateKindsAndOmitKinds,
 		validateCurrentDeploymentExists,
 		// validateProfilesExists,
-		validateProfilesFileHasData,
+		// validateProfilesFileHasData,
 	}
 }
 
