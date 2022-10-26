@@ -1,6 +1,7 @@
 package providers_patch
 
 import (
+	"fmt"
 	"strings"
 
 	"github.com/austinthao5/golang_proto_test/internal/migrate/structs"
@@ -24,16 +25,17 @@ type Providers struct {
 
 func GetProvidersData(KustomizeData structs.Kustomize) string {
 
-	// KustomizeData.Halyard.DeploymentConfiguration[KustomizeData.CurrentDeploymentPos].Providers.Aws.GetAwsAcc()
-	// KustomizeData.Halyard.DeploymentConfiguration[KustomizeData.CurrentDeploymentPos].Providers.AppEngine
-	prob := Providers{}
-	prob.SetProvidersData(KustomizeData)
+	str := ""
 
-	str := `
+	if nil != KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Providers {
+		prob := Providers{}
+		prob.SetProvidersData(KustomizeData)
+
+		str = `
   validation:
     providers:
       ` + prob.Enable + `:
-        enabled: true    # Default: true. Indicate if operator should do connectivity checks to configured kubernetes accounts before applying the manifest
+        enabled: true
   spinnakerConfig:
     config:
       providers:
@@ -61,6 +63,7 @@ func GetProvidersData(KustomizeData structs.Kustomize) string {
           ` + prob.Oracle + `
         cloudfoundry:
           ` + prob.Cloudfoundry
+	}
 
 	return str
 }
@@ -87,6 +90,7 @@ func (ProvidersData *Providers) SetProvidersData(KustomizeData structs.Kustomize
 	for _, function := range functionCalls {
 		err := function(KustomizeData)
 		if err != nil {
+			fmt.Println("Error while executing the function:%s Error:(%s)", function, err)
 			return err
 			// return fmt.Errorf("Error while executing the function:%s Error:(%s)", function, err)
 		}
@@ -95,97 +99,15 @@ func (ProvidersData *Providers) SetProvidersData(KustomizeData structs.Kustomize
 	return nil
 }
 
-func (ProvidersData *Providers) SetAppEngineData(KustomizeData structs.Kustomize) error {
-
-	str := `enabled: false
-	accounts: []`
-
-	// enabled: ` + KustomizeData.Halyard.DeploymentConfiguration[KustomizeData.CurrentDeploymentPos].Providers.AppEngine.Enable + `
-
-	str = strings.Replace(str, "\t", "          ", -1)
-	ProvidersData.AppEngine = str
-
-	return nil
-}
-
-func (ProvidersData *Providers) SetAwsData(KustomizeData structs.Kustomize) error {
-
-	str := `enabled: true
-	primaryAccount: ` + /* KustomizeData.Halyard.DeploymentConfiguration[KustomizeData.CurrentDeploymentPos].Providers.Aws.PrimaryAccount +*/ `                # Must be one of the configured AWS accounts
-	# accounts: []
-	  accounts:
-	  - name: XXXXX
-	  accountId: "XXXXX"            # (Required). Your AWS account ID to manage. See the AWS IAM User Guide for more information.
-	  assumeRole: XXXXX           # (Required). If set, will configure a credentials provider that uses AWS Security Token Service to assume the specified role. Example: “user/spinnaker” or “role/spinnakerManaged”
-	  lifecycleHooks: []                   # (Optional). Configuration for AWS Auto Scaling Lifecycle Hooks. For more information, see: https://docs.aws.amazon.com/autoscaling/ec2/userguide/lifecycle-hooks.html
-	  permissions: {}
-	  providerVersion: V1
-	  regions:
-	  - name: us-east-1
-	  - name: us-east-2
-	  - name: us-west-1
-	  - name: us-west-2
-	  bakeryDefaults:                        # Configuration for Spinnaker’s image bakery.Configuration for Spinnaker’s image bakery.
-	    baseImages: []
-	  accessKeyId: ` + /*KustomizeData.Halyard.DeploymentConfiguration[KustomizeData.CurrentDeploymentPos].Providers.Aws.AccessKey +*/ `      # Only needed if cluster worker nodes don't have IAM roles for talking to the target aws account
-	  secretAccessKey: ` + /*KustomizeData.Halyard.DeploymentConfiguration[KustomizeData.CurrentDeploymentPos].Providers.Aws.SecretAccessKey +*/ `  # Only needed if cluster worker nodes don't have IAM roles for talking to the target aws account
-	  defaultKeyPairTemplate: '` + /*KustomizeData.DeploymentConfiguration[KustomizeData.CurrentDeploymentPos].Halyard.Providers.Aws.DefaultKeyPairTemplate +*/ `'
-	  defaultRegions:
-	  - name: us-east-1
-	  - name: us-east-2
-	  - name: us-west-1
-	  - name: us-west-2
-	  defaults:
-	    iamRole: BaseIAMRole
-	  features:
-	    cloudFormation:
-	      enabled: true                       # (Default: false). Enable cloudformation support on this AWS account.`
-
-	str = strings.Replace(str, "\t", "          ", -1)
-
-	// log.Println("str:" + str)
-
-	ProvidersData.Aws = str
-
-	return nil
-}
-
-func (ProvidersData *Providers) SetEcs(KustomizeData structs.Kustomize) error {
-
-	str := `enabled: true
-	accounts:
-	- name: halyard-migrator
-	  requiredGroupMembership: []
-	  providerVersion: V1
-	  permissions: {}
-	  awsAccount: XXXXX                   # Must be one of the configured AWS accounts
-	primaryAccount: halyard-migrator             # Must be one of the configured AWS ECS accounts`
-
-	// enabled: ` + KustomizeData.Halyard.DeploymentConfiguration[KustomizeData.CurrentDeploymentPos].Providers.Ecs.Enable + `
-
-	str = strings.Replace(str, "\t", "          ", -1)
-	ProvidersData.Ecs = str
-
-	return nil
-}
-
-func (ProvidersData *Providers) SetAzure(KustomizeData structs.Kustomize) error {
-
-	str := `enabled: false
-	accounts: []
-	bakeryDefaults:
-	  templateFile: azure-linux.json
-	  baseImages: []`
-
-	// enabled: ` + KustomizeData.Halyard.DeploymentConfiguration[KustomizeData.CurrentDeploymentPos].Providers.Azure.Enable + `
-
-	str = strings.Replace(str, "\t", "          ", -1)
-	ProvidersData.Azure = str
-
-	return nil
-}
-
 func (ProvidersData *Providers) SetDcos(KustomizeData structs.Kustomize) error {
+
+	// if nil != KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Providers.Dcos {
+	// 	return fmt.Errorf("Dcos value is null")
+	// }
+
+	// if KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Providers.Dcos.Enable {
+	// 	ProvidersData.Enable = "dcos"
+	// }
 
 	str := `enabled: false
 	accounts: []
@@ -199,55 +121,15 @@ func (ProvidersData *Providers) SetDcos(KustomizeData structs.Kustomize) error {
 	return nil
 }
 
-func (ProvidersData *Providers) SetDockerRegistry(KustomizeData structs.Kustomize) error {
-
-	str := `enabled: true
-	accounts:
-	- name: halyard-migrator
-	  requiredGroupMembership: []
-	  permissions: {}
-	  address: XXXXX
-	  username: XXXXX
-	  password: XXXXX
-	  email: fake.email@spinnaker.io
-	  cacheIntervalSeconds: 3600
-	  clientTimeoutMillis: 60000
-	  cacheThreads: 1
-	  paginateSize: 100
-	  sortTagsByDate: false
-	  trackDigests: false
-	  insecureRegistry: false
-	  repositories: []
-	primaryAccount: halyard-migrator`
-
-	// enabled: ` + KustomizeData.Halyard.DeploymentConfiguration[KustomizeData.CurrentDeploymentPos].Providers.DockerRegistry.Enable + `
-
-	str = strings.Replace(str, "\t", "          ", -1)
-	ProvidersData.DockerRegistry = str
-
-	return nil
-}
-
-func (ProvidersData *Providers) SetGoogle(KustomizeData structs.Kustomize) error {
-
-	str := `enabled: false
-	accounts: []
-	bakeryDefaults:
-	  templateFile: gce.json
-	  baseImages: []
-	  zone: us-central1-f
-	  network: default
-	  useInternalIp: false`
-
-	// enabled: ` + KustomizeData.Halyard.DeploymentConfiguration[KustomizeData.CurrentDeploymentPos].Providers.Google.Enable + `
-
-	str = strings.Replace(str, "\t", "          ", -1)
-	ProvidersData.Google = str
-
-	return nil
-}
-
 func (ProvidersData *Providers) SetHuaweicloud(KustomizeData structs.Kustomize) error {
+
+	// if nil != KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Providers.Huaweicloud {
+	// 	return fmt.Errorf("Huaweicloud value is null")
+	// }
+
+	// if KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Providers.Huaweicloud.Enabled {
+	// 	ProvidersData.Enable = "huaweicloud"
+	// }
 
 	str := `enabled: false
 	accounts: []
@@ -262,46 +144,11 @@ func (ProvidersData *Providers) SetHuaweicloud(KustomizeData structs.Kustomize) 
 	return nil
 }
 
-func (ProvidersData *Providers) SetKubernetes(KustomizeData structs.Kustomize) error {
-
-	//TODO check which one is enable
-	if true {
-		ProvidersData.Enable = "kubernetes"
-	}
-
-	str := `enabled: true
-	accounts:
-	- name: halyard-migrator
-	  requiredGroupMembership: []
-	  permissions: {}
-	  dockerRegistries: []
-	  providerVersion: V2
-	  context: XXXXX
-	  configureImagePullSecrets: true
-	  cacheThreads: 1
-	  namespaces: []
-	  omitNamespaces: []
-	  kinds: []
-	  omitKinds: []
-	  customResources: []
-	  cachingPolicies: []
-	  kubeconfigFile: /home/spinnaker/.kube/config
-	  rawResourcesEndpointConfig:
-		kindExpressions: []
-		omitKindExpressions: []
-	  oAuthScopes: []
-	  onlySpinnakerManaged: false
-	primaryAccount: halyard-migrator`
-
-	// enabled: ` + KustomizeData.Halyard.DeploymentConfiguration[KustomizeData.CurrentDeploymentPos].Providers.Kubernetes.Enable + `
-
-	str = strings.Replace(str, "\t", "          ", -1)
-	ProvidersData.Kubernetes = str
-
-	return nil
-}
-
 func (ProvidersData *Providers) SetTencentcloud(KustomizeData structs.Kustomize) error {
+
+	// if nil != KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Providers.Tencent {
+	// 	return fmt.Errorf("Tencent value is null")
+	// }
 
 	str := `enabled: false
 	accounts: []
@@ -317,6 +164,10 @@ func (ProvidersData *Providers) SetTencentcloud(KustomizeData structs.Kustomize)
 }
 
 func (ProvidersData *Providers) SetOracle(KustomizeData structs.Kustomize) error {
+
+	// if nil != KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Providers.Oracle {
+	// 	return fmt.Errorf("Oracle value is null")
+	// }
 
 	str := `enabled: false
 	accounts: []
@@ -334,6 +185,10 @@ func (ProvidersData *Providers) SetOracle(KustomizeData structs.Kustomize) error
 
 func (ProvidersData *Providers) SetCloudfoundry(KustomizeData structs.Kustomize) error {
 
+	// if nil != KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Providers.Cloudfoundry {
+	// 	return fmt.Errorf("Cloudfoundry value is null")
+	// }
+
 	str := `enabled: false
 	accounts: []`
 
@@ -343,4 +198,22 @@ func (ProvidersData *Providers) SetCloudfoundry(KustomizeData structs.Kustomize)
 	ProvidersData.Cloudfoundry = str
 
 	return nil
+}
+
+func getProvidersStringArray(stringArray []string, fieldName string) string {
+	str := ""
+
+	if nil != stringArray {
+		str += `
+		      ` + fieldName + `:`
+		for _, stringValue := range stringArray {
+			str += `
+		        ` + stringValue
+		}
+	} else {
+		str += `
+		      ` + fieldName + `: []`
+	}
+
+	return str
 }

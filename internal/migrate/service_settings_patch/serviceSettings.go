@@ -8,17 +8,21 @@ import (
 )
 
 func GetServiceSettings(KustomizeData structs.Kustomize) string {
+	str := ""
 
-	return GetClouddriverServiceSettings(KustomizeData) +
-		GetDeckServiceSettings(KustomizeData) +
-		GetEchoServiceSettings(KustomizeData) +
-		GetFiatServiceSettings(KustomizeData) +
-		GetFront50ServiceSettings(KustomizeData) +
-		GetGateServiceSettings(KustomizeData) +
-		GetIgorServiceSettings(KustomizeData) +
-		GetKayentaServiceSettings(KustomizeData) +
-		GetOrcaServiceSettings(KustomizeData) +
-		GetRoscoServiceSettings(KustomizeData)
+	if nil != KustomizeData.ServiceSettingsConfigFiles {
+		str = GetClouddriverServiceSettings(KustomizeData) +
+			GetDeckServiceSettings(KustomizeData) +
+			GetEchoServiceSettings(KustomizeData) +
+			GetFiatServiceSettings(KustomizeData) +
+			GetFront50ServiceSettings(KustomizeData) +
+			GetGateServiceSettings(KustomizeData) +
+			GetIgorServiceSettings(KustomizeData) +
+			GetKayentaServiceSettings(KustomizeData) +
+			GetOrcaServiceSettings(KustomizeData) +
+			GetRoscoServiceSettings(KustomizeData)
+	}
+	return str
 }
 
 func GetClouddriverServiceSettings(KustomizeData structs.Kustomize) string {

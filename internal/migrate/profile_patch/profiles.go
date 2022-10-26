@@ -8,17 +8,24 @@ import (
 )
 
 func GetProfiles(KustomizeData structs.Kustomize) string {
+	str := ""
 
-	return GetClouddriverProfile(KustomizeData) +
-		GetDeckProfile(KustomizeData) +
-		GetEchoProfile(KustomizeData) +
-		GetFiatProfile(KustomizeData) +
-		GetFront50Profile(KustomizeData) +
-		GetGateProfile(KustomizeData) +
-		GetIgorProfile(KustomizeData) +
-		GetKayentaProfile(KustomizeData) +
-		GetOrcaProfile(KustomizeData) +
-		GetRoscoProfile(KustomizeData)
+	if nil != KustomizeData.ProfilesConfigFiles {
+		str = GetClouddriverProfile(KustomizeData) +
+			GetDeckProfile(KustomizeData) +
+			GetEchoProfile(KustomizeData) +
+			GetFiatProfile(KustomizeData) +
+			GetFront50Profile(KustomizeData) +
+			GetGateProfile(KustomizeData) +
+			GetIgorProfile(KustomizeData) +
+			GetKayentaProfile(KustomizeData) +
+			GetOrcaProfile(KustomizeData) +
+			GetRoscoProfile(KustomizeData)
+		//TODO dinghy-local.yml
+		//TODO spinnaker-local.yml
+	}
+
+	return str
 }
 
 func GetClouddriverProfile(KustomizeData structs.Kustomize) string {
