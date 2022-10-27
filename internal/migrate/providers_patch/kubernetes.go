@@ -34,10 +34,18 @@ func GetKubernetesAccounts(accounts []*providers.KubernetesAcc) string {
 		str += `
 		  accounts:`
 		for _, account := range accounts {
+			//To avoid null pointers
+			var ResourceEndpointKindExpressions []string
+			var ResourceEndpointKindOmitExpressions []string
+			if nil != account.RawResourcesEndpointConfig {
+				ResourceEndpointKindExpressions = account.RawResourcesEndpointConfig.KindExpressions
+				ResourceEndpointKindOmitExpressions = account.RawResourcesEndpointConfig.OmitKindExpressions
+			}
+
 			str += `
 		    - name: ` + account.Name +
 				getProvidersStringArray(account.RequiredGroupMembership, "requiredGroupMembership") + `
-		      dockerRegistries: []` /*+ account.KubeDockerRegistries +*/ + `
+		      dockerRegistries: []` /*+ TODO account.KubeDockerRegistries +*/ + `
 		      providerVersion: ` + account.ProviderVersion + `
 		      configureImagePullSecrets: ` + strconv.FormatBool(account.ConfigureImagePullSecrets) + `
 		      serviceAccount: ` + strconv.FormatBool(account.ServiceAccount) + `
@@ -55,8 +63,8 @@ func GetKubernetesAccounts(accounts []*providers.KubernetesAcc) string {
 		      checkPermissionsOnStartup: ` + strconv.FormatBool(account.CheckPermissionsOnStartup) + `
 		      liveManifestCalls: ` + strconv.FormatBool(account.LiveManifestCalls) + `
 		      rawResourcesEndpointConfig:` +
-				strings.Replace(getProvidersStringArray(account.RawResourcesEndpointConfig.KindExpressions, "kindExpressions"), "\t", "     ", -1) +
-				strings.Replace(getProvidersStringArray(account.RawResourcesEndpointConfig.OmitKindExpressions, "omitKindExpressions"), "\t", "     ", -1) + `
+				strings.Replace(getProvidersStringArray(ResourceEndpointKindExpressions, "kindExpressions"), "\t", "     ", -1) +
+				strings.Replace(getProvidersStringArray(ResourceEndpointKindOmitExpressions, "omitKindExpressions"), "\t", "     ", -1) + `
 		      permission: {}` //TODO + account.Permission`
 		}
 	} else {
