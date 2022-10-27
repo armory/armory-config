@@ -3,15 +3,21 @@ package sizing_patch
 import (
 	"strings"
 
+	"github.com/austinthao5/golang_proto_test/config/deploymentConfigurations/deploymentEnv"
 	"github.com/austinthao5/golang_proto_test/internal/migrate/structs"
 )
 
 func GetDeploymentEnvironment(KustomizeData structs.Kustomize) string {
+	str := ""
 
-	return GetCustomSizing(KustomizeData)
+	if nil != KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].DeploymentEnvironment.CustomSizing {
+		str = GetCustomSizing(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].DeploymentEnvironment.CustomSizing)
+	}
+
+	return str
 }
 
-func GetCustomSizing(KustomizeData structs.Kustomize) string {
+func GetCustomSizing(sizingReference *deploymentEnv.CustomSizing) string {
 	str := `
 	customSizing:
 	  # This applies sizings to the clouddriver container as well as any sidecar 

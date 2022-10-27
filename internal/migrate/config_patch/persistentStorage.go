@@ -4,6 +4,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/austinthao5/golang_proto_test/config/deploymentConfigurations/persistentStorage"
 	"github.com/austinthao5/golang_proto_test/internal/migrate/structs"
 )
 
@@ -11,32 +12,32 @@ func GetPersistentStorage(KustomizeData structs.Kustomize) string {
 	str := ""
 
 	if nil != KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].PersistentStorage {
-		str = GetPersistentStoreType(KustomizeData) +
-			GetAzsStorage(KustomizeData) +
-			GetGcsStorage(KustomizeData) +
-			GetRedisStorage(KustomizeData) +
-			GetS3Storage(KustomizeData) +
-			GetOracleStorage(KustomizeData)
+		str = GetPersistentStoreType(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].PersistentStorage) +
+			GetAzsStorage(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].PersistentStorage) +
+			GetGcsStorage(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].PersistentStorage) +
+			GetRedisStorage(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].PersistentStorage) +
+			GetS3Storage(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].PersistentStorage) +
+			GetOracleStorage(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].PersistentStorage)
 	}
 	return str
 }
 
-func GetPersistentStoreType(KustomizeData structs.Kustomize) string {
+func GetPersistentStoreType(storageReference *persistentStorage.PersistentStorage) string {
 	str := `
-	persistentStoreType: ` + KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].PersistentStorage.PersistentStoreType
+	persistentStoreType: ` + storageReference.PersistentStoreType
 	str = strings.Replace(str, "\t", "        ", -1)
 	return str
 }
 
-func GetAzsStorage(KustomizeData structs.Kustomize) string {
+func GetAzsStorage(storageReference *persistentStorage.PersistentStorage) string {
 	str := ""
 
-	if nil != KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].PersistentStorage.Azs &&
-		"" != KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].PersistentStorage.Azs.StorageAccountName {
+	if nil != storageReference.Azs &&
+		"" != storageReference.Azs.StorageAccountName {
 		str = `  azs:
-			StorageAccountName: ` + KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].PersistentStorage.Azs.StorageAccountName + `
-			StorageAccountKey: ` + KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].PersistentStorage.Azs.StorageAccountKey + `
-			StorageContainerName: ` + KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].PersistentStorage.Azs.StorageContainerName
+			StorageAccountName: ` + storageReference.Azs.StorageAccountName + `
+			StorageAccountKey: ` + storageReference.Azs.StorageAccountKey + `
+			StorageContainerName: ` + storageReference.Azs.StorageContainerName
 	} else {
 		str = `  azs: {}`
 	}
@@ -46,17 +47,17 @@ func GetAzsStorage(KustomizeData structs.Kustomize) string {
 	return str
 }
 
-func GetGcsStorage(KustomizeData structs.Kustomize) string {
+func GetGcsStorage(storageReference *persistentStorage.PersistentStorage) string {
 	str := ""
 
-	if nil != KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].PersistentStorage.Gcs &&
-		"" != KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].PersistentStorage.Gcs.JsonPath {
+	if nil != storageReference.Gcs &&
+		"" != storageReference.Gcs.JsonPath {
 		str = `  gcs:
-			jsonPath: ` + KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].PersistentStorage.Gcs.JsonPath + `
-			project: ` + KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].PersistentStorage.Gcs.Project + `
-			bucket: ` + KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].PersistentStorage.Gcs.Bucket + `
-			rootFolder: ` + KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].PersistentStorage.Gcs.RootFolder + `
-			bucketLocation: ` + KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].PersistentStorage.Gcs.BucketLocation
+			jsonPath: ` + storageReference.Gcs.JsonPath + `
+			project: ` + storageReference.Gcs.Project + `
+			bucket: ` + storageReference.Gcs.Bucket + `
+			rootFolder: ` + storageReference.Gcs.RootFolder + `
+			bucketLocation: ` + storageReference.Gcs.BucketLocation
 	} else {
 		str = `  gcs: {}`
 	}
@@ -66,11 +67,11 @@ func GetGcsStorage(KustomizeData structs.Kustomize) string {
 	return str
 }
 
-func GetRedisStorage(KustomizeData structs.Kustomize) string {
+func GetRedisStorage(storageReference *persistentStorage.PersistentStorage) string {
 	str := ""
 
-	/*if nil != KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].PersistentStorage.R &&
-		"" != KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].PersistentStorage.Gcs.JsonPath {
+	/*if nil != storageReference.R &&
+		"" != storageReference.Gcs.JsonPath {
 			str = `  redis: `
 		} else {
 			str = `  redis: {}
@@ -88,18 +89,18 @@ func GetRedisStorage(KustomizeData structs.Kustomize) string {
 	return str
 }
 
-func GetS3Storage(KustomizeData structs.Kustomize) string {
+func GetS3Storage(storageReference *persistentStorage.PersistentStorage) string {
 	str := ""
 
-	if nil != KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].PersistentStorage.S3 &&
-		"" != KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].PersistentStorage.S3.Bucket {
+	if nil != storageReference.S3 &&
+		"" != storageReference.S3.Bucket {
 		str = `  s3:
-			bucket: ` + KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].PersistentStorage.S3.Bucket + `
-			rootFolder: ` + KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].PersistentStorage.S3.RootFolder + `
-			region: ` + KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].PersistentStorage.S3.Region + `
-			pathStyleAccess: ` + strconv.FormatBool(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].PersistentStorage.S3.PathStyleAccess) + `
-			accessKeyId: ` + KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].PersistentStorage.S3.AccessKeyId + `
-			secretAccessKey: ` + KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].PersistentStorage.S3.SecretAccessKey
+			bucket: ` + storageReference.S3.Bucket + `
+			rootFolder: ` + storageReference.S3.RootFolder + `
+			region: ` + storageReference.S3.Region + `
+			pathStyleAccess: ` + strconv.FormatBool(storageReference.S3.PathStyleAccess) + `
+			accessKeyId: ` + storageReference.S3.AccessKeyId + `
+			secretAccessKey: ` + storageReference.S3.SecretAccessKey
 	} else {
 		str = `    s3: {}`
 	}
@@ -109,21 +110,21 @@ func GetS3Storage(KustomizeData structs.Kustomize) string {
 	return str
 }
 
-func GetOracleStorage(KustomizeData structs.Kustomize) string {
+func GetOracleStorage(storageReference *persistentStorage.PersistentStorage) string {
 	str := ""
 
-	if nil != KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].PersistentStorage.Oracle &&
-		"" != KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].PersistentStorage.Oracle.BucketName {
+	if nil != storageReference.Oracle &&
+		"" != storageReference.Oracle.BucketName {
 		str = `  oracle:
-			bucketName: ` + KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].PersistentStorage.Oracle.BucketName + `
-			namespace: ` + KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].PersistentStorage.Oracle.Namespace + `
-			compartmentId: ` + KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].PersistentStorage.Oracle.CompartmentId + `
-			region: ` + KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].PersistentStorage.Oracle.Region + `
-			userId: ` + KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].PersistentStorage.Oracle.UserId + `
-			fingerprint: ` + KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].PersistentStorage.Oracle.Fingerprint + `
-			sshPrivateKeyFilePath: ` + KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].PersistentStorage.Oracle.SshPrivateKeyFilePath + `
-			privateKeyPassphrase: ` + KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].PersistentStorage.Oracle.PrivateKeyPassphrase + `
-			tenancyId: ` + KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].PersistentStorage.Oracle.TenancyId
+			bucketName: ` + storageReference.Oracle.BucketName + `
+			namespace: ` + storageReference.Oracle.Namespace + `
+			compartmentId: ` + storageReference.Oracle.CompartmentId + `
+			region: ` + storageReference.Oracle.Region + `
+			userId: ` + storageReference.Oracle.UserId + `
+			fingerprint: ` + storageReference.Oracle.Fingerprint + `
+			sshPrivateKeyFilePath: ` + storageReference.Oracle.SshPrivateKeyFilePath + `
+			privateKeyPassphrase: ` + storageReference.Oracle.PrivateKeyPassphrase + `
+			tenancyId: ` + storageReference.Oracle.TenancyId
 	} else {
 		str = `  oracle: {}`
 	}

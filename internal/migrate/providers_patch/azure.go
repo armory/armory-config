@@ -5,24 +5,23 @@ import (
 	"strings"
 
 	"github.com/austinthao5/golang_proto_test/config/deploymentConfigurations/providers"
-	"github.com/austinthao5/golang_proto_test/internal/migrate/structs"
 )
 
-func (ProvidersData *Providers) SetAzure(KustomizeData structs.Kustomize) error {
+func (ProvidersData *Providers) SetAzure(providersRef *providers.Providers) error {
 
-	// if nil != KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Providers.Azure {
+	// if nil != providersRef.Azure {
 	// 	return fmt.Errorf("Azure value is null")
 	// }
 
-	if KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Providers.Azure.Enabled {
+	if providersRef.Azure.Enabled {
 		ProvidersData.Enable = "azure"
 	}
 
-	str := `enabled: ` + strconv.FormatBool(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Providers.Azure.Enabled) + `
-	primaryAccount: ` + KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Providers.Azure.PrimaryAccount +
-		GetAzureAccounts(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Providers.Azure.Accounts)
+	str := `enabled: ` + strconv.FormatBool(providersRef.Azure.Enabled) + `
+	primaryAccount: ` + providersRef.Azure.PrimaryAccount +
+		GetAzureAccounts(providersRef.Azure.Accounts)
 		//TODO
-		//GetAzureBakeryDefaults(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Providers.Azure.Accounts)
+		//GetAzureBakeryDefaults(providersRef.Azure.Accounts)
 	// bakeryDefaults:
 	//   templateFile: azure-linux.json
 	//   baseImages: []`

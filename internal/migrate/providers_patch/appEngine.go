@@ -5,22 +5,21 @@ import (
 	"strings"
 
 	"github.com/austinthao5/golang_proto_test/config/deploymentConfigurations/providers"
-	"github.com/austinthao5/golang_proto_test/internal/migrate/structs"
 )
 
-func (ProvidersData *Providers) SetAppEngineData(KustomizeData structs.Kustomize) error {
+func (ProvidersData *Providers) SetAppEngineData(providersRef *providers.Providers) error {
 
-	// if nil != KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Providers.Appengine {
+	// if nil != providersRef.Appengine {
 	// 	return fmt.Errorf("Appengine value is null")
 	// }
 
-	if KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Providers.Appengine.Enabled {
+	if providersRef.Appengine.Enabled {
 		ProvidersData.Enable = "appengine"
 	}
 
-	str := `enabled: ` + strconv.FormatBool(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Providers.Appengine.Enabled) + `
-	primaryAccount: ` + KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Providers.Appengine.PrimaryAccount +
-		GetAppEngineAccounts(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Providers)
+	str := `enabled: ` + strconv.FormatBool(providersRef.Appengine.Enabled) + `
+	primaryAccount: ` + providersRef.Appengine.PrimaryAccount +
+		GetAppEngineAccounts(providersRef)
 
 	str = strings.Replace(str, "\t", "          ", -1)
 	ProvidersData.AppEngine = str

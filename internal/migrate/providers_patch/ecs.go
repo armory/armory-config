@@ -5,22 +5,21 @@ import (
 	"strings"
 
 	"github.com/austinthao5/golang_proto_test/config/deploymentConfigurations/providers"
-	"github.com/austinthao5/golang_proto_test/internal/migrate/structs"
 )
 
-func (ProvidersData *Providers) SetEcs(KustomizeData structs.Kustomize) error {
+func (ProvidersData *Providers) SetEcs(providersRef *providers.Providers) error {
 
-	// if nil != KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Providers.Ecs {
+	// if nil != providersRef.Ecs {
 	// 	return fmt.Errorf("Ecs value is null")
 	// }
 
-	if KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Providers.Ecs.Enabled {
+	if providersRef.Ecs.Enabled {
 		ProvidersData.Enable = "ecs"
 	}
 
-	str := `enabled: ` + strconv.FormatBool(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Providers.Ecs.Enabled) + `
-	primaryAccount: ` + KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Providers.Ecs.PrimaryAccount +
-		GetEcsAccounts(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Providers.Ecs.Accounts)
+	str := `enabled: ` + strconv.FormatBool(providersRef.Ecs.Enabled) + `
+	primaryAccount: ` + providersRef.Ecs.PrimaryAccount +
+		GetEcsAccounts(providersRef.Ecs.Accounts)
 
 	str = strings.Replace(str, "\t", "          ", -1)
 	ProvidersData.Ecs = str

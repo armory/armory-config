@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/austinthao5/golang_proto_test/config/deploymentConfigurations/providers"
 	"github.com/austinthao5/golang_proto_test/internal/migrate/structs"
 )
 
@@ -72,7 +73,7 @@ func GetProvidersData(KustomizeData structs.Kustomize) string {
 func (ProvidersData *Providers) SetProvidersData(KustomizeData structs.Kustomize) error {
 
 	// Slice of function calls to fill all the Providers Data
-	functionCalls := []func(KustomizeData structs.Kustomize) error{
+	functionCalls := []func(providersRef *providers.Providers) error{
 		ProvidersData.SetAppEngineData,
 		ProvidersData.SetAwsData,
 		ProvidersData.SetEcs,
@@ -88,7 +89,7 @@ func (ProvidersData *Providers) SetProvidersData(KustomizeData structs.Kustomize
 	}
 
 	for _, function := range functionCalls {
-		err := function(KustomizeData)
+		err := function(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Providers)
 		if err != nil {
 			fmt.Println("Error while executing the function:%s Error:(%s)", function, err)
 			return err
@@ -99,7 +100,7 @@ func (ProvidersData *Providers) SetProvidersData(KustomizeData structs.Kustomize
 	return nil
 }
 
-func (ProvidersData *Providers) SetDcos(KustomizeData structs.Kustomize) error {
+func (ProvidersData *Providers) SetDcos(providersRef *providers.Providers) error {
 
 	// if nil != KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Providers.Dcos {
 	// 	return fmt.Errorf("Dcos value is null")
@@ -121,7 +122,7 @@ func (ProvidersData *Providers) SetDcos(KustomizeData structs.Kustomize) error {
 	return nil
 }
 
-func (ProvidersData *Providers) SetHuaweicloud(KustomizeData structs.Kustomize) error {
+func (ProvidersData *Providers) SetHuaweicloud(providersRef *providers.Providers) error {
 
 	// if nil != KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Providers.Huaweicloud {
 	// 	return fmt.Errorf("Huaweicloud value is null")
@@ -144,7 +145,7 @@ func (ProvidersData *Providers) SetHuaweicloud(KustomizeData structs.Kustomize) 
 	return nil
 }
 
-func (ProvidersData *Providers) SetTencentcloud(KustomizeData structs.Kustomize) error {
+func (ProvidersData *Providers) SetTencentcloud(providersRef *providers.Providers) error {
 
 	// if nil != KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Providers.Tencent {
 	// 	return fmt.Errorf("Tencent value is null")
@@ -163,7 +164,7 @@ func (ProvidersData *Providers) SetTencentcloud(KustomizeData structs.Kustomize)
 	return nil
 }
 
-func (ProvidersData *Providers) SetOracle(KustomizeData structs.Kustomize) error {
+func (ProvidersData *Providers) SetOracle(providersRef *providers.Providers) error {
 
 	// if nil != KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Providers.Oracle {
 	// 	return fmt.Errorf("Oracle value is null")
@@ -183,7 +184,7 @@ func (ProvidersData *Providers) SetOracle(KustomizeData structs.Kustomize) error
 	return nil
 }
 
-func (ProvidersData *Providers) SetCloudfoundry(KustomizeData structs.Kustomize) error {
+func (ProvidersData *Providers) SetCloudfoundry(providersRef *providers.Providers) error {
 
 	// if nil != KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Providers.Cloudfoundry {
 	// 	return fmt.Errorf("Cloudfoundry value is null")

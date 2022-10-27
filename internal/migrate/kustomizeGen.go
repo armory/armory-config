@@ -329,7 +329,7 @@ func GetPatchSizing(KustomizeData structs.Kustomize) string {
   spinnakerConfig:
     config:
       deploymentEnvironment:` +
-		sizing_patch.GetCustomSizing(KustomizeData) + `
+		sizing_patch.GetDeploymentEnvironment(KustomizeData) + `
 `
 
 	return str

@@ -12,24 +12,24 @@ func GetCanary(KustomizeData structs.Kustomize) string {
 	str := ""
 
 	if nil != KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Canary {
-		str = GetCanaryConfig(KustomizeData)
+		str = GetCanaryConfig(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Canary)
 	}
 	return str
 }
 
-func GetCanaryConfig(KustomizeData structs.Kustomize) string {
+func GetCanaryConfig(canaryReference *canary.Canary) string {
 	str := `
-		enabled: ` + strconv.FormatBool(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Canary.Enabled)
+		enabled: ` + strconv.FormatBool(canaryReference.Enabled)
 
-	if nil != KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Canary.ServiceIntegrations {
-		str += GetCanaryServiceIntegrations(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Canary)
+	if nil != canaryReference.ServiceIntegrations {
+		str += GetCanaryServiceIntegrations(canaryReference)
 	}
 	str += `
-		reduxLogger: ` + strconv.FormatBool(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Canary.ReduxLogger) + `
-		defaultJudge: ` + KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Canary.DefaultJudge + `
-		stagesEnabled: ` + strconv.FormatBool(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Canary.StagesEnabled) + `
-		templatesEnabled: ` + strconv.FormatBool(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Canary.TemplatesEnabled) + `
-		showAllConfigsEnabled: ` + strconv.FormatBool(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Canary.ShowAllConfigsEnabled)
+		reduxLogger: ` + strconv.FormatBool(canaryReference.ReduxLogger) + `
+		defaultJudge: ` + canaryReference.DefaultJudge + `
+		stagesEnabled: ` + strconv.FormatBool(canaryReference.StagesEnabled) + `
+		templatesEnabled: ` + strconv.FormatBool(canaryReference.TemplatesEnabled) + `
+		showAllConfigsEnabled: ` + strconv.FormatBool(canaryReference.ShowAllConfigsEnabled)
 
 	str = strings.Replace(str, "\t", "    ", -1)
 

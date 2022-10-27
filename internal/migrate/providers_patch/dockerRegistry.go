@@ -5,22 +5,21 @@ import (
 	"strings"
 
 	"github.com/austinthao5/golang_proto_test/config/deploymentConfigurations/providers"
-	"github.com/austinthao5/golang_proto_test/internal/migrate/structs"
 )
 
-func (ProvidersData *Providers) SetDockerRegistry(KustomizeData structs.Kustomize) error {
+func (ProvidersData *Providers) SetDockerRegistry(providersRef *providers.Providers) error {
 
-	// if nil != KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Providers.DockerRegistry {
+	// if nil != providersRef.DockerRegistry {
 	// 	return fmt.Errorf("DockerRegistry value is null")
 	// }
 
-	if KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Providers.DockerRegistry.Enabled {
+	if providersRef.DockerRegistry.Enabled {
 		ProvidersData.Enable = "dockerRegistry"
 	}
 
-	str := `enabled: ` + strconv.FormatBool(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Providers.DockerRegistry.Enabled) + `
-	primaryAccount: ` + KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Providers.DockerRegistry.PrimaryAccount +
-		GetDockerRegistryAccounts(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Providers.DockerRegistry.Accounts)
+	str := `enabled: ` + strconv.FormatBool(providersRef.DockerRegistry.Enabled) + `
+	primaryAccount: ` + providersRef.DockerRegistry.PrimaryAccount +
+		GetDockerRegistryAccounts(providersRef.DockerRegistry.Accounts)
 
 	str = strings.Replace(str, "\t", "          ", -1)
 	ProvidersData.DockerRegistry = str
