@@ -4,6 +4,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/austinthao5/golang_proto_test/config/deploymentConfigurations/metricStores"
 	"github.com/austinthao5/golang_proto_test/internal/migrate/structs"
 )
 
@@ -11,29 +12,29 @@ func GetMetricStores(KustomizeData structs.Kustomize) string {
 	str := ""
 
 	if nil != KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].MetricStores {
-		str = GetDatadogMetrics(KustomizeData) +
-			GetPrometheusMetrics(KustomizeData) +
-			GetStackdriverMetrics(KustomizeData) +
-			GetNewrelicMetrics(KustomizeData) +
-			GetMetricStoresGenMetrics(KustomizeData)
+		str = GetDatadogMetrics(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].MetricStores) +
+			GetPrometheusMetrics(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].MetricStores) +
+			GetStackdriverMetrics(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].MetricStores) +
+			GetNewrelicMetrics(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].MetricStores) +
+			GetMetricStoresGenMetrics(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].MetricStores)
 	}
 	return str
 }
 
-func GetDatadogMetrics(KustomizeData structs.Kustomize) string {
+func GetDatadogMetrics(metricsReference *metricStores.MetricStores) string {
 	str := ""
 
-	if nil != KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].MetricStores.Datadog {
+	if nil != metricsReference.Datadog {
 		str = `
 		datadog:
-		  enabled: ` + strconv.FormatBool(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].MetricStores.Datadog.Enabled) + `
-		  api_key: ` + KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].MetricStores.Datadog.ApiKey + `
-		  app_key: ` + KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].MetricStores.Datadog.AppKey
+		  enabled: ` + strconv.FormatBool(metricsReference.Datadog.Enabled) + `
+		  api_key: ` + metricsReference.Datadog.ApiKey + `
+		  app_key: ` + metricsReference.Datadog.AppKey
 
-		if nil != KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].MetricStores.Datadog.Tags {
+		if nil != metricsReference.Datadog.Tags {
 			str += `
 		  tags: #  Your datadog custom tags. Please delimit the KVP with colons i.e. app:test env:dev`
-			for _, b := range KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].MetricStores.Datadog.Tags {
+			for _, b := range metricsReference.Datadog.Tags {
 				str += "\n" + `		    - ` + b
 				// - env:dev    # Example
 			}
@@ -48,53 +49,52 @@ func GetDatadogMetrics(KustomizeData structs.Kustomize) string {
 	return str
 }
 
-func GetPrometheusMetrics(KustomizeData structs.Kustomize) string {
+func GetPrometheusMetrics(metricsReference *metricStores.MetricStores) string {
 	str := ""
 
-	if nil != KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].MetricStores.Prometheus {
+	if nil != metricsReference.Prometheus {
 		str = `
 		prometheus:
-		  enabled: ` + strconv.FormatBool(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].MetricStores.Prometheus.Enabled) + `
-		  push-gateway: ` + KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].MetricStores.Prometheus.PushGateway + `
-		  add_source_metalabels: ` + strconv.FormatBool(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].MetricStores.Prometheus.AddSourceMetalabels)
+		  enabled: ` + strconv.FormatBool(metricsReference.Prometheus.Enabled) + `
+		  push-gateway: ` + metricsReference.Prometheus.PushGateway + `
+		  add_source_metalabels: ` + strconv.FormatBool(metricsReference.Prometheus.AddSourceMetalabels)
 
 		str = strings.Replace(str, "\t", "    ", -1)
 	}
 	return str
 }
 
-func GetStackdriverMetrics(KustomizeData structs.Kustomize) string {
+func GetStackdriverMetrics(metricsReference *metricStores.MetricStores) string {
 	str := ""
 
-	if nil != KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].MetricStores.Stackdriver {
+	if nil != metricsReference.Stackdriver {
 		str = `
 		stackdriver:
-		  enabled: ` + strconv.FormatBool(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].MetricStores.Stackdriver.Enabled) + `
-		  project: ` + KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].MetricStores.Stackdriver.Project + `                              # (Required). The project Spinnaker’s metrics should be published to.
-		  zone: ` + KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].MetricStores.Stackdriver.Zone + `                                    # (Required). The zone Spinnaker’s metrics should be associated with.
-		  credentials_path: ` + KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].MetricStores.Stackdriver.CredentialsPath + `             # (Secret). A path to a Google JSON service account that has permission to publish metrics.`
+		  enabled: ` + strconv.FormatBool(metricsReference.Stackdriver.Enabled) + `
+		  project: ` + metricsReference.Stackdriver.Project + `                              # (Required). The project Spinnaker’s metricsReference should be published to.
+		  zone: ` + metricsReference.Stackdriver.Zone + `                                    # (Required). The zone Spinnaker’s metricsReference should be associated with.
+		  credentials_path: ` + metricsReference.Stackdriver.CredentialsPath + `             # (Secret). A path to a Google JSON service account that has permission to publish metricsReference.`
 
 		str = strings.Replace(str, "\t", "    ", -1)
 	}
 	return str
-	// KustomizeData.Halyard.DeploymentConfiguration[KustomizeData.CurrentDeploymentPos].MetricStores.Stackdriver
 }
 
-func GetNewrelicMetrics(KustomizeData structs.Kustomize) string {
+func GetNewrelicMetrics(metricsReference *metricStores.MetricStores) string {
 	str := ""
 
-	if nil != KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].MetricStores.Newrelic {
+	if nil != metricsReference.Newrelic {
 		str = `
 		newrelic:
-		  enabled: ` + strconv.FormatBool(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].MetricStores.Newrelic.Enabled) + `
-		  insert-key: ` + KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].MetricStores.Newrelic.InsertKey + `
-		  host: ` + KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].MetricStores.Newrelic.Host
+		  enabled: ` + strconv.FormatBool(metricsReference.Newrelic.Enabled) + `
+		  insert-key: ` + metricsReference.Newrelic.InsertKey + `
+		  host: ` + metricsReference.Newrelic.Host
 
-		if nil != KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].MetricStores.Newrelic &&
-			nil != KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].MetricStores.Newrelic.Tags {
+		if nil != metricsReference.Newrelic &&
+			nil != metricsReference.Newrelic.Tags {
 			str += `
 		  tags: #  Your Newrelic custom tags.`
-			for _, b := range KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].MetricStores.Newrelic.Tags {
+			for _, b := range metricsReference.Newrelic.Tags {
 				str += "\n" + `		    - ` + b
 			}
 		} else {
@@ -107,11 +107,11 @@ func GetNewrelicMetrics(KustomizeData structs.Kustomize) string {
 	return str
 }
 
-func GetMetricStoresGenMetrics(KustomizeData structs.Kustomize) string {
+func GetMetricStoresGenMetrics(metricsReference *metricStores.MetricStores) string {
 
 	str := `
-	period: ` + strconv.FormatInt(int64(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].MetricStores.Period), 10) + `
-	enabled: ` + strconv.FormatBool(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].MetricStores.Enabled)
+	period: ` + strconv.FormatInt(int64(metricsReference.Period), 10) + `
+	enabled: ` + strconv.FormatBool(metricsReference.Enabled)
 
 	str = strings.Replace(str, "\t", "        ", -1)
 	return str

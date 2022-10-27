@@ -5,23 +5,22 @@ import (
 	"strings"
 
 	"github.com/austinthao5/golang_proto_test/config/deploymentConfigurations/providers"
-	"github.com/austinthao5/golang_proto_test/internal/migrate/structs"
 )
 
-func (ProvidersData *Providers) SetGoogle(KustomizeData structs.Kustomize) error {
+func (ProvidersData *Providers) SetGoogle(providersRef *providers.Providers) error {
 
-	// if nil != KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Providers.Google {
+	// if nil != providersRef.Google {
 	// 	return fmt.Errorf("Google value is null")
 	// }
 
-	if KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Providers.Google.Enabled {
+	if providersRef.Google.Enabled {
 		ProvidersData.Enable = "google"
 	}
 
-	str := `enabled: ` + strconv.FormatBool(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Providers.Google.Enabled) + `
-	primaryAccount: ` + KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Providers.Google.PrimaryAccount +
-		GetGoogleAccounts(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Providers.Google.Accounts) +
-		GetGoogleBakeryDefaultsAccounts(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Providers.Google.BakeryDefault)
+	str := `enabled: ` + strconv.FormatBool(providersRef.Google.Enabled) + `
+	primaryAccount: ` + providersRef.Google.PrimaryAccount +
+		GetGoogleAccounts(providersRef.Google.Accounts) +
+		GetGoogleBakeryDefaultsAccounts(providersRef.Google.BakeryDefault)
 
 	str = strings.Replace(str, "\t", "          ", -1)
 	ProvidersData.Google = str

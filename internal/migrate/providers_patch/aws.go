@@ -5,34 +5,33 @@ import (
 	"strings"
 
 	"github.com/austinthao5/golang_proto_test/config/deploymentConfigurations/providers"
-	"github.com/austinthao5/golang_proto_test/internal/migrate/structs"
 )
 
-func (ProvidersData *Providers) SetAwsData(KustomizeData structs.Kustomize) error {
+func (ProvidersData *Providers) SetAwsData(providersRef *providers.Providers) error {
 
-	// if nil != KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Providers.Aws {
+	// if nil != providersRef.Aws {
 	// 	return fmt.Errorf("Aws value is null")
 	// }
 
-	if KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Providers.Aws.Enabled {
+	if providersRef.Aws.Enabled {
 		ProvidersData.Enable = "aws"
 	}
 
-	str := `enabled: ` + strconv.FormatBool(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Providers.Aws.Enabled) + `
-	primaryAccount: ` + KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Providers.Aws.PrimaryAccount + `                # Must be one of the configured AWS accounts` +
-		GetAwsAccounts(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Providers) +
-		GetAwsBakeryDefault(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Providers.Aws.BakeryDefault) + `
-	accessKeyId: ` + KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Providers.Aws.AccessKey + `      # Only needed if cluster worker nodes don't have IAM roles for talking to the target aws account
-	secretAccessKey: ` + KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Providers.Aws.SecretAccessKey + `  # Only needed if cluster worker nodes don't have IAM roles for talking to the target aws account
-	defaultKeyPairTemplate: '` + KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Providers.Aws.DefaultKeyPairTemplate + `'` +
-		strings.Replace(getAwsRegions(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Providers.Aws.DefaultRegions, "defaultRegions"), "\t", "    ", -1) + `
+	str := `enabled: ` + strconv.FormatBool(providersRef.Aws.Enabled) + `
+	primaryAccount: ` + providersRef.Aws.PrimaryAccount + `                # Must be one of the configured AWS accounts` +
+		GetAwsAccounts(providersRef) +
+		GetAwsBakeryDefault(providersRef.Aws.BakeryDefault) + `
+	accessKeyId: ` + providersRef.Aws.AccessKey + `      # Only needed if cluster worker nodes don't have IAM roles for talking to the target aws account
+	secretAccessKey: ` + providersRef.Aws.SecretAccessKey + `  # Only needed if cluster worker nodes don't have IAM roles for talking to the target aws account
+	defaultKeyPairTemplate: '` + providersRef.Aws.DefaultKeyPairTemplate + `'` +
+		strings.Replace(getAwsRegions(providersRef.Aws.DefaultRegions, "defaultRegions"), "\t", "    ", -1) + `
 	defaults:
-	  iamRole: ` + KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Providers.Aws.Defaults.IamRole /*+ `
+	  iamRole: ` + providersRef.Aws.Defaults.IamRole /*+ `
 	features:
 	  cloudFormation:
-	    enabled: ` + strconv.FormatBool(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Providers.Aws.Features.Cloudformation.Enabled) + `                       # (Default: false). Enable cloudformation support on this AWS account.` + `
+	    enabled: ` + strconv.FormatBool(providersRef.Aws.Features.Cloudformation.Enabled) + `                       # (Default: false). Enable cloudformation support on this AWS account.` + `
 	  lambda:
-	    enabled: ` + strconv.FormatBool(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Providers.Aws.Features.Lambda.Enabled) */
+	    enabled: ` + strconv.FormatBool(providersRef.Aws.Features.Lambda.Enabled) */
 	//TODO Fix this
 
 	str = strings.Replace(str, "\t", "          ", -1)

@@ -5,22 +5,21 @@ import (
 	"strings"
 
 	"github.com/austinthao5/golang_proto_test/config/deploymentConfigurations/providers"
-	"github.com/austinthao5/golang_proto_test/internal/migrate/structs"
 )
 
-func (ProvidersData *Providers) SetKubernetes(KustomizeData structs.Kustomize) error {
+func (ProvidersData *Providers) SetKubernetes(providersRef *providers.Providers) error {
 
-	// if nil != KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Providers.Kubernetes {
+	// if nil != providersRef.Kubernetes {
 	// 	return fmt.Errorf("Kubernetes value is null")
 	// }
 
-	if KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Providers.Kubernetes.Enabled {
+	if providersRef.Kubernetes.Enabled {
 		ProvidersData.Enable = "kubernetes"
 	}
 
-	str := `enabled: ` + strconv.FormatBool(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Providers.Kubernetes.Enabled) + `
-	primaryAccount: ` + KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Providers.Kubernetes.PrimaryAccount +
-		GetKubernetesAccounts(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Providers.Kubernetes.Accounts)
+	str := `enabled: ` + strconv.FormatBool(providersRef.Kubernetes.Enabled) + `
+	primaryAccount: ` + providersRef.Kubernetes.PrimaryAccount +
+		GetKubernetesAccounts(providersRef.Kubernetes.Accounts)
 
 	str = strings.Replace(str, "\t", "          ", -1)
 	ProvidersData.Kubernetes = str

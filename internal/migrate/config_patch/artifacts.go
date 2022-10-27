@@ -12,28 +12,28 @@ func GetArtifacts(KustomizeData structs.Kustomize) string {
 	str := ""
 
 	if nil != KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Artifacts {
-		str = GetBitbucketArtifacts(KustomizeData) +
-			GetGcsArtifacts(KustomizeData) +
-			GetOracleArtifacts(KustomizeData) +
-			GetGithubArtifacts(KustomizeData) +
-			GetGitlabArtifacts(KustomizeData) +
-			GetGitrepoArtifacts(KustomizeData) +
-			GetHttpArtifacts(KustomizeData) +
-			GetHelmArtifacts(KustomizeData) +
-			GetS3Artifacts(KustomizeData) +
-			GetMavenArtifacts(KustomizeData)
+		str = GetBitbucketArtifacts(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Artifacts) +
+			GetGcsArtifacts(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Artifacts) +
+			GetOracleArtifacts(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Artifacts) +
+			GetGithubArtifacts(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Artifacts) +
+			GetGitlabArtifacts(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Artifacts) +
+			GetGitrepoArtifacts(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Artifacts) +
+			GetHttpArtifacts(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Artifacts) +
+			GetHelmArtifacts(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Artifacts) +
+			GetS3Artifacts(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Artifacts) +
+			GetMavenArtifacts(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Artifacts)
 	}
 	return str
 }
 
-func GetBitbucketArtifacts(KustomizeData structs.Kustomize) string {
+func GetBitbucketArtifacts(artifactsReference *artifacts.Artifacts) string {
 	str := ""
 
-	if nil != KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Artifacts.Bitbucket {
+	if nil != artifactsReference.Bitbucket {
 		str = `
 		bitbucket:
-		  enabled: ` + strconv.FormatBool(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Artifacts.Bitbucket.Enabled) +
-			GetBitbucketAccounts(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Artifacts.Bitbucket)
+		  enabled: ` + strconv.FormatBool(artifactsReference.Bitbucket.Enabled) +
+			GetBitbucketAccounts(artifactsReference.Bitbucket)
 		str = strings.Replace(str, "\t", "    ", -1)
 	}
 
@@ -61,14 +61,14 @@ func GetBitbucketAccounts(bitbucket *artifacts.Bitbucket) string {
 	return str
 }
 
-func GetGcsArtifacts(KustomizeData structs.Kustomize) string {
+func GetGcsArtifacts(artifactsReference *artifacts.Artifacts) string {
 	str := ""
 
-	if nil != KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Artifacts.Gcs {
+	if nil != artifactsReference.Gcs {
 		str = `
 		gcs:
-		  enabled: ` + strconv.FormatBool(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Artifacts.Gcs.Enabled) +
-			GetGcsAccounts(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Artifacts.Gcs)
+		  enabled: ` + strconv.FormatBool(artifactsReference.Gcs.Enabled) +
+			GetGcsAccounts(artifactsReference.Gcs)
 		str = strings.Replace(str, "\t", "    ", -1)
 	}
 
@@ -94,14 +94,14 @@ func GetGcsAccounts(gcs *artifacts.Gcs) string {
 	return str
 }
 
-func GetOracleArtifacts(KustomizeData structs.Kustomize) string {
+func GetOracleArtifacts(artifactsReference *artifacts.Artifacts) string {
 	str := ""
 
-	if nil != KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Artifacts.Oracle {
+	if nil != artifactsReference.Oracle {
 		str = `
 		oracle:
-		  enabled: ` + strconv.FormatBool(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Artifacts.Oracle.Enabled) +
-			GetOracleAccounts(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Artifacts.Oracle)
+		  enabled: ` + strconv.FormatBool(artifactsReference.Oracle.Enabled) +
+			GetOracleAccounts(artifactsReference.Oracle)
 		str = strings.Replace(str, "\t", "    ", -1)
 	}
 
@@ -133,14 +133,14 @@ func GetOracleAccounts(oracle *artifacts.Oracle) string {
 	return str
 }
 
-func GetGithubArtifacts(KustomizeData structs.Kustomize) string {
+func GetGithubArtifacts(artifactsReference *artifacts.Artifacts) string {
 	str := ""
 
-	if nil != KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Artifacts.Github {
+	if nil != artifactsReference.Github {
 		str = `
 		github:
-		  enabled: ` + strconv.FormatBool(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Artifacts.Github.Enabled) +
-			GetGithubAccounts(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Artifacts.Github)
+		  enabled: ` + strconv.FormatBool(artifactsReference.Github.Enabled) +
+			GetGithubAccounts(artifactsReference.Github)
 		str = strings.Replace(str, "\t", "    ", -1)
 	}
 
@@ -170,14 +170,14 @@ func GetGithubAccounts(github *artifacts.Github) string {
 	return str
 }
 
-func GetGitlabArtifacts(KustomizeData structs.Kustomize) string {
+func GetGitlabArtifacts(artifactsReference *artifacts.Artifacts) string {
 	str := ""
 
-	if nil != KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Artifacts.Gitlab {
+	if nil != artifactsReference.Gitlab {
 		str = `
 		gitlab:
-		  enabled: ` + strconv.FormatBool(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Artifacts.Gitlab.Enabled) +
-			GetGitlabAccounts(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Artifacts.Gitlab)
+		  enabled: ` + strconv.FormatBool(artifactsReference.Gitlab.Enabled) +
+			GetGitlabAccounts(artifactsReference.Gitlab)
 		str = strings.Replace(str, "\t", "    ", -1)
 	}
 
@@ -204,14 +204,14 @@ func GetGitlabAccounts(gitlab *artifacts.Gitlab) string {
 	return str
 }
 
-func GetGitrepoArtifacts(KustomizeData structs.Kustomize) string {
+func GetGitrepoArtifacts(artifactsReference *artifacts.Artifacts) string {
 	str := ""
 
-	if nil != KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Artifacts.Gitrepo {
+	if nil != artifactsReference.Gitrepo {
 		str = `
 		gitrepo:
-		  enabled: ` + strconv.FormatBool(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Artifacts.Gitrepo.Enabled) +
-			GetGitrepoAccounts(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Artifacts.Gitrepo)
+		  enabled: ` + strconv.FormatBool(artifactsReference.Gitrepo.Enabled) +
+			GetGitrepoAccounts(artifactsReference.Gitrepo)
 		str = strings.Replace(str, "\t", "    ", -1)
 	}
 
@@ -245,14 +245,14 @@ func GetGitrepoAccounts(gitrepo *artifacts.Gitrepo) string {
 	return str
 }
 
-func GetHttpArtifacts(KustomizeData structs.Kustomize) string {
+func GetHttpArtifacts(artifactsReference *artifacts.Artifacts) string {
 	str := ""
 
-	if nil != KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Artifacts.Http {
+	if nil != artifactsReference.Http {
 		str = `
 		http:
-		  enabled: ` + strconv.FormatBool(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Artifacts.Http.Enabled) +
-			GetHttpAccounts(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Artifacts.Http)
+		  enabled: ` + strconv.FormatBool(artifactsReference.Http.Enabled) +
+			GetHttpAccounts(artifactsReference.Http)
 		str = strings.Replace(str, "\t", "    ", -1)
 	}
 
@@ -280,14 +280,14 @@ func GetHttpAccounts(http *artifacts.Http) string {
 	return str
 }
 
-func GetHelmArtifacts(KustomizeData structs.Kustomize) string {
+func GetHelmArtifacts(artifactsReference *artifacts.Artifacts) string {
 	str := ""
 
-	if nil != KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Artifacts.Helm {
+	if nil != artifactsReference.Helm {
 		str = `
 		helm:
-		  enabled: ` + strconv.FormatBool(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Artifacts.Helm.Enabled) +
-			GetHelmAccounts(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Artifacts.Helm)
+		  enabled: ` + strconv.FormatBool(artifactsReference.Helm.Enabled) +
+			GetHelmAccounts(artifactsReference.Helm)
 		str = strings.Replace(str, "\t", "    ", -1)
 	}
 
@@ -316,14 +316,14 @@ func GetHelmAccounts(helm *artifacts.Helm) string {
 	return str
 }
 
-func GetS3Artifacts(KustomizeData structs.Kustomize) string {
+func GetS3Artifacts(artifactsReference *artifacts.Artifacts) string {
 	str := ""
 
-	if nil != KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Artifacts.S3 {
+	if nil != artifactsReference.S3 {
 		str = `
 		s3:
-		  enabled: ` + strconv.FormatBool(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Artifacts.S3.Enabled) +
-			GetS3Accounts(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Artifacts.S3)
+		  enabled: ` + strconv.FormatBool(artifactsReference.S3.Enabled) +
+			GetS3Accounts(artifactsReference.S3)
 		str = strings.Replace(str, "\t", "    ", -1)
 	}
 
@@ -353,14 +353,14 @@ func GetS3Accounts(s3 *artifacts.S3) string {
 	return str
 }
 
-func GetMavenArtifacts(KustomizeData structs.Kustomize) string {
+func GetMavenArtifacts(artifactsReference *artifacts.Artifacts) string {
 	str := ""
 
-	if nil != KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Artifacts.Maven {
+	if nil != artifactsReference.Maven {
 		str = `
 		maven:
-		  enabled: ` + strconv.FormatBool(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Artifacts.Maven.Enabled) +
-			GetMavenAccounts(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Artifacts.Maven)
+		  enabled: ` + strconv.FormatBool(artifactsReference.Maven.Enabled) +
+			GetMavenAccounts(artifactsReference.Maven)
 		str = strings.Replace(str, "\t", "    ", -1)
 	}
 

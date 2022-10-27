@@ -4,6 +4,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/austinthao5/golang_proto_test/config/deploymentConfigurations/notifications"
 	"github.com/austinthao5/golang_proto_test/internal/migrate/structs"
 )
 
@@ -11,55 +12,55 @@ func GetNotifications(KustomizeData structs.Kustomize) string {
 	str := ""
 
 	if nil != KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Notifications {
-		str = GetSlack(KustomizeData) +
-			GetTwilio(KustomizeData) +
-			GetGithubStatus(KustomizeData)
+		str = GetSlack(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Notifications) +
+			GetTwilio(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Notifications) +
+			GetGithubStatus(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Notifications)
 	}
 	return str
 }
 
-func GetSlack(KustomizeData structs.Kustomize) string {
+func GetSlack(notificationsReference *notifications.Notifications) string {
 	str := ""
 
-	if nil != KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Notifications.Slack {
+	if nil != notificationsReference.Slack {
 		str = `
 		slack:
-		  enabled: ` + strconv.FormatBool(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Notifications.Slack.Enabled) + `
-		  botName: ` + KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Notifications.Slack.BotName + `
-		  token: ` + KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Notifications.Slack.Token + `
-		  baseUrl: ` + KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Notifications.Slack.BaseUrl + `
-		  forceUseIncomingWebhook: ` + strconv.FormatBool(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Notifications.Slack.ForceUseIncomingWebhook)
+		  enabled: ` + strconv.FormatBool(notificationsReference.Slack.Enabled) + `
+		  botName: ` + notificationsReference.Slack.BotName + `
+		  token: ` + notificationsReference.Slack.Token + `
+		  baseUrl: ` + notificationsReference.Slack.BaseUrl + `
+		  forceUseIncomingWebhook: ` + strconv.FormatBool(notificationsReference.Slack.ForceUseIncomingWebhook)
 
 		str = strings.Replace(str, "\t", "    ", -1)
 	}
 	return str
 }
 
-func GetTwilio(KustomizeData structs.Kustomize) string {
+func GetTwilio(notificationsReference *notifications.Notifications) string {
 	str := ""
 
-	if nil != KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Notifications.Twilio {
+	if nil != notificationsReference.Twilio {
 		str = `
 		twilio:
-		  enabled: ` + strconv.FormatBool(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Notifications.Twilio.Enabled) + `
-		  account: ` + KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Notifications.Twilio.Account + `
-		  baseUrl: ` + KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Notifications.Twilio.BaseUrl + `
-		  from: '` + KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Notifications.Twilio.From + `'
-		  token: ` + strconv.FormatBool(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Notifications.Twilio.Token)
+		  enabled: ` + strconv.FormatBool(notificationsReference.Twilio.Enabled) + `
+		  account: ` + notificationsReference.Twilio.Account + `
+		  baseUrl: ` + notificationsReference.Twilio.BaseUrl + `
+		  from: '` + notificationsReference.Twilio.From + `'
+		  token: ` + strconv.FormatBool(notificationsReference.Twilio.Token)
 
 		str = strings.Replace(str, "\t", "    ", -1)
 	}
 	return str
 }
 
-func GetGithubStatus(KustomizeData structs.Kustomize) string {
+func GetGithubStatus(notificationsReference *notifications.Notifications) string {
 	str := ""
 
-	if nil != KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Notifications.GithubStatus {
+	if nil != notificationsReference.GithubStatus {
 		str = `
 		github-status:
-		  enabled: ` + strconv.FormatBool(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Notifications.GithubStatus.Enabled) + `
-		  token: ` + KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Notifications.GithubStatus.Token
+		  enabled: ` + strconv.FormatBool(notificationsReference.GithubStatus.Enabled) + `
+		  token: ` + notificationsReference.GithubStatus.Token
 
 		str = strings.Replace(str, "\t", "    ", -1)
 	}

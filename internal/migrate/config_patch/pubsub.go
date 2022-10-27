@@ -12,22 +12,22 @@ func GetPubsub(KustomizeData structs.Kustomize) string {
 	str := ""
 
 	if nil != KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Pubsub {
-		str = GetPubsubConfig(KustomizeData)
+		str = GetPubsubConfig(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Pubsub)
 	}
 	return str
 }
 
-func GetPubsubConfig(KustomizeData structs.Kustomize) string {
+func GetPubsubConfig(pubsubReference *pubsub.Pubsub) string {
 	str := `
-	    enabled: ` + strconv.FormatBool(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Pubsub.Enabled)
+	    enabled: ` + strconv.FormatBool(pubsubReference.Enabled)
 
-	if nil != KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Pubsub.Google {
+	if nil != pubsubReference.Google {
 		str += `
 		google:
-		  enabled: ` + strconv.FormatBool(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Pubsub.Google.Enabled) + `
-		  pubsubType: ` + KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Pubsub.Google.PubsubType +
-			GetGoogleSubscriptions(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Pubsub.Google) +
-			GetGooglePublishers(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Pubsub.Google)
+		  enabled: ` + strconv.FormatBool(pubsubReference.Google.Enabled) + `
+		  pubsubType: ` + pubsubReference.Google.PubsubType +
+			GetGoogleSubscriptions(pubsubReference.Google) +
+			GetGooglePublishers(pubsubReference.Google)
 
 		str = strings.Replace(str, "\t", "    ", -1)
 	}

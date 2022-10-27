@@ -11,20 +11,20 @@ import (
 func GetStats(KustomizeData structs.Kustomize) string {
 	str := ""
 
-	if nil != KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Canary {
-		str = GetStatsConfig(KustomizeData)
+	if nil != KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Stats {
+		str = GetStatsConfig(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Stats)
 	}
 	return str
 }
 
-func GetStatsConfig(KustomizeData structs.Kustomize) string {
+func GetStatsConfig(statsReference *stats.Stats) string {
 	str := `
-	enabled: ` + strconv.FormatBool(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Stats.Enabled) + `
-	endpoint: ` + KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Stats.Endpoint + `
-	instanceId: ` + KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Stats.InstanceId +
-		getDeploymentMethodStats(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Stats) + `
-	connectionTimeoutMillis: ` + strconv.FormatInt(int64(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Stats.ConnectionTimeoutMillis), 10) + `
-	readTimeoutMillis: ` + strconv.FormatInt(int64(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Stats.ReadTimeoutMillis), 10)
+	enabled: ` + strconv.FormatBool(statsReference.Enabled) + `
+	endpoint: ` + statsReference.Endpoint + `
+	instanceId: ` + statsReference.InstanceId +
+		getDeploymentMethodStats(statsReference) + `
+	connectionTimeoutMillis: ` + strconv.FormatInt(int64(statsReference.ConnectionTimeoutMillis), 10) + `
+	readTimeoutMillis: ` + strconv.FormatInt(int64(statsReference.ReadTimeoutMillis), 10)
 
 	str = strings.Replace(str, "\t", "        ", -1)
 	return str

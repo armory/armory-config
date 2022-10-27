@@ -12,24 +12,24 @@ func GetCi(KustomizeData structs.Kustomize) string {
 	str := ""
 
 	if nil != KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Ci {
-		str = GetJenkinsCi(KustomizeData) +
-			GetTravisCi(KustomizeData) +
-			GetWerckerCi(KustomizeData) +
-			GetConcourseCi(KustomizeData) +
-			GetGcbCi(KustomizeData) +
-			GetCodebuildCi(KustomizeData)
+		str = GetJenkinsCi(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Ci) +
+			GetTravisCi(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Ci) +
+			GetWerckerCi(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Ci) +
+			GetConcourseCi(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Ci) +
+			GetGcbCi(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Ci) +
+			GetCodebuildCi(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Ci)
 	}
 	return str
 }
 
-func GetJenkinsCi(KustomizeData structs.Kustomize) string {
+func GetJenkinsCi(ciReference *ci.Ci) string {
 	str := ""
 
-	if nil != KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Ci.Jenkins {
+	if nil != ciReference.Jenkins {
 		str = `
 		jenkins:
-		  enabled: ` + strconv.FormatBool(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Ci.Jenkins.Enabled) +
-			GetJenkinsCiMasters(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Ci.Jenkins)
+		  enabled: ` + strconv.FormatBool(ciReference.Jenkins.Enabled) +
+			GetJenkinsCiMasters(ciReference.Jenkins)
 		str = strings.Replace(str, "\t", "    ", -1)
 	}
 
@@ -59,14 +59,14 @@ func GetJenkinsCiMasters(jenkins *ci.Jenkins) string {
 	return str
 }
 
-func GetTravisCi(KustomizeData structs.Kustomize) string {
+func GetTravisCi(ciReference *ci.Ci) string {
 	str := ""
 
-	if nil != KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Ci.Travis {
+	if nil != ciReference.Travis {
 		str = `
 		travis:
-		  enabled: ` + strconv.FormatBool(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Ci.Travis.Enabled) +
-			GetTravisCiMasters(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Ci.Travis)
+		  enabled: ` + strconv.FormatBool(ciReference.Travis.Enabled) +
+			GetTravisCiMasters(ciReference.Travis)
 
 		str = strings.Replace(str, "\t", "    ", -1)
 	}
@@ -97,14 +97,14 @@ func GetTravisCiMasters(travis *ci.Travis) string {
 	return str
 }
 
-func GetWerckerCi(KustomizeData structs.Kustomize) string {
+func GetWerckerCi(ciReference *ci.Ci) string {
 	str := ""
 
-	if nil != KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Ci.Wercker {
+	if nil != ciReference.Wercker {
 		str = `
 		wercker:
-		  enabled: ` + strconv.FormatBool(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Ci.Wercker.Enabled) +
-			GetWerckerCiMasters(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Ci.Wercker)
+		  enabled: ` + strconv.FormatBool(ciReference.Wercker.Enabled) +
+			GetWerckerCiMasters(ciReference.Wercker)
 
 		str = strings.Replace(str, "\t", "    ", -1)
 	}
@@ -133,14 +133,14 @@ func GetWerckerCiMasters(wercker *ci.Wercker) string {
 	return str
 }
 
-func GetConcourseCi(KustomizeData structs.Kustomize) string {
+func GetConcourseCi(ciReference *ci.Ci) string {
 	str := ""
 
-	if nil != KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Ci.Concourse {
+	if nil != ciReference.Concourse {
 		str = `
 		concourse:
-		  enabled: ` + strconv.FormatBool(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Ci.Concourse.Enabled) +
-			GetConcourseCiMasters(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Ci.Concourse)
+		  enabled: ` + strconv.FormatBool(ciReference.Concourse.Enabled) +
+			GetConcourseCiMasters(ciReference.Concourse)
 
 		str = strings.Replace(str, "\t", "    ", -1)
 	}
@@ -169,14 +169,14 @@ func GetConcourseCiMasters(concourse *ci.Concourse) string {
 	return str
 }
 
-func GetGcbCi(KustomizeData structs.Kustomize) string {
+func GetGcbCi(ciReference *ci.Ci) string {
 	str := ""
 
-	if nil != KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Ci.Gcb {
+	if nil != ciReference.Gcb {
 		str = `
 		gcb:
-		  enabled: ` + strconv.FormatBool(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Ci.Gcb.Enabled) +
-			GetGcbCiAccounts(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Ci.Gcb)
+		  enabled: ` + strconv.FormatBool(ciReference.Gcb.Enabled) +
+			GetGcbCiAccounts(ciReference.Gcb)
 
 		str = strings.Replace(str, "\t", "    ", -1)
 	}
@@ -205,14 +205,14 @@ func GetGcbCiAccounts(gcb *ci.Gcb) string {
 	return str
 }
 
-func GetCodebuildCi(KustomizeData structs.Kustomize) string {
+func GetCodebuildCi(ciReference *ci.Ci) string {
 	str := ""
 
-	if nil != KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Ci.Codebuild {
+	if nil != ciReference.Codebuild {
 		str = `
 		codebuild:
-		  enabled: ` + strconv.FormatBool(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Ci.Codebuild.Enabled) +
-			GetCodebuildCiAccounts(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Ci.Codebuild)
+		  enabled: ` + strconv.FormatBool(ciReference.Codebuild.Enabled) +
+			GetCodebuildCiAccounts(ciReference.Codebuild)
 
 		str = strings.Replace(str, "\t", "    ", -1)
 	}
