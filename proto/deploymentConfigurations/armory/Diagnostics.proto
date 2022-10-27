@@ -1,0 +1,31 @@
+syntax = "proto3";
+package proto.armory;
+
+option go_package = "config/deploymentConfigurations/armory";
+
+// Configuration for the clouddriver microservice.
+
+message Diagnostics {
+    bool enabled = 1;
+    string uuid = 2;
+    Logging logging = 3;
+}
+
+message Logging {
+    bool enabled = 1;
+    string endpoint = 2;
+}
+
+/*
+
+Example Config:
+
+  armory:
+    diagnostics:
+      enabled: true
+      uuid: 12345678
+      logging:
+        enabled: false
+        endpoint: https://debug.armory.io/v1/logs
+
+*/
