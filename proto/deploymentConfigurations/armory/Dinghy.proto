@@ -1,0 +1,50 @@
+syntax = "proto3";
+package proto.armory;
+
+option go_package = "config/deploymentConfigurations/armory";
+
+// Configuration for the clouddriver microservice.
+
+message Dinghy {
+
+    bool enabled = 1;
+    string templateOrg = 2;
+    string templateRepo = 3;
+    string githubToken = 4;
+    string githubEndpoint = 5;
+    bool repositoryRawdataProcessing = 6;
+    string dinghyFilename = 7;
+    bool autoLockPipelines = 8;
+    string fiatUser = 9;
+    Notifiers notifiers = 10;
+}
+
+message Notifiers {
+    Slack slack = 1;
+}
+
+message Slack {
+    bool enabled = 1;
+}
+
+/*
+
+Example Config:
+
+
+  armory:
+    dinghy:
+      enabled: true
+      templateOrg: org
+      templateRepo: dinghy-templates-test
+      githubToken: token
+      githubEndpoint: http://localhost:9090
+      repositoryRawdataProcessing: false
+      dinghyFilename: dinghyfile
+      autoLockPipelines: true
+      fiatUser: svc-account
+      notifiers:
+        slack:
+          enabled: false
+
+*/

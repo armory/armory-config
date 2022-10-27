@@ -1,0 +1,29 @@
+syntax = "proto3";
+package proto.armory;
+
+option go_package = "config/deploymentConfigurations/armory";
+
+// Configuration for the clouddriver microservice.
+
+message Terraform {
+    bool enabled = 1;
+    Git git = 2;
+}
+
+message Git {
+    bool enabled = 1;
+    string accessToken = 2;
+}
+
+/*
+
+Example Config:
+
+  armory:
+    terraform:
+      enabled: true
+      git:
+        enabled: true
+        accessToken: encrypted:s3!r:us-west-2!b:xero-ps-spinnaker-svc-halyard-test-secrets!f:spinnaker-secrets.yml!k:github.terraformerToken
+
+*/

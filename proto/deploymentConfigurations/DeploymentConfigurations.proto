@@ -20,6 +20,7 @@ import "proto/deploymentConfigurations/spinnaker/Spinnaker.proto";
 import "proto/deploymentConfigurations/webhook/Webhook.proto";
 import "proto/deploymentConfigurations/canary/Canary.proto";
 import "proto/deploymentConfigurations/stats/Stats.proto";
+import "proto/deploymentConfigurations/armory/Armory.proto";
 
 // All available configurations for Spinnaker Halyard
 
@@ -43,7 +44,7 @@ message DeploymentConfigurations {
     webhook.Webhook webhook = 16;
     string timezone = 17;
     stats.Stats stats = 18;
-    // Armory armory = 17;
+    armory.Armory armory = 19;
 
 }
 
