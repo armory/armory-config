@@ -10,6 +10,11 @@ import "proto/deploymentConfigurations/providers/Azure.proto";
 import "proto/deploymentConfigurations/providers/DockerRegistry.proto";
 import "proto/deploymentConfigurations/providers/Google.proto";
 import "proto/deploymentConfigurations/providers/Kubernetes.proto";
+import "proto/deploymentConfigurations/providers/Dcos.proto";
+import "proto/deploymentConfigurations/providers/Huaweicloud.proto";
+import "proto/deploymentConfigurations/providers/Tencentcloud.proto";
+import "proto/deploymentConfigurations/providers/Oracle.proto";
+import "proto/deploymentConfigurations/providers/Cloudfoundry.proto";
 // Configuration for the clouddriver microservice.
 
 /* 
@@ -18,7 +23,6 @@ ToDo:
 Azure provider - Need more information on all possible configs
 Docker Registry - Needs some touching up to ensure it covers all possible configs
 Google provider - Need to review later
-Huawei Cloud - Does anyone even use this? Will revisit later
 
 */
 message Providers {
@@ -27,13 +31,13 @@ message Providers {
     Aws aws = 2;
     Ecs ecs = 3;
     Azure azure = 4;
-    // Dcos dcos = 5; 
+    Dcos dcos = 5; 
     DockerRegistry dockerRegistry = 6;
     Google google = 7; 
-    // Huaweicloud huaweicloud = 8; 
+    Huaweicloud huaweicloud = 8; 
     Kubernetes kubernetes = 9;
-    // Tencentcloud tencentcloud = 10;
-    // Orcale oracle = 11;
-    // Cloudfoundry cloudfoundry = 12;
+    Tencentcloud tencentcloud = 10;
+    Oracle oracle = 11;
+    Cloudfoundry cloudfoundry = 12;
 
 }

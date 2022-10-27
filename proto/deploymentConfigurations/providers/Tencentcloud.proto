@@ -1,0 +1,89 @@
+syntax = "proto3";
+package proto.providers;
+
+option go_package = "config/deploymentConfigurations/providers";
+
+import "proto/deploymentConfigurations/permissions/Permissions.proto";
+// Configuration for the dcos provider.
+message Tencentcloud {
+    bool enabled = 1;
+    repeated TencentAccounts accounts = 2;
+    string primaryAccount = 3;
+    TencentBakery bakeryDefaults = 4;
+}
+
+message TencentAccounts {
+    string name = 1;
+    string environment = 2;
+    repeated string requiredGroupMembership = 3;
+    permissions.Permissions permissions = 4;
+    string secretId = 5;
+    string secretKey = 6;
+    repeated string regions = 7;
+}
+
+message TencentBakery {
+    string templateFile = 1;
+    repeated TencentBaseImages baseImages = 2;
+}
+
+message TencentBaseImages {
+    TencentBaseImage baseImage = 1;
+    repeated TencentVS virtualizationSettings = 2;
+}
+
+message TencentBaseImage {
+    string id = 1;
+    string shortDescription = 2;
+    string detailedDescription = 3;
+    string packageType = 4;
+    string templateFile = 5;
+
+}
+
+message TencentVS {
+    string region = 1;
+    string zone = 2;
+    string instanceType = 3;
+    string sourceImageId = 4;
+    string sshUserName =5;
+}
+/*
+
+Example Config
+
+    tencentcloud:
+      enabled: false
+      accounts:
+      - name: tencent
+        environment: dev
+        requiredGroupMembership:
+        - dev
+        - test
+        permissions:
+          READ:
+          - dev,test
+          WRITE:
+          - dev,test
+        secretId: secret
+        secretKey: secret
+        regions:
+        - us-west-1
+      primaryAccount: tencent
+      bakeryDefaults:
+        templateFile: temp.json
+        baseImages:
+        - baseImage:
+            id: tencent-image
+            shortDescription: desc
+            detailedDescription: details
+            packageType: huh
+            templateFile: temp.json
+          virtualizationSettings:
+          - region: us-west-1
+            zone: zone
+            instanceType: what
+            sourceImageId: id
+            sshUserName: ssh
+
+*/

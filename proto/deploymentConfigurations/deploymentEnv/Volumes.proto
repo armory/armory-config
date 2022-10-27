@@ -7,7 +7,7 @@ option go_package = "config/deploymentConfigurations/deploymentEnv";
 message Volumes {
 
     string name = 1;
-    string emptyDir = 2;
+    EmptyDir emptyDir = 2;
     Secret secret = 3;
 
 }
@@ -15,6 +15,10 @@ message Volumes {
 message Secret {
 
     string secretName = 1;
-    string defaultMode = 2;
+    int64 defaultMode = 2;
 
+}
+
+message EmptyDir {
+    string test = 1;
 }

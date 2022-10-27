@@ -54,36 +54,35 @@ import (
 	"fmt"
 
 	"github.com/austinthao5/golang_proto_test/cmd/migrate"
-	"github.com/austinthao5/golang_proto_test/internal/fileio"
-	"sigs.k8s.io/yaml"
+	"github.com/austinthao5/golang_proto_test/internal/parser"
 )
 
 func main() {
 
 	path := "/Users/austinthao/kustom_github/austin-spin-ftw/proto_tests/Austin.yml"
 
-	data, err := fileio.ReadFile(path)
+	// data, err := fileio.ReadFile(path)
 
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	json, err := yaml.YAMLToJSON(data)
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	s := string(json)
-	fmt.Println(s)
-
-	// test, err := parser.ParseHalConfig(path)
-
-	// fmt.Println("TESTING IN MAIN")
 	// if err != nil {
 	// 	fmt.Println(err)
-	// } else {
-	// 	fmt.Println(test.DeploymentConfigurations[0].DeploymentEnvironment.Affinity)
 	// }
+
+	// json, err := yaml.YAMLToJSON(data)
+	// if err != nil {
+	// 	fmt.Println(err)
+	// }
+
+	// s := string(json)
+	// fmt.Println(s)
+
+	test, err := parser.ParseHalConfig(path)
+
+	fmt.Println("TESTING IN MAIN")
+	if err != nil {
+		fmt.Println(err)
+	} else {
+		fmt.Println(test.DeploymentConfigurations[0].Providers)
+	}
 
 	migrate.Execute()
 }

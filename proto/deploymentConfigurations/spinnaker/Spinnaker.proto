@@ -16,7 +16,7 @@ message Spinnaker {
 message Extensibility {
 
     // map<string, Plugins> plugins = 1;
-    Plugins plugins = 1;
+    Test plugins = 1;
     Repositories repositories = 2;
 
 }
@@ -47,6 +47,10 @@ message Repositories {
     string name = 1;
     string id = 2;
     string url = 3;
+}
+
+message Test {
+  map<string, Plugins> plugins = 1;
 }
 
 /*

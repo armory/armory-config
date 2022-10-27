@@ -1,0 +1,56 @@
+syntax = "proto3";
+package proto.providers;
+
+option go_package = "config/deploymentConfigurations/providers";
+
+import "proto/deploymentConfigurations/permissions/Permissions.proto";
+// Configuration for the clouddriver microservice.
+message Cloudfoundry {
+
+    bool enabled = 1;
+    repeated CFAccounts accounts = 2;
+    string primaryAccount = 3;
+}
+
+message CFAccounts {
+
+    string name = 1;
+    string environment = 2;
+    repeated string requiredGroupMembership = 3;
+    permissions.Permissions permissions = 4;
+    string password = 5;
+    string user = 6;
+    bool skipSslValidation = 7;
+    string api = 8;
+    string appsManagerUri = 9;
+    string metricsUri = 10;
+
+}
+
+
+/*
+
+Example Config:
+
+    cloudfoundry:
+      enabled: false
+      accounts:
+      - name: cf
+        environment: env
+        requiredGroupMembership:
+        - dev
+        - test
+        permissions:
+          READ:
+          - dev,test
+          WRITE:
+          - dev,test
+        password: pass
+        user: user
+        skipSslValidation: true
+        api: http://localhost:9090
+        appsManagerUri: http://localhost:9090
+        metricsUri: http://localhost:9090
+      primaryAccount: cf
+
+*/

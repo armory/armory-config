@@ -1,0 +1,123 @@
+syntax = "proto3";
+package proto.providers;
+
+option go_package = "config/deploymentConfigurations/providers";
+
+import "proto/deploymentConfigurations/permissions/Permissions.proto";
+// Configuration for the dcos provider.
+message Huaweicloud {
+
+    bool enabled = 1;
+    repeated HuaweiAccounts accounts = 2;
+    string primaryAccount = 3;
+    HuaweiBakery bakeryDefaults = 4;
+
+}
+
+message HuaweiAccounts {
+    string name = 1;
+    string environment = 2;
+    repeated string requiredGroupMembership = 3;
+    permissions.Permissions permissions = 4;
+    string accountType = 5;
+    string authUrl = 6;
+    string username = 7;
+    string password = 8;
+    string projectName = 9;
+    string domainName = 10;
+    bool insecure = 11;
+    repeated string regions = 12;
+}
+
+message HuaweiBakery {
+    string templateFile = 1;
+    repeated HuaweiBaseImages baseImages = 2;
+    string authUrl = 3;
+    string username = 4;
+    string password = 5;
+    string projectName = 6;
+    string domainName = 7;
+    bool insecure = 8;
+    string vpcId = 9;
+    string subnetId = 10;
+    string securityGroup = 11;
+    int32 eipBandwidthSize = 12;
+}
+
+
+message HuaweiBaseImages {
+    HuaweiBaseImage baseImage = 1;
+    repeated HuaweiVS virtualizationSettings = 2;
+
+}
+
+message HuaweiBaseImage {
+    string id = 1;
+    string shortDescription = 2;
+    string detailedDescription = 3;
+    string packageType = 4;
+    string templateFile = 5;
+
+}
+
+message HuaweiVS {
+    string region = 1;
+    string instanceType = 2;
+    string sourceImageId = 3;
+    string sshUserName = 4;
+    string eiptype = 5;
+}
+/*
+
+Example Config
+
+    huaweicloud:
+      enabled: false
+      accounts:
+      - name: huawei
+        environment: dev
+        requiredGroupMembership:
+        - dev
+        - test
+        permissions:
+          READ:
+          - dev,test
+          WRITE:
+          - dev,test
+        accountType: test
+        authUrl: http://localhost:9090
+        username: user
+        password: pass
+        projectName: proj
+        domainName: domain
+        insecure: true
+        regions:
+        - us-east-1
+      primaryAccount: huawei
+      bakeryDefaults:
+        templateFile: temp.json
+        baseImages:
+        - baseImage:
+            id: base-image
+            shortDescription: test
+            detailedDescription: test
+            packageType: pack
+            templateFile: temp.json
+          virtualizationSettings:
+          - region: us-west-1
+            instanceType: type
+            sourceImageId: id
+            sshUserName: ssh
+            eipType: eip1
+        authUrl: http://localhost:9090
+        username: user
+        password: pass
+        projectName: proj
+        domainName: domainName
+        insecure: true
+        vpcId: vpc-123
+        subnetId: subnet-123
+        securityGroup: sg-123
+        eipBandwidthSize: 10
+
+*/

@@ -1,0 +1,87 @@
+syntax = "proto3";
+package proto.providers;
+
+option go_package = "config/deploymentConfigurations/providers";
+
+import "proto/deploymentConfigurations/permissions/Permissions.proto";
+// Configuration for the dcos provider.
+message Dcos {
+
+    bool enabled = 1;
+    repeated DcosAccounts accounts = 2;
+    string primaryAccount = 3;
+    repeated DcosCluster clusters = 4;
+
+}
+
+message DcosAccounts {
+    string name = 1;
+    string environment = 2;
+    repeated string requiredGroupMembership = 3;
+    permissions.Permissions permissions = 4;
+    repeated DcosDocker dockerRegistries = 5;
+    repeated DcosAccCluster clusters = 6;
+    
+}
+
+message DcosDocker {
+    string accountName = 1;
+    repeated string namespaces = 2;
+}
+
+message DcosAccCluster {
+    string name = 1;
+    string uid = 2;
+    string password = 3;
+    string serviceKeyFile = 4;
+}
+
+message DcosCluster {
+    string name = 1;
+    string dcosUrl = 2;
+    string caCertFile = 3;
+    bool insecureSkipTlsVerify = 4;
+    DcosLB loadBalancer = 5;
+}
+
+message DcosLB {
+    string image = 1;
+    string serviceAccountSecret = 2;
+}
+
+/*
+
+Example Config
+
+    dcos:
+      enabled: true
+      accounts:
+      - name: dcos
+        environment: dev
+        requiredGroupMembership:
+        - dev
+        - test
+        permissions:
+          READ:
+          - dev,test
+          WRITE:
+          - dev,test
+        dockerRegistries:
+        - accountName: docker
+          namespaces: []
+        clusters:
+        - name: my-dcos-cluster
+          uid: '12345'
+          password: pass
+          serviceKeyFile: /home/spinnaker/.hal/config
+      primaryAccount: dcos
+      clusters:
+      - name: my-dcos-cluster
+        dcosUrl: http://localhost:9090
+        caCertFile: /home/spinnaker/.hal/config
+        insecureSkipTlsVerify: true
+        loadBalancer:
+          image: image
+          serviceAccountSecret: test
+
+*/
