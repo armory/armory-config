@@ -10,7 +10,7 @@ message Google {
     bool enabled = 1;
     string primaryAccount = 2;
     repeated GoogleAcc accounts = 3;
-    GoogleBakeryDefaults bakeryDefault = 4;
+    GoogleBakeryDefaults bakeryDefaults = 4;
     
 }
 
@@ -40,7 +40,7 @@ message Consul {
 
 message GoogleBakeryDefaults {
     string templateFile = 1;
-    GoogleBaseImages baseImages = 2;
+    repeated GoogleBaseImages baseImages = 2;
     string zone = 3;
     string network = 4;
     bool useInternalIp = 5;
@@ -49,6 +49,7 @@ message GoogleBakeryDefaults {
 message GoogleBaseImages {
 
     GoogleBaseImage baseImage = 1;
+    GoogleVirtualizationSettings virtualizationSettings = 2;
     
 
 }
@@ -60,7 +61,6 @@ message GoogleBaseImage {
     string packageType = 4;
     string templateFile = 5;
     bool imageFamily = 6;
-    GoogleVirtualizationSettings virtualizationSettings = 7;
 }
 
 message GoogleVirtualizationSettings {

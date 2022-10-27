@@ -10,7 +10,7 @@ message Azure {
     bool enabled = 1;
     string primaryAccount = 2;
     repeated AzureAcc accounts = 3;
-    AzureBakeryDefaults bakeryDefault = 4;
+    AzureBakeryDefaults bakeryDefaults = 4;
 
 }
 
@@ -41,14 +41,18 @@ message AzureBakeryDefaults {
 }
 
 message AzureBaseImages {
-    string id = 1;
-    string shortDescription = 2;
-    string packageType = 3;
-    string templateFile = 4;
-    string publisher = 5;
-    string offer = 6;
-    string sku = 7;
-    string version = 8;
+  AzureBaseImage baseImage = 1;
+}
+
+message AzureBaseImage {
+  string id = 1;
+  string shortDescription = 2;
+  string packageType = 3;
+  string templateFile = 4;
+  string publisher = 5;
+  string offer = 6;
+  string sku = 7;
+  string version = 8;
 }
 
 /*

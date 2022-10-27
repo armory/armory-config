@@ -1,0 +1,98 @@
+syntax = "proto3";
+package proto.providers;
+
+option go_package = "config/deploymentConfigurations/providers";
+
+import "proto/deploymentConfigurations/permissions/Permissions.proto";
+// Configuration for the clouddriver microservice.
+message Oracle {
+
+    bool enabled = 1;
+    repeated OracleAccounts accounts = 2;
+    string primaryAccount = 3;
+    OracleBakery bakeryDefaults = 4;
+}
+
+message OracleAccounts {
+    string name = 1;
+    string environment = 2;
+    repeated string requiredGroupMembership = 3;
+    permissions.Permissions permissions = 4;
+    string compartmentId = 5;
+    string userId = 6;
+    string fingerprint = 7;
+    string sshPrivateKeyFilePath = 8;
+    string privateKeyPassphrase = 9;
+    string tenancyId = 10;
+    string region = 11;
+}
+
+message OracleBakery {
+    string templateFile = 1;
+    repeated OracleBaseImages baseImages = 2;
+    string availabilityDomain = 3;
+    string subnetId = 4;
+    string instanceShape = 5;
+}
+
+message OracleBaseImages {
+    OracleBaseImage baseImage = 1;
+    OracleVS virtualizationSettings = 2;
+}
+
+message OracleBaseImage {
+    string id = 1;
+    string shortDescription = 2;
+    string detailedDescription = 3;
+    string packageType = 4;
+    string templateFile = 5;
+}
+
+message OracleVS {
+    string baseImageId = 1;
+    string sshUserName = 2;
+}
+
+
+/*
+
+Example Config:
+
+    oracle:
+      enabled: false
+      accounts:
+      - name: oracle
+        environment: env
+        requiredGroupMembership:
+        - dev
+        - test
+        permissions:
+          READ:
+          - dev,test
+          WRITE:
+          - dev,test
+        compartmentId: id
+        userId: user
+        fingerprint: /home/spinnaker/.hal/config
+        sshPrivateKeyFilePath: /home/spinnaker/.hal/config
+        privateKeyPassphrase: password
+        tenancyId: tenID
+        region: us-phoenix-1
+      primaryAccount: oracle
+      bakeryDefaults:
+        templateFile: temp.json
+        baseImages:
+        - baseImage:
+            id: oracle-image
+            shortDescription: testing
+            detailedDescription: something here
+            packageType: deb
+            templateFile: temp.json
+          virtualizationSettings:
+            baseImageId: id
+            sshUserName: user
+        availabilityDomain: test
+        subnetId: sub-id
+        instanceShape: shape
+
+*/
