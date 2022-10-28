@@ -20,7 +20,7 @@ func (ProvidersData *Providers) SetGoogle(providersRef *providers.Providers) err
 	str := `enabled: ` + strconv.FormatBool(providersRef.Google.Enabled) + `
 	primaryAccount: ` + providersRef.Google.PrimaryAccount +
 		GetGoogleAccounts(providersRef.Google.Accounts) +
-		GetGoogleBakeryDefaultsAccounts(providersRef.Google.BakeryDefault)
+		GetGoogleBakeryDefaultsAccounts(providersRef.Google.BakeryDefaults)
 
 	str = strings.Replace(str, "\t", "          ", -1)
 	ProvidersData.Google = str
