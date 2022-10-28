@@ -37,7 +37,7 @@ func GetCloudfoundryAccounts(accounts []*providers.CFAccounts) string {
 			str += `
 		    - name: ` + account.Name + `
 		      environment: ` + account.Environment +
-				getProvidersStringArray(account.RequiredGroupMembership, "requiredGroupMembership") + `
+				getProvidersStringArrayAppend(account.RequiredGroupMembership, "requiredGroupMembership", "- ") + `
 		      password: ` + account.Password + `
 		      user: ` + account.User + `
 		      skipSslValidation: ` + strconv.FormatBool(account.SkipSslValidation) + `

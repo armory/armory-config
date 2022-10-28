@@ -38,10 +38,10 @@ func GetTencentcloudAccounts(accounts []*providers.TencentAccounts) string {
 			str += `
 		    - name: ` + account.Name + `
 		      environment: ` + account.Environment +
-				getProvidersStringArray(account.RequiredGroupMembership, "requiredGroupMembership") + `
+				getProvidersStringArrayAppend(account.RequiredGroupMembership, "requiredGroupMembership", "- ") + `
 		      secretId: ` + account.SecretId + `
 		      secretKey: ` + account.SecretKey +
-				getProvidersStringArray(account.Regions, "regions") + `
+				getProvidersStringArrayAppend(account.Regions, "regions", "- ") + `
 		      permission: {}` //TODO + account.Permission`
 		}
 	} else {
@@ -59,11 +59,47 @@ func GetTencentBakeryDefaultsAccounts(bakeryDefault *providers.TencentBakery) st
 	if nil != bakeryDefault {
 		str += `
 		  bakeryDefaults:` + `
-		    templateFile: ` + bakeryDefault.TemplateFile + `
-		    baseImages: []` /* + TODO bakeryDefault.BaseImages + */
+		    templateFile: ` + bakeryDefault.TemplateFile +
+			GetTencentBaseImages(bakeryDefault.BaseImages)
 	} else {
 		str += `
 		  bakeryDefaults: []`
+	}
+
+	str = strings.Replace(str, "\t", "    ", -1)
+	return str
+}
+
+func GetTencentBaseImages(baseImages []*providers.TencentBaseImages) string {
+	str := ""
+
+	if nil != baseImages {
+		str += `
+		    baseImages:`
+		for _, baseImage := range baseImages {
+			if nil != baseImage.BaseImage {
+				str += `
+			  - baseImage:
+			    id: ` + baseImage.BaseImage.Id + `
+			    shortDescription: ` + baseImage.BaseImage.ShortDescription + `
+			    detailedDescription: ` + baseImage.BaseImage.DetailedDescription + `
+			    packageType: ` + baseImage.BaseImage.PackageType + `
+			    templateFile: ` + baseImage.BaseImage.TemplateFile
+			}
+			for _, virtualSetting := range baseImage.VirtualizationSettings {
+				if nil != virtualSetting {
+					str += `
+			    virtualizationSettings:
+			      - region: ` + virtualSetting.Region + `
+			        instanceType: ` + virtualSetting.InstanceType + `
+			        sourceImageId: ` + virtualSetting.SourceImageId + `
+			        sshUserName: ` + virtualSetting.SshUserName
+				}
+			}
+		}
+	} else {
+		str += `
+		    baseImages: []`
 	}
 
 	str = strings.Replace(str, "\t", "    ", -1)

@@ -49,16 +49,16 @@ func GetAwsAccounts(provider *providers.Providers) string {
 		  accounts:`
 		for _, account := range provider.Aws.Accounts {
 			str += `
-		    - name: ` + account.Name + `
-		      environment: ` + account.Environment +
-				getProvidersStringArray(account.RequiredGroupMembership, "requiredGroupMembership") + `
-		      defaultKeyPair: ` + account.DefaultKeyPair + `
-		      edda : ` + account.Edda + `
-		      discovery: ` + account.Discovery + `
-		      accountId: ` + account.AccountId +
-				strings.Replace(getAwsRegions(account.Regions, "region"), "\t", "      ", -1) +
-				strings.Replace(getAwsLifecycleHooks(account.LifecycleHooks), "\t", "      ", -1) + `
-		      Permission: {}` //TODO + account.Permission`
+		  - name: ` + account.Name + `
+		    environment: ` + account.Environment +
+				strings.Replace(getProvidersStringArrayAppend(account.RequiredGroupMembership, "requiredGroupMembership", "- "), "\t", "   ", -1) + `
+		    defaultKeyPair: ` + account.DefaultKeyPair + `
+		    edda : ` + account.Edda + `
+		    discovery: ` + account.Discovery + `
+		    accountId: ` + account.AccountId +
+				strings.Replace(getAwsRegions(account.Regions, "region"), "\t", "     ", -1) +
+				strings.Replace(getAwsLifecycleHooks(account.LifecycleHooks), "\t", "     ", -1) + `
+		    Permission: {}` //TODO + account.Permission`
 			//TODO assumeRole
 			//TODO providerVersion
 		}
@@ -98,10 +98,10 @@ func getAwsLifecycleHooks(lifeCycles []*providers.LifecycleHooks) string {
 		for _, lifeCycle := range lifeCycles {
 			str += `
 		    - defaultResult: ` + lifeCycle.DefaultResult + `
-		    heartbeatTimeout: ` + strconv.FormatInt(int64(lifeCycle.HeartbeatTimeout), 10) + `
-		    lifecycleTransition: ` + lifeCycle.LifecycleTransition + `
-		    notificationTargetARN: ` + lifeCycle.NotificationTargetARN + `
-		    roleARN: ` + lifeCycle.RoleARN
+		      heartbeatTimeout: ` + strconv.FormatInt(int64(lifeCycle.HeartbeatTimeout), 10) + `
+		      lifecycleTransition: ` + lifeCycle.LifecycleTransition + `
+		      notificationTargetARN: ` + lifeCycle.NotificationTargetARN + `
+		      roleARN: ` + lifeCycle.RoleARN
 		}
 	} else {
 		str += `

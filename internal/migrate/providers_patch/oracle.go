@@ -38,7 +38,7 @@ func GetOracleAccounts(accounts []*providers.OracleAccounts) string {
 			str += `
 		    - name: ` + account.Name + `
 		      environment: ` + account.Environment +
-				getProvidersStringArray(account.RequiredGroupMembership, "requiredGroupMembership") + `
+				getProvidersStringArrayAppend(account.RequiredGroupMembership, "requiredGroupMembership", "- ") + `
 		      compartmentId: ` + account.CompartmentId + `
 		      userId: ` + account.UserId + `
 		      fingerprint: ` + account.Fingerprint + `
@@ -64,14 +64,48 @@ func GetOracleBakeryDefaultsAccounts(bakeryDefault *providers.OracleBakery) stri
 	if nil != bakeryDefault {
 		str += `
 		  bakeryDefaults:` + `
-		    templateFile: ` + bakeryDefault.TemplateFile + `
-		    baseImages: []` + /*TODO bakeryDefault.BaseImages + */ `
+		    templateFile: ` + bakeryDefault.TemplateFile +
+			GetOracleBaseImages(bakeryDefault.BaseImages) + `
 		    availabilityDomain: ` + bakeryDefault.AvailabilityDomain + `
 		    subnetId: ` + bakeryDefault.SubnetId + `
 		    instanceShape: ` + bakeryDefault.InstanceShape
 	} else {
 		str += `
 		  bakeryDefaults: []`
+	}
+
+	str = strings.Replace(str, "\t", "    ", -1)
+	return str
+}
+
+func GetOracleBaseImages(baseImages []*providers.OracleBaseImages) string {
+	str := ""
+
+	if nil != baseImages {
+		str += `
+		    baseImages:`
+		for _, baseImage := range baseImages {
+			if nil != baseImage.BaseImage {
+				str += `
+			  - baseImage:
+			    id: ` + baseImage.BaseImage.Id + `
+			    shortDescription: ` + baseImage.BaseImage.ShortDescription + `
+			    detailedDescription: ` + baseImage.BaseImage.DetailedDescription + `
+			    packageType: ` + baseImage.BaseImage.PackageType + `
+			    templateFile: ` + baseImage.BaseImage.TemplateFile
+			}
+			//for _, virtualSetting := range baseImage.VirtualizationSettings {
+			if nil != baseImage.VirtualizationSettings {
+				str += `
+			    virtualizationSettings:
+			      - baseImageId: ` + baseImage.VirtualizationSettings.BaseImageId + `
+			        sshUserName: ` + baseImage.VirtualizationSettings.SshUserName
+			}
+			//}
+		}
+	} else {
+		str += `
+		    baseImages: []`
 	}
 
 	str = strings.Replace(str, "\t", "    ", -1)

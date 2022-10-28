@@ -51,7 +51,7 @@ func GetGcsStorage(storageReference *persistentStorage.PersistentStorage) string
 	str := ""
 
 	if nil != storageReference.Gcs &&
-		"" != storageReference.Gcs.JsonPath {
+		"" != storageReference.Gcs.Bucket {
 		str = `  gcs:
 			jsonPath: ` + storageReference.Gcs.JsonPath + `
 			project: ` + storageReference.Gcs.Project + `

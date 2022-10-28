@@ -41,20 +41,20 @@ func GetAzureAccounts(accounts []*providers.AzureAcc) string {
 		for _, account := range accounts {
 			str += `
 		    - name: ` + account.Name + `
-		        environment: ` + account.Environment +
-				getProvidersStringArray(account.RequiredGroupMembership, "requiredGroupMembership") + `
-		        clientId: ` + account.ClientId + `
-		        appKey: ` + account.AppKey + `
-		        tenantId: ` + account.TenantId + `
-		        subscriptionId: ` + account.SubscriptionId + `
-		        objectId: ` + account.ObjectId + `
-		        defaultResourceGroup: ` + account.DefaultResourceGroup + `
-		        defaultKeyVault: ` + account.DefaultKeyVault + `
-		        packerResourceGroup: ` + account.PackerResourceGroup + `
-		        packerStorageAccount: ` + account.PackerStorageAccount +
-				getProvidersStringArray(account.Regions, "regions") + `
-		        useSshPublicKey: ` + account.UseSshPublicKey + `
-		        permission: {}` //TODO + account.Permission`
+		      environment: ` + account.Environment +
+				getProvidersStringArrayAppend(account.RequiredGroupMembership, "requiredGroupMembership", "- ") + `
+		      clientId: ` + account.ClientId + `
+		      appKey: ` + account.AppKey + `
+		      tenantId: ` + account.TenantId + `
+		      subscriptionId: ` + account.SubscriptionId + `
+		      objectId: ` + account.ObjectId + `
+		      defaultResourceGroup: ` + account.DefaultResourceGroup + `
+		      defaultKeyVault: ` + account.DefaultKeyVault + `
+		      packerResourceGroup: ` + account.PackerResourceGroup + `
+		      packerStorageAccount: ` + account.PackerStorageAccount +
+				getProvidersStringArrayAppend(account.Regions, "regions", "- ") + `
+		      useSshPublicKey: ` + account.UseSshPublicKey + `
+		      permission: {}` //TODO + account.Permission`
 		}
 	} else {
 		str += `

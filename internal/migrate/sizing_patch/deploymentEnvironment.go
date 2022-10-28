@@ -55,7 +55,7 @@ func GetCustomSizing(sizingReference *deploymentEnv.CustomSizing) string {
 		getServiceSizing(sizingReference.SpinEcho, "spin-echo") +
 		getServiceSizing(sizingReference.ClouddriverBootstrap, "clouddriver-bootstrap") +
 		getServiceSizing(sizingReference.SpinEchoScheduler, "spin-echo-scheduler") +
-		getServiceSizing(sizingReference.SpinClouddriverCaching, "spin-clouddriver-caching") +
+		getServiceSizing(sizingReference.SpinClouddriverCaching, "spin-clouddriver-caching") + //spinClouddriverCaching
 		getServiceSizing(sizingReference.SpinClouddriverBootstrap, "spin-clouddriver-bootstrap") +
 		getServiceSizing(sizingReference.SpinVaultClient, "spin-vault-client") +
 		getServiceSizing(sizingReference.SpinFiat, "spin-fiat") +
@@ -72,6 +72,18 @@ func GetCustomSizing(sizingReference *deploymentEnv.CustomSizing) string {
 		getServiceSizing(sizingReference.Orca, "orca") +
 		getServiceSizing(sizingReference.Rosco, "rosco") +
 		getServiceSizing(sizingReference.SpinFront50, "spin-front50")
+		// MISSING getServiceSizing(sizingReference.SpinTerraformer, "spin-terraformer")
+		// MISSING getServiceSizing(sizingReference.SpinDinghy, "spin-dinghy")
+
+		//TODO sidecars
+		//TODO initContainers
+		//TODO hostAliases
+		//TODO affinity
+		//TODO tolerations
+		//TODO nodeSelectors
+		//TODO gitConfig
+		//TODO livenessProbeConfig
+		//TODO haServices
 
 	str = strings.Replace(str, "\t", "    ", -1)
 	return str

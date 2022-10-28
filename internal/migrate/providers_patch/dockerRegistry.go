@@ -35,24 +35,24 @@ func GetDockerRegistryAccounts(accounts []*providers.DockerRegistryAcc) string {
 		  accounts:`
 		for _, account := range accounts {
 			str += `
-		    - name: ` + account.Name +
-				getProvidersStringArray(account.RequiredGroupMembership, "requiredGroupMembership") + `
-		      address: ` + account.Address + `
-		      username: ` + account.Username + `
-		      email: ` + account.Email + `
-		      cacheIntervalSeconds: ` + strconv.FormatInt(int64(account.CacheIntervalSeconds), 10) + `
-		      clientTimeoutMillis: ` + strconv.FormatInt(int64(account.ClientTimeoutMillis), 10) + `
-		      cacheThreads: ` + strconv.FormatInt(int64(account.CacheThreads), 10) + `
-		      paginateSize: ` + strconv.FormatInt(int64(account.PaginateSize), 10) + `
-		      sortTagsByDate: ` + strconv.FormatBool(account.SortTagsByDate) + `
-		      trackDigests: ` + strconv.FormatBool(account.TrackDigests) + `
-		      insecureRegistry: ` + strconv.FormatBool(account.InsecureRegistry) + `
-		      environment: ` + account.Environment + `
-		      password: ` + account.Password + `
-		      passwordCommand: ` + account.PasswordCommand +
-				getProvidersStringArray(account.Repositories, "repositories") + `
-		      passwordFile: ` + account.PasswordFile + `
-		      permission: {}` //TODO + account.Permission`
+		  - name: ` + account.Name +
+				strings.Replace(getProvidersStringArrayAppend(account.RequiredGroupMembership, "requiredGroupMembership", "- "), "\t", "   ", -1) + `
+		    address: ` + account.Address + `
+		    username: ` + account.Username + `
+		    email: ` + account.Email + `
+		    cacheIntervalSeconds: ` + strconv.FormatInt(int64(account.CacheIntervalSeconds), 10) + `
+		    clientTimeoutMillis: ` + strconv.FormatInt(int64(account.ClientTimeoutMillis), 10) + `
+		    cacheThreads: ` + strconv.FormatInt(int64(account.CacheThreads), 10) + `
+		    paginateSize: ` + strconv.FormatInt(int64(account.PaginateSize), 10) + `
+		    sortTagsByDate: ` + strconv.FormatBool(account.SortTagsByDate) + `
+		    trackDigests: ` + strconv.FormatBool(account.TrackDigests) + `
+		    insecureRegistry: ` + strconv.FormatBool(account.InsecureRegistry) + `
+		    environment: ` + account.Environment + `
+		    password: ` + account.Password + `
+		    passwordCommand: ` + account.PasswordCommand +
+				strings.Replace(getProvidersStringArrayAppend(account.Repositories, "repositories", "- "), "\t", "   ", -1) + `
+		    passwordFile: ` + account.PasswordFile + `
+		    permission: {}` //TODO + account.Permission`
 		}
 	} else {
 		str += `

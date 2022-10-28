@@ -116,3 +116,21 @@ func getProvidersStringArray(stringArray []string, fieldName string) string {
 
 	return str
 }
+
+func getProvidersStringArrayAppend(stringArray []string, fieldName string, valueToAppend string) string {
+	str := ""
+
+	if nil != stringArray {
+		str += `
+		      ` + fieldName + `:`
+		for _, stringValue := range stringArray {
+			str += `
+		        ` + valueToAppend + stringValue
+		}
+	} else {
+		str += `
+		      ` + fieldName + `: []`
+	}
+
+	return str
+}

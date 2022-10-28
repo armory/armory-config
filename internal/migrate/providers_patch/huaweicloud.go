@@ -38,7 +38,7 @@ func GetHuaweiCloudAccounts(accounts []*providers.HuaweiAccounts) string {
 			str += `
 		    - name: ` + account.Name + `
 		      environment: ` + account.Environment +
-				getProvidersStringArray(account.RequiredGroupMembership, "requiredGroupMembership") + `
+				getProvidersStringArrayAppend(account.RequiredGroupMembership, "requiredGroupMembership", "- ") + `
 		      accountType: ` + account.AccountType + `
 		      authUrl: ` + account.AuthUrl + `
 		      username: ` + account.Username + `
@@ -46,7 +46,7 @@ func GetHuaweiCloudAccounts(accounts []*providers.HuaweiAccounts) string {
 		      projectName: ` + account.ProjectName + `
 		      domainName: ` + account.DomainName + `
 		      insecure: ` + strconv.FormatBool(account.Insecure) +
-				getProvidersStringArray(account.Regions, "regions") + `
+				getProvidersStringArrayAppend(account.Regions, "regions", "- ") + `
 		      permission: {}` //TODO + account.Permission`
 		}
 	} else {
@@ -64,8 +64,8 @@ func GetHuaweiBakeryDefaultsAccounts(bakeryDefault *providers.HuaweiBakery) stri
 	if nil != bakeryDefault {
 		str += `
 		  bakeryDefaults:` + `
-		    templateFile: ` + bakeryDefault.TemplateFile + `
-		    baseImages: []` + /*TODO bakeryDefault.BaseImages + */ `
+		    templateFile: ` + bakeryDefault.TemplateFile +
+			GetHuaweiBaseImages(bakeryDefault.BaseImages) + `
 		    authUrl: ` + bakeryDefault.AuthUrl + `
 		    username: ` + bakeryDefault.Username + `
 		    password: ` + bakeryDefault.Password + `
@@ -79,6 +79,43 @@ func GetHuaweiBakeryDefaultsAccounts(bakeryDefault *providers.HuaweiBakery) stri
 	} else {
 		str += `
 		  bakeryDefaults: []`
+	}
+
+	str = strings.Replace(str, "\t", "    ", -1)
+	return str
+}
+
+func GetHuaweiBaseImages(baseImages []*providers.HuaweiBaseImages) string {
+	str := ""
+
+	if nil != baseImages {
+		str += `
+		    baseImages:`
+		for _, baseImage := range baseImages {
+			if nil != baseImage.BaseImage {
+				str += `
+			  - baseImage:
+			    id: ` + baseImage.BaseImage.Id + `
+			    shortDescription: ` + baseImage.BaseImage.ShortDescription + `
+			    detailedDescription: ` + baseImage.BaseImage.DetailedDescription + `
+			    packageType: ` + baseImage.BaseImage.PackageType + `
+			    templateFile: ` + baseImage.BaseImage.TemplateFile
+			}
+			for _, virtualSetting := range baseImage.VirtualizationSettings {
+				if nil != virtualSetting {
+					str += `
+			    virtualizationSettings:
+			      - region: ` + virtualSetting.Region + `
+			        instanceType: ` + virtualSetting.InstanceType + `
+			        sourceImageId: ` + virtualSetting.SourceImageId + `
+			        sshUserName: ` + virtualSetting.SshUserName + `
+			        eiptype: ` + virtualSetting.Eiptype
+				}
+			}
+		}
+	} else {
+		str += `
+		    baseImages: []`
 	}
 
 	str = strings.Replace(str, "\t", "    ", -1)

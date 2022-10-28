@@ -92,6 +92,8 @@ func migrator(halconfig_dir string, output_dir string, deployment_dir string, sp
 	// fmt.Printf("\nKustomizeData: %#v \n\n", KustomizeData)
 	// fmt.Printf("\nHalyard: %#v \n\n", KustomizeData.Halyard)
 	// fmt.Println("Aws.AccessKey: " + KustomizeData.Halyard.DeploymentConfigurations[0].Name)
+	// fmt.Println("Aws.AccessKey: " + KustomizeData.Halyard.DeploymentConfigurations[0].String())
+	// fmt.Println("Aws.AccessKey: %#v" + KustomizeData.Halyard.DeploymentConfigurations[0].Providers.Aws.String())
 
 	if "Y" != KustomizeData.Skip_validations {
 		if err := validate.KustomizeConfig(&KustomizeData); err != nil {

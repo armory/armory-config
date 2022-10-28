@@ -39,11 +39,11 @@ func GetDcosAccounts(accounts []*providers.DcosAccounts) string {
 		for _, account := range accounts {
 			str += `
 		    - name: ` + account.Name + `
-		        environment: ` + account.Environment +
-				getProvidersStringArray(account.RequiredGroupMembership, "requiredGroupMembership") +
+		      environment: ` + account.Environment +
+				getProvidersStringArrayAppend(account.RequiredGroupMembership, "requiredGroupMembership", "- ") +
 				getDcosDockerRegistries(account.DockerRegistries) +
 				getDcosClusters(account.Clusters) + `
-		        permission: {}` //TODO + account.Permission`
+		      permission: {}` //TODO + account.Permission`
 		}
 	} else {
 		str += `
@@ -59,15 +59,15 @@ func getDcosDockerRegistries(dockerRegistries []*providers.DcosDocker) string {
 
 	if nil != dockerRegistries {
 		str += `
-		  dockerRegistries:`
+		      dockerRegistries:`
 		for _, dockerRegistry := range dockerRegistries {
 			str += `
-		    - accountName: ` + dockerRegistry.AccountName + `
-		        namespaces: ` + getDcosNamespaces(dockerRegistry.Namespaces, "namespaces")
+		        - accountName: ` + dockerRegistry.AccountName +
+				getDcosNamespaces(dockerRegistry.Namespaces, "namespaces")
 		}
 	} else {
 		str += `
-		  dockerRegistries: []`
+		      dockerRegistries: []`
 	}
 
 	str = strings.Replace(str, "\t", "    ", -1)
@@ -76,6 +76,21 @@ func getDcosDockerRegistries(dockerRegistries []*providers.DcosDocker) string {
 
 func getDcosClusters(Clusters []*providers.DcosAccCluster) string {
 	str := ""
+
+	if nil != Clusters {
+		str += `
+		      clusters:`
+		for _, Cluster := range Clusters {
+			str += `
+		        - name: ` + Cluster.Name + `
+		          uid: ` + Cluster.Uid + `
+		          password: ` + Cluster.Password + `
+		          serviceKeyFile: ` + Cluster.ServiceKeyFile
+		}
+	} else {
+		str += `
+		      clusters: []`
+	}
 
 	str = strings.Replace(str, "\t", "    ", -1)
 	return str
@@ -86,14 +101,14 @@ func getDcosNamespaces(stringArray []string, fieldName string) string {
 
 	if nil != stringArray {
 		str += `
-		      ` + fieldName + `:`
+		          ` + fieldName + `:`
 		for _, stringValue := range stringArray {
 			str += `
-		        ` + stringValue
+		            ` + stringValue
 		}
 	} else {
 		str += `
-		      ` + fieldName + `: []`
+		          ` + fieldName + `: []`
 	}
 
 	return str

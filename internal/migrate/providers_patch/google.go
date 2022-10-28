@@ -37,18 +37,18 @@ func GetGoogleAccounts(accounts []*providers.GoogleAcc) string {
 		for _, account := range accounts {
 			str += `
 		    - name: ` + account.Name +
-				getProvidersStringArray(account.RequiredGroupMembership, "requiredGroupMembership") + `
+				getProvidersStringArrayAppend(account.RequiredGroupMembership, "requiredGroupMembership", "- ") + `
 		      project: ` + account.Project + `
 		      jsonPath: ` + account.JsonPath + `
 		      alphaListed: ` + strconv.FormatBool(account.AlphaListed) +
-				getProvidersStringArray(account.ImageProjects, "imageProjects") + `
+				getProvidersStringArrayAppend(account.ImageProjects, "imageProjects", "- ") + `
 		      environment: ` + account.Environment + `
-		      consul: ` + account.Environment + `
+		      consul:` + account.Environment + `
 		        enabled: ` + strconv.FormatBool(account.Consul.Enabled) + `
 		        agentEndpoint: ` + account.Consul.AgentEndpoint + `
 		        agentPort: ` + strconv.FormatInt(int64(account.Consul.AgentPort), 10) +
-				getProvidersStringArray(account.Consul.Datacenters, "datacenters") +
-				getProvidersStringArray(account.Consul.Regions, "regions") + `
+				strings.Replace(getProvidersStringArray(account.Consul.Datacenters, "datacenters"), "\t", "     ", -1) +
+				getProvidersStringArrayAppend(account.Consul.Regions, "regions", "- ") + `
 		      permission: {}` //TODO + account.Permission`
 		}
 	} else {
