@@ -36,7 +36,8 @@ func GetDockerRegistryAccounts(accounts []*providers.DockerRegistryAcc) string {
 		for _, account := range accounts {
 			str += `
 		  - name: ` + account.Name +
-				strings.Replace(getProvidersStringArrayAppend(account.RequiredGroupMembership, "requiredGroupMembership", "- "), "\t", "   ", -1) + `
+				strings.Replace(getProvidersStringArrayAppend(account.RequiredGroupMembership, "requiredGroupMembership", "- "), "\t", "   ", -1) +
+				getPermissions(account.Permissions) + `
 		    address: ` + account.Address + `
 		    username: ` + account.Username + `
 		    email: ` + account.Email + `
@@ -51,8 +52,7 @@ func GetDockerRegistryAccounts(accounts []*providers.DockerRegistryAcc) string {
 		    password: ` + account.Password + `
 		    passwordCommand: ` + account.PasswordCommand +
 				strings.Replace(getProvidersStringArrayAppend(account.Repositories, "repositories", "- "), "\t", "   ", -1) + `
-		    passwordFile: ` + account.PasswordFile + `
-		    permission: {}` //TODO + account.Permission`
+		    passwordFile: ` + account.PasswordFile
 		}
 	} else {
 		str += `

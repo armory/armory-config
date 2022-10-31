@@ -78,7 +78,7 @@ func GetAuthnSecurity(securityReference *security.Security) string {
 		      userAuthorizationUri: ` + securityReference.Authn.Oauth2.Client.UserAuthorizationUri + `
 		      scope: ` + securityReference.Authn.Oauth2.Client.Scope + `
 		    resource:
-		      userInfoUri: XXXX` + /*+ securityReference.Authn.Oauth2.Resource.UserInfoUri + `
+		      userInfoUri: XXXX` + /*+ securityReference.Authn.Oauth2.Resource.UserInfoUri + ` // TODO Missing proto fields
 			  userInfoMapping:
 			    email: ` + securityReference.Authn.Oauth2.UserInfoMapping.Email + `
 			    firstName: ` + securityReference.Authn.Oauth2.UserInfoMapping.FirstName + `
@@ -162,7 +162,7 @@ func GetAuthzSecurity(securityReference *security.Security) string {
 		      roleProviderType: ` + securityReference.Authz.GroupMembership.Github.RoleProviderType + `
 		      path: ` + securityReference.Authz.GroupMembership.Github.Path
 	}
-	// TODO
+	// TODO Missing proto fields
 	//     github:
 	//       roleProviderType: GITHUB
 	//       baseUrl: https://api.github.com

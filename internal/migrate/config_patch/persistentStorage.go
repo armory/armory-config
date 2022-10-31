@@ -70,6 +70,7 @@ func GetGcsStorage(storageReference *persistentStorage.PersistentStorage) string
 func GetRedisStorage(storageReference *persistentStorage.PersistentStorage) string {
 	str := ""
 
+	//Todo Missing proto
 	/*if nil != storageReference.R &&
 		"" != storageReference.Gcs.JsonPath {
 			str = `  redis: `

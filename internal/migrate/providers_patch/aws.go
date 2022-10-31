@@ -13,6 +13,18 @@ func (ProvidersData *Providers) SetAwsData(providersRef *providers.Providers) er
 	// 	return fmt.Errorf("Aws value is null")
 	// }
 
+	//To avoid null pointers
+	featuresCloudF := ""
+	featuresLambda := ""
+	if nil != providersRef.Aws.Features {
+		if nil != providersRef.Aws.Features.Cloudformation {
+			featuresCloudF = strconv.FormatBool(providersRef.Aws.Features.Cloudformation.Enabled)
+		}
+		if nil != providersRef.Aws.Features.Lambda {
+			featuresLambda = strconv.FormatBool(providersRef.Aws.Features.Lambda.Enabled)
+		}
+	}
+
 	if providersRef.Aws.Enabled {
 		ProvidersData.Enable = "aws"
 	}
@@ -26,13 +38,12 @@ func (ProvidersData *Providers) SetAwsData(providersRef *providers.Providers) er
 	defaultKeyPairTemplate: '` + providersRef.Aws.DefaultKeyPairTemplate + `'` +
 		strings.Replace(getAwsRegions(providersRef.Aws.DefaultRegions, "defaultRegions"), "\t", "    ", -1) + `
 	defaults:
-	  iamRole: ` + providersRef.Aws.Defaults.IamRole /*+ `
+	  iamRole: ` + providersRef.Aws.Defaults.IamRole + `
 	features:
 	  cloudFormation:
-	    enabled: ` + strconv.FormatBool(providersRef.Aws.Features.Cloudformation.Enabled) + `                       # (Default: false). Enable cloudformation support on this AWS account.` + `
+	    enabled: ` + featuresCloudF + `                       # (Default: false). Enable cloudformation support on this AWS account.` + `
 	  lambda:
-	    enabled: ` + strconv.FormatBool(providersRef.Aws.Features.Lambda.Enabled) */
-	//TODO Fix this
+	    enabled: ` + featuresLambda
 
 	str = strings.Replace(str, "\t", "          ", -1)
 
@@ -51,14 +62,14 @@ func GetAwsAccounts(provider *providers.Providers) string {
 			str += `
 		  - name: ` + account.Name + `
 		    environment: ` + account.Environment +
-				strings.Replace(getProvidersStringArrayAppend(account.RequiredGroupMembership, "requiredGroupMembership", "- "), "\t", "   ", -1) + `
+				strings.Replace(getProvidersStringArrayAppend(account.RequiredGroupMembership, "requiredGroupMembership", "- "), "\t", "   ", -1) +
+				getPermissions(account.Permissions) + `
 		    defaultKeyPair: ` + account.DefaultKeyPair + `
 		    edda : ` + account.Edda + `
 		    discovery: ` + account.Discovery + `
 		    accountId: ` + account.AccountId +
 				strings.Replace(getAwsRegions(account.Regions, "region"), "\t", "     ", -1) +
-				strings.Replace(getAwsLifecycleHooks(account.LifecycleHooks), "\t", "     ", -1) + `
-		    Permission: {}` //TODO + account.Permission`
+				strings.Replace(getAwsLifecycleHooks(account.LifecycleHooks), "\t", "     ", -1)
 			//TODO assumeRole
 			//TODO providerVersion
 		}
@@ -111,16 +122,66 @@ func getAwsLifecycleHooks(lifeCycles []*providers.LifecycleHooks) string {
 	return str
 }
 
-// TODO
 func GetAwsBakeryDefault(bakeryDefaults *providers.AwsBakeryDefaults) string {
 	str := ""
 
 	if nil != bakeryDefaults {
 		str += `
-		  bakeryDefaults:                        # Configuration for Spinnaker’s image bakery.Configuration for Spinnaker’s image bakery.`
+		  bakeryDefaults:` + `
+		    templateFile: ` + bakeryDefaults.TemplateFile + `
+		    awsAccessKey: ` + bakeryDefaults.AwsAccessKey + `
+		    awsSecretKey: ` + bakeryDefaults.AwsSecretKey +
+			GetAwsBaseImages(bakeryDefaults.BaseImages) + `
+		    awsAssociatePublicIpAddress: ` + strconv.FormatBool(bakeryDefaults.AwsAssociatePublicIpAddress) + `
+		    defaultVirtualizationType: ` + bakeryDefaults.DefaultVirtualizationType + `
+		    awsSubnetId: ` + bakeryDefaults.AwsSubnetId + `
+		    awsVpcId: ` + bakeryDefaults.AwsVpcId
 	} else {
 		str += `
-		  bakeryDefaults: []                         # Configuration for Spinnaker’s image bakery.Configuration for Spinnaker’s image bakery.`
+		  bakeryDefaults: []`
+	}
+
+	str = strings.Replace(str, "\t", "    ", -1)
+	return str
+}
+
+func GetAwsBaseImages(baseImages *providers.AWSBaseImages) string {
+	str := ""
+
+	if nil != baseImages {
+		str += `
+		    baseImages:`
+		if nil != baseImages.BaseImage {
+			for _, baseImage := range baseImages.BaseImage {
+				str += `
+			  - baseImage:
+			    id: ` + baseImage.Id + `
+			    shortDescription: ` + baseImage.ShortDescription + `
+			    detailedDescription: ` + baseImage.DetailedDescription + `
+			    packageType: ` + baseImage.PackageType + `
+			    templateFile: ` + baseImage.TemplateFile
+				if nil != baseImage.VirtualizationSettings {
+					str += `
+			    virtualizationSettings:`
+					for _, virtualSettings := range baseImage.VirtualizationSettings {
+						str += `
+			      - region: ` + virtualSettings.Region + `
+			        virtualizationType: ` + virtualSettings.VirtualizationType + `
+			        instanceType: ` + virtualSettings.InstanceType + `
+			        sourceAmi: ` + virtualSettings.SourceAmi + /*`
+							  winRmUserName: ` + virtualSettings.WinRmUserName + */`
+			        spotPrice: ` + virtualSettings.SpotPrice + `
+			        spotPriceAutoProduct: ` + virtualSettings.SpotPriceAutoProduct
+					}
+				} else {
+					str += `
+					virtualizationSettings: []`
+				}
+			}
+		}
+	} else {
+		str += `
+		    baseImages: []`
 	}
 
 	str = strings.Replace(str, "\t", "    ", -1)

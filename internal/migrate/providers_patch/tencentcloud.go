@@ -38,11 +38,11 @@ func GetTencentcloudAccounts(accounts []*providers.TencentAccounts) string {
 			str += `
 		    - name: ` + account.Name + `
 		      environment: ` + account.Environment +
-				getProvidersStringArrayAppend(account.RequiredGroupMembership, "requiredGroupMembership", "- ") + `
+				getProvidersStringArrayAppend(account.RequiredGroupMembership, "requiredGroupMembership", "- ") +
+				strings.Replace(getPermissions(account.Permissions), "\t", "     ", -1) + `
 		      secretId: ` + account.SecretId + `
 		      secretKey: ` + account.SecretKey +
-				getProvidersStringArrayAppend(account.Regions, "regions", "- ") + `
-		      permission: {}` //TODO + account.Permission`
+				getProvidersStringArrayAppend(account.Regions, "regions", "- ")
 		}
 	} else {
 		str += `

@@ -3,6 +3,7 @@ package providers_patch
 import (
 	"fmt"
 
+	"github.com/austinthao5/golang_proto_test/config/deploymentConfigurations/permissions"
 	"github.com/austinthao5/golang_proto_test/config/deploymentConfigurations/providers"
 	"github.com/austinthao5/golang_proto_test/internal/migrate/structs"
 )
@@ -130,6 +131,31 @@ func getProvidersStringArrayAppend(stringArray []string, fieldName string, value
 	} else {
 		str += `
 		      ` + fieldName + `: []`
+	}
+
+	return str
+}
+
+func getPermissions(permissionsRef *permissions.Permissions) string {
+	str := ""
+
+	if nil != permissionsRef {
+		str += `
+		    permissions:
+		      READ:`
+		for _, permissionRead := range permissionsRef.READ {
+			str += `
+		        - ` + permissionRead
+		}
+		str += `
+		      WRITE:`
+		for _, permissionWrite := range permissionsRef.WRITE {
+			str += `
+		        - ` + permissionWrite
+		}
+	} else {
+		str += `
+		      permissions: {}`
 	}
 
 	return str

@@ -19,12 +19,8 @@ func (ProvidersData *Providers) SetAzure(providersRef *providers.Providers) erro
 
 	str := `enabled: ` + strconv.FormatBool(providersRef.Azure.Enabled) + `
 	primaryAccount: ` + providersRef.Azure.PrimaryAccount +
-		GetAzureAccounts(providersRef.Azure.Accounts)
-		//TODO
-		//GetAzureBakeryDefaults(providersRef.Azure.Accounts)
-	// bakeryDefaults:
-	//   templateFile: azure-linux.json
-	//   baseImages: []`
+		GetAzureAccounts(providersRef.Azure.Accounts) +
+		GetAzureBakeryDefaults(providersRef.Azure.BakeryDefaults)
 
 	str = strings.Replace(str, "\t", "          ", -1)
 	ProvidersData.Azure = str
@@ -42,7 +38,8 @@ func GetAzureAccounts(accounts []*providers.AzureAcc) string {
 			str += `
 		    - name: ` + account.Name + `
 		      environment: ` + account.Environment +
-				getProvidersStringArrayAppend(account.RequiredGroupMembership, "requiredGroupMembership", "- ") + `
+				getProvidersStringArrayAppend(account.RequiredGroupMembership, "requiredGroupMembership", "- ") +
+				strings.Replace(getPermissions(account.Permissions), "\t", "     ", -1) + `
 		      clientId: ` + account.ClientId + `
 		      appKey: ` + account.AppKey + `
 		      tenantId: ` + account.TenantId + `
@@ -53,12 +50,58 @@ func GetAzureAccounts(accounts []*providers.AzureAcc) string {
 		      packerResourceGroup: ` + account.PackerResourceGroup + `
 		      packerStorageAccount: ` + account.PackerStorageAccount +
 				getProvidersStringArrayAppend(account.Regions, "regions", "- ") + `
-		      useSshPublicKey: ` + account.UseSshPublicKey + `
-		      permission: {}` //TODO + account.Permission`
+		      useSshPublicKey: ` + account.UseSshPublicKey
 		}
 	} else {
 		str += `
 		  accounts: []`
+	}
+
+	str = strings.Replace(str, "\t", "    ", -1)
+	return str
+}
+
+func GetAzureBakeryDefaults(bakeryDefaults *providers.AzureBakeryDefaults) string {
+	str := ""
+
+	if nil != bakeryDefaults {
+		str += `
+		  bakeryDefaults:` + `
+		    templateFile: ` + bakeryDefaults.TemplateFile +
+			GetAzureBaseImages(bakeryDefaults.BaseImages)
+	} else {
+		str += `
+		  bakeryDefaults: []`
+	}
+
+	str = strings.Replace(str, "\t", "    ", -1)
+	return str
+}
+
+func GetAzureBaseImages(baseImages []*providers.AzureBaseImages) string {
+	str := ""
+
+	if nil != baseImages {
+		str += `
+		    baseImages:`
+		for _, baseImage := range baseImages {
+			if nil != baseImage.BaseImage {
+				str += `
+			  - baseImage:
+			    id: ` + baseImage.BaseImage.Id + `
+			    shortDescription: ` + baseImage.BaseImage.ShortDescription + /*`
+					  detailedDescription: ` + baseImage.BaseImage.DetailedDescription +*/`
+			    packageType: ` + baseImage.BaseImage.PackageType + `
+			    templateFile: ` + baseImage.BaseImage.TemplateFile + `
+			    publisher: ` + baseImage.BaseImage.Publisher + `
+			    offer: ` + baseImage.BaseImage.Offer + `
+			    sku: ` + baseImage.BaseImage.Sku + `
+			    version: ` + baseImage.BaseImage.Version
+			}
+		}
+	} else {
+		str += `
+		    baseImages: []`
 	}
 
 	str = strings.Replace(str, "\t", "    ", -1)

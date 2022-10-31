@@ -44,8 +44,9 @@ func GetKubernetesAccounts(accounts []*providers.KubernetesAcc) string {
 
 			str += `
 		    - name: ` + account.Name +
-				getProvidersStringArrayAppend(account.RequiredGroupMembership, "requiredGroupMembership", "- ") + `
-		      dockerRegistries: []` /*+ TODO account.KubeDockerRegistries +*/ + `
+				getProvidersStringArrayAppend(account.RequiredGroupMembership, "requiredGroupMembership", "- ") +
+				strings.Replace(getPermissions(account.Permissions), "\t", "     ", -1) +
+				getDockerRegistries(account.DockerRegistries) + `
 		      providerVersion: ` + account.ProviderVersion + `
 		      configureImagePullSecrets: ` + strconv.FormatBool(account.ConfigureImagePullSecrets) + `
 		      serviceAccount: ` + strconv.FormatBool(account.ServiceAccount) + `
@@ -64,12 +65,31 @@ func GetKubernetesAccounts(accounts []*providers.KubernetesAcc) string {
 		      liveManifestCalls: ` + strconv.FormatBool(account.LiveManifestCalls) + `
 		      rawResourcesEndpointConfig:` +
 				strings.Replace(getProvidersStringArray(ResourceEndpointKindExpressions, "kindExpressions"), "\t", "     ", -1) +
-				strings.Replace(getProvidersStringArray(ResourceEndpointKindOmitExpressions, "omitKindExpressions"), "\t", "     ", -1) + `
-		      permission: {}` //TODO + account.Permission`
+				strings.Replace(getProvidersStringArray(ResourceEndpointKindOmitExpressions, "omitKindExpressions"), "\t", "     ", -1)
 		}
 	} else {
 		str += `
 		  accounts: []`
+	}
+
+	str = strings.Replace(str, "\t", "    ", -1)
+	return str
+}
+
+func getDockerRegistries(registries []*providers.KubeDockerRegistries) string {
+	str := ""
+
+	if nil != registries {
+		str += `
+		      dockerRegistries:`
+		for _, account := range registries {
+			str += `
+		        - accountName: ` + account.AccountName +
+				strings.Replace(getProvidersStringArrayAppend(account.Namespaces, "Namespaces", "- "), "\t", "      ", -1)
+		}
+	} else {
+		str += `
+		      dockerRegistries: []`
 	}
 
 	str = strings.Replace(str, "\t", "    ", -1)

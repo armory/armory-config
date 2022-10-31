@@ -37,7 +37,8 @@ func GetAppEngineAccounts(provider *providers.Providers) string {
 			str += `
 		  - name: ` + account.Name + `
 		    environment              : ` + account.Environment +
-				strings.Replace(getProvidersStringArrayAppend(account.RequiredGroupMembership, "requiredGroupMembership", "- "), "\t", "   ", -1) + `
+				strings.Replace(getProvidersStringArrayAppend(account.RequiredGroupMembership, "requiredGroupMembership", "- "), "\t", "   ", -1) +
+				getPermissions(account.Permissions) + `
 		    project                  : ` + account.Project + `
 		    jsonPath                 : ` + account.JsonPath + `
 		    localRepositoryDirectory : ` + account.LocalRepositoryDirectory + `
@@ -53,8 +54,7 @@ func GetAppEngineAccounts(provider *providers.Providers) string {
 				strings.Replace(getProvidersStringArrayAppend(account.Versions, "versions", "- "), "\t", "   ", -1) +
 				strings.Replace(getProvidersStringArrayAppend(account.OmitServices, "omitServices", "- "), "\t", "   ", -1) +
 				strings.Replace(getProvidersStringArrayAppend(account.OmitVersions, "omitVersions", "- "), "\t", "   ", -1) + `
-		    cachingIntervalSeconds   : ` + strconv.FormatInt(int64(account.CachingIntervalSeconds), 10) + `
-		    Permission: {}` //TODO + master.Permission
+		    cachingIntervalSeconds   : ` + strconv.FormatInt(int64(account.CachingIntervalSeconds), 10)
 		}
 	} else {
 		str += `

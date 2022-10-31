@@ -125,7 +125,7 @@ func GetTerraformArmory(armoryReference *armory.Armory) string {
 func GetSecretsArmory(armoryReference *armory.Armory) string {
 	str := ""
 
-	//TODO
+	//TODO Missing proto
 	// if nil != armoryReference.Secrets {
 	// 	str = `
 	// 	secrets:

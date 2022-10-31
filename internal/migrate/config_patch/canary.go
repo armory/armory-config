@@ -111,14 +111,14 @@ func getSupportedTypes(supTypes []string) string {
 
 	if nil != supTypes {
 		str += `
-		          supportedTypes:`
+		        supportedTypes:`
 		for _, supType := range supTypes {
 			str += `
-		            ` + supType
+		          - ` + supType
 		}
 	} else {
 		str += `
-		          supportedTypes: []`
+		        supportedTypes: []`
 	}
 
 	return str

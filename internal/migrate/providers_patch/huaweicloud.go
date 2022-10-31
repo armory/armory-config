@@ -38,7 +38,8 @@ func GetHuaweiCloudAccounts(accounts []*providers.HuaweiAccounts) string {
 			str += `
 		    - name: ` + account.Name + `
 		      environment: ` + account.Environment +
-				getProvidersStringArrayAppend(account.RequiredGroupMembership, "requiredGroupMembership", "- ") + `
+				getProvidersStringArrayAppend(account.RequiredGroupMembership, "requiredGroupMembership", "- ") +
+				strings.Replace(getPermissions(account.Permissions), "\t", "     ", -1) + `
 		      accountType: ` + account.AccountType + `
 		      authUrl: ` + account.AuthUrl + `
 		      username: ` + account.Username + `
@@ -46,8 +47,7 @@ func GetHuaweiCloudAccounts(accounts []*providers.HuaweiAccounts) string {
 		      projectName: ` + account.ProjectName + `
 		      domainName: ` + account.DomainName + `
 		      insecure: ` + strconv.FormatBool(account.Insecure) +
-				getProvidersStringArrayAppend(account.Regions, "regions", "- ") + `
-		      permission: {}` //TODO + account.Permission`
+				getProvidersStringArrayAppend(account.Regions, "regions", "- ")
 		}
 	} else {
 		str += `

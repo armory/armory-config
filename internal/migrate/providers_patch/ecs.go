@@ -36,10 +36,10 @@ func GetEcsAccounts(accounts []*providers.EcsAcc) string {
 		for _, account := range accounts {
 			str += `
 		    - name: ` + account.Name +
-				getProvidersStringArrayAppend(account.RequiredGroupMembership, "requiredGroupMembership", "- ") + `
+				getProvidersStringArrayAppend(account.RequiredGroupMembership, "requiredGroupMembership", "- ") +
+				strings.Replace(getPermissions(account.Permissions), "\t", "     ", -1) + `
 		      awsAccount: ` + account.AwsAccount + `
-		      environment: ` + account.Environment + `
-		      Permission: {}` //TODO + account.Permission`
+		      environment: ` + account.Environment
 			//TODO assumeRole
 			//TODO providerVersion
 		}

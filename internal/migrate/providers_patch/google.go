@@ -37,7 +37,8 @@ func GetGoogleAccounts(accounts []*providers.GoogleAcc) string {
 		for _, account := range accounts {
 			str += `
 		    - name: ` + account.Name +
-				getProvidersStringArrayAppend(account.RequiredGroupMembership, "requiredGroupMembership", "- ") + `
+				getProvidersStringArrayAppend(account.RequiredGroupMembership, "requiredGroupMembership", "- ") +
+				strings.Replace(getPermissions(account.Permissions), "\t", "     ", -1) + `
 		      project: ` + account.Project + `
 		      jsonPath: ` + account.JsonPath + `
 		      alphaListed: ` + strconv.FormatBool(account.AlphaListed) +
@@ -48,8 +49,7 @@ func GetGoogleAccounts(accounts []*providers.GoogleAcc) string {
 		        agentEndpoint: ` + account.Consul.AgentEndpoint + `
 		        agentPort: ` + strconv.FormatInt(int64(account.Consul.AgentPort), 10) +
 				strings.Replace(getProvidersStringArray(account.Consul.Datacenters, "datacenters"), "\t", "     ", -1) +
-				getProvidersStringArrayAppend(account.Consul.Regions, "regions", "- ") + `
-		      permission: {}` //TODO + account.Permission`
+				getProvidersStringArrayAppend(account.Consul.Regions, "regions", "- ")
 		}
 	} else {
 		str += `
@@ -66,14 +66,56 @@ func GetGoogleBakeryDefaultsAccounts(bakeryDefault *providers.GoogleBakeryDefaul
 	if nil != bakeryDefault {
 		str += `
 		  bakeryDefaults:` + `
-		    templateFile: ` + bakeryDefault.TemplateFile + `
-		    baseImages: []` + /*TODO bakeryDefault.BaseImages + */ `
+		    templateFile: ` + bakeryDefault.TemplateFile +
+			GetGoogleBaseImages(bakeryDefault.BaseImages) + `
 		    zone: ` + bakeryDefault.Zone + `
 		    network: ` + bakeryDefault.Network + `
 		    useInternalIp: ` + strconv.FormatBool(bakeryDefault.UseInternalIp)
 	} else {
 		str += `
 		  bakeryDefaults: []`
+	}
+
+	str = strings.Replace(str, "\t", "    ", -1)
+	return str
+}
+
+func GetGoogleBaseImages(baseImages []*providers.GoogleBaseImages) string {
+	str := ""
+
+	if nil != baseImages {
+		str += `
+		    baseImages:`
+		if nil != baseImages {
+			for _, baseImage := range baseImages {
+				if nil != baseImage.BaseImage {
+					str += `
+			  - baseImage:
+			    id: ` + baseImage.BaseImage.Id + `
+			    shortDescription: ` + baseImage.BaseImage.ShortDescription + `
+			    detailedDescription: ` + baseImage.BaseImage.DetailedDescription + `
+			    packageType: ` + baseImage.BaseImage.PackageType + `
+			    templateFile: ` + baseImage.BaseImage.TemplateFile + `
+			    imageFamily: ` + strconv.FormatBool(baseImage.BaseImage.ImageFamily)
+				}
+				if nil != baseImage.VirtualizationSettings {
+					str += `
+			    virtualizationSettings:`
+					virtualSettings := baseImage.VirtualizationSettings
+					//for _, virtualSettings := range baseImage.VirtualizationSettings {
+					str += `
+			      - sourceImage: ` + virtualSettings.SourceImage + `
+			        sourceImageFamily: ` + virtualSettings.SourceImageFamily
+					// }
+				} else {
+					str += `
+					virtualizationSettings: []`
+				}
+			}
+		}
+	} else {
+		str += `
+		    baseImages: []`
 	}
 
 	str = strings.Replace(str, "\t", "    ", -1)

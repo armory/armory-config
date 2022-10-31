@@ -61,9 +61,21 @@ func GetSpecificConfig(KustomizeData structs.Kustomize) string {
 	  canary:` +
 		GetCanary(KustomizeData) + `
 
+# === Spinnaker ===
+	  spinnaker:` +
+		GetSpinnaker(KustomizeData) + `
+
+# === Webhook ===
+	  webhook:` +
+		GetWebhook(KustomizeData) + `
+
 # === Stats ===
 	  stats:` +
-		GetStats(KustomizeData)
+		GetStats(KustomizeData) + `
+
+# === Telemetry ===
+	  telemetry:` +
+		GetTelemetry(KustomizeData)
 
 	str = strings.Replace(str, "\t", "    ", -1)
 	return str

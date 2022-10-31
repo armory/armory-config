@@ -38,15 +38,15 @@ func GetOracleAccounts(accounts []*providers.OracleAccounts) string {
 			str += `
 		    - name: ` + account.Name + `
 		      environment: ` + account.Environment +
-				getProvidersStringArrayAppend(account.RequiredGroupMembership, "requiredGroupMembership", "- ") + `
+				getProvidersStringArrayAppend(account.RequiredGroupMembership, "requiredGroupMembership", "- ") +
+				strings.Replace(getPermissions(account.Permissions), "\t", "     ", -1) + `
 		      compartmentId: ` + account.CompartmentId + `
 		      userId: ` + account.UserId + `
 		      fingerprint: ` + account.Fingerprint + `
 		      sshPrivateKeyFilePath: ` + account.SshPrivateKeyFilePath + `
 		      privateKeyPassphrase: ` + account.PrivateKeyPassphrase + `
 		      tenancyId: ` + account.TenancyId + `
-		      region: ` + account.Region + `
-		      permission: {}` //TODO + account.Permission`
+		      region: ` + account.Region
 			//   getProvidersStringArray(account.Regions, "regions") + `
 		}
 	} else {

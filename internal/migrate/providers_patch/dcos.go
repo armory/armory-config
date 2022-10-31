@@ -19,10 +19,8 @@ func (ProvidersData *Providers) SetDcos(providersRef *providers.Providers) error
 
 	str := `enabled: ` + strconv.FormatBool(providersRef.Dcos.Enabled) + `
 	primaryAccount: ` + providersRef.Dcos.PrimaryAccount +
-		GetDcosAccounts(providersRef.Dcos.Accounts)
-		//Clusters
-
-	// enabled: ` + KustomizeData.Halyard.DeploymentConfiguration[KustomizeData.CurrentDeploymentPos].Providers.Dcos.Enable + `
+		GetDcosAccounts(providersRef.Dcos.Accounts) +
+		GetDcosMainClusters(providersRef.Dcos.Clusters)
 
 	str = strings.Replace(str, "\t", "          ", -1)
 	ProvidersData.Dcos = str
@@ -41,9 +39,9 @@ func GetDcosAccounts(accounts []*providers.DcosAccounts) string {
 		    - name: ` + account.Name + `
 		      environment: ` + account.Environment +
 				getProvidersStringArrayAppend(account.RequiredGroupMembership, "requiredGroupMembership", "- ") +
+				strings.Replace(getPermissions(account.Permissions), "\t", "     ", -1) +
 				getDcosDockerRegistries(account.DockerRegistries) +
-				getDcosClusters(account.Clusters) + `
-		      permission: {}` //TODO + account.Permission`
+				getDcosAccountsClusters(account.Clusters)
 		}
 	} else {
 		str += `
@@ -74,7 +72,7 @@ func getDcosDockerRegistries(dockerRegistries []*providers.DcosDocker) string {
 	return str
 }
 
-func getDcosClusters(Clusters []*providers.DcosAccCluster) string {
+func getDcosAccountsClusters(Clusters []*providers.DcosAccCluster) string {
 	str := ""
 
 	if nil != Clusters {
@@ -111,5 +109,37 @@ func getDcosNamespaces(stringArray []string, fieldName string) string {
 		          ` + fieldName + `: []`
 	}
 
+	return str
+}
+
+func GetDcosMainClusters(Clusters []*providers.DcosCluster) string {
+	str := ""
+
+	if nil != Clusters {
+		str += `
+		  clusters:`
+		for _, Cluster := range Clusters {
+			clusterLbImage := ""
+			clusterLbSss := ""
+			if nil != Cluster.LoadBalancer {
+				clusterLbImage = Cluster.LoadBalancer.Image
+				clusterLbSss = Cluster.LoadBalancer.ServiceAccountSecret
+			}
+
+			str += `
+		  - name: ` + Cluster.Name + `
+		    dcosUrl: ` + Cluster.DcosUrl + `
+		    caCertFile: ` + Cluster.CaCertFile + `
+		    insecureSkipTlsVerify: ` + strconv.FormatBool(Cluster.InsecureSkipTlsVerify) + `
+		    loadBalancer:
+		      image: ` + clusterLbImage + `
+		      serviceAccountSecret: ` + clusterLbSss
+		}
+	} else {
+		str += `
+		  clusters: []`
+	}
+
+	str = strings.Replace(str, "\t", "    ", -1)
 	return str
 }

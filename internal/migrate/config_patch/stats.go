@@ -34,7 +34,7 @@ func getDeploymentMethodStats(deploymentStats *stats.Stats) string {
 	str := ""
 	str = `
 	deploymentMethod: {}`
-	//TODO
+	//TODO Missing proto
 
 	/*if nil != deploymentStats.DeploymentMethod {
 		str += `
