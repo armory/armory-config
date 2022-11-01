@@ -81,7 +81,7 @@ func getDcosAccountsClusters(Clusters []*providers.DcosAccCluster) string {
 		for _, Cluster := range Clusters {
 			str += `
 		        - name: ` + Cluster.Name + `
-		          uid: ` + Cluster.Uid + `
+		          uid: '` + Cluster.Uid + `'
 		          password: ` + Cluster.Password + `
 		          serviceKeyFile: ` + Cluster.ServiceKeyFile
 		}

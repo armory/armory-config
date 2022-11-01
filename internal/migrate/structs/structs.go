@@ -10,6 +10,5 @@ type Kustomize struct {
 	ProfilesConfigFiles        map[string]string
 	ServiceSettingsConfigFiles map[string]string
 	CurrentDeploymentPos       int
-	PatchSizing                bool
 	Header                     string
 }

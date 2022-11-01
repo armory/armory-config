@@ -153,9 +153,15 @@ func getPermissions(permissionsRef *permissions.Permissions) string {
 			str += `
 		        - ` + permissionWrite
 		}
+
+		//If both are 0 this will override the permissions instead of having both write and read fields empty
+		if 0 == len(permissionsRef.READ) && 0 == len(permissionsRef.WRITE) {
+			str = `
+		    permissions: {}`
+		}
 	} else {
-		str += `
-		      permissions: {}`
+		str = `
+		    permissions: {}`
 	}
 
 	return str

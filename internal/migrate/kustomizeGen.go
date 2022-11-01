@@ -41,10 +41,7 @@ func CreateKustomization(KustomizeData *structs.Kustomize) error {
 `
 	}
 
-	//Todo Check if patch-sizing not empty
-	KustomizeData.PatchSizing = true
-
-	if KustomizeData.PatchSizing {
+	if !sizing_patch.IsDeploymentEnvironmentEmpty(*KustomizeData) {
 		str += `	- patch-sizing.yml              #Contains Halyard DeploymentEnvironment
 `
 	}
@@ -78,7 +75,7 @@ func CreateKustomization(KustomizeData *structs.Kustomize) error {
 		functionCalls = append(functionCalls, CreateArmoryPatch)
 	}
 
-	if KustomizeData.PatchSizing {
+	if !sizing_patch.IsDeploymentEnvironmentEmpty(*KustomizeData) {
 		functionCalls = append(functionCalls, CreatePatchSizing)
 	}
 

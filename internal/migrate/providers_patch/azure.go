@@ -41,10 +41,10 @@ func GetAzureAccounts(accounts []*providers.AzureAcc) string {
 				getProvidersStringArrayAppend(account.RequiredGroupMembership, "requiredGroupMembership", "- ") +
 				strings.Replace(getPermissions(account.Permissions), "\t", "     ", -1) + `
 		      clientId: ` + account.ClientId + `
-		      appKey: ` + account.AppKey + `
-		      tenantId: ` + account.TenantId + `
-		      subscriptionId: ` + account.SubscriptionId + `
-		      objectId: ` + account.ObjectId + `
+		      appKey: '` + account.AppKey + `'
+		      tenantId: '` + account.TenantId + `'
+		      subscriptionId: '` + account.SubscriptionId + `'
+		      objectId: '` + account.ObjectId + `'
 		      defaultResourceGroup: ` + account.DefaultResourceGroup + `
 		      defaultKeyVault: ` + account.DefaultKeyVault + `
 		      packerResourceGroup: ` + account.PackerResourceGroup + `
@@ -95,8 +95,8 @@ func GetAzureBaseImages(baseImages []*providers.AzureBaseImages) string {
 			    templateFile: ` + baseImage.BaseImage.TemplateFile + `
 			    publisher: ` + baseImage.BaseImage.Publisher + `
 			    offer: ` + baseImage.BaseImage.Offer + `
-			    sku: ` + baseImage.BaseImage.Sku + `
-			    version: ` + baseImage.BaseImage.Version
+			    sku: '` + baseImage.BaseImage.Sku + `'
+			    version: '` + baseImage.BaseImage.Version + `'`
 			}
 		}
 	} else {

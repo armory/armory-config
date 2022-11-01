@@ -67,11 +67,11 @@ func GetAwsAccounts(provider *providers.Providers) string {
 		    defaultKeyPair: ` + account.DefaultKeyPair + `
 		    edda : ` + account.Edda + `
 		    discovery: ` + account.Discovery + `
-		    accountId: ` + account.AccountId +
-				strings.Replace(getAwsRegions(account.Regions, "region"), "\t", "     ", -1) +
+		    accountId: '` + account.AccountId + `'` +
+				strings.Replace(getAwsRegions(account.Regions, "regions"), "\t", "     ", -1) +
 				strings.Replace(getAwsLifecycleHooks(account.LifecycleHooks), "\t", "     ", -1)
-			//TODO assumeRole
-			//TODO providerVersion
+			//TODO assumeRole Missing proto
+			//TODO providerVersion Missing proto
 		}
 	} else {
 		str += `
@@ -125,6 +125,7 @@ func getAwsLifecycleHooks(lifeCycles []*providers.LifecycleHooks) string {
 func GetAwsBakeryDefault(bakeryDefaults *providers.AwsBakeryDefaults) string {
 	str := ""
 
+	//TODO Check null pointer
 	if nil != bakeryDefaults {
 		str += `
 		  bakeryDefaults:` + `
@@ -154,28 +155,28 @@ func GetAwsBaseImages(baseImages *providers.AWSBaseImages) string {
 		if nil != baseImages.BaseImage {
 			for _, baseImage := range baseImages.BaseImage {
 				str += `
-			  - baseImage:
-			    id: ` + baseImage.Id + `
-			    shortDescription: ` + baseImage.ShortDescription + `
-			    detailedDescription: ` + baseImage.DetailedDescription + `
-			    packageType: ` + baseImage.PackageType + `
-			    templateFile: ` + baseImage.TemplateFile
+		      - baseImage:
+		        id: ` + baseImage.Id + `
+		        shortDescription: ` + baseImage.ShortDescription + `
+		        detailedDescription: ` + baseImage.DetailedDescription + `
+		        packageType: ` + baseImage.PackageType + `
+		        templateFile: ` + baseImage.TemplateFile
 				if nil != baseImage.VirtualizationSettings {
 					str += `
-			    virtualizationSettings:`
+		        virtualizationSettings:`
 					for _, virtualSettings := range baseImage.VirtualizationSettings {
 						str += `
-			      - region: ` + virtualSettings.Region + `
-			        virtualizationType: ` + virtualSettings.VirtualizationType + `
-			        instanceType: ` + virtualSettings.InstanceType + `
-			        sourceAmi: ` + virtualSettings.SourceAmi + /*`
+		          - region: ` + virtualSettings.Region + `
+		            virtualizationType: ` + virtualSettings.VirtualizationType + `
+		            instanceType: ` + virtualSettings.InstanceType + `
+		            sourceAmi: ` + virtualSettings.SourceAmi + /*`
 							  winRmUserName: ` + virtualSettings.WinRmUserName + */`
-			        spotPrice: ` + virtualSettings.SpotPrice + `
-			        spotPriceAutoProduct: ` + virtualSettings.SpotPriceAutoProduct
+		            spotPrice: ` + virtualSettings.SpotPrice + `
+		            spotPriceAutoProduct: ` + virtualSettings.SpotPriceAutoProduct
 					}
 				} else {
 					str += `
-					virtualizationSettings: []`
+		        virtualizationSettings: []`
 				}
 			}
 		}
