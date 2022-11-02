@@ -43,7 +43,7 @@ func GetAppEngineAccounts(provider *providers.Providers) string {
 		    project                  : ` + account.Project + `
 		    jsonPath                 : ` + account.JsonPath + `
 		    localRepositoryDirectory : ` + account.LocalRepositoryDirectory + `
-		    gitHttpUsername          : ` + account.GitHttpUsername + `
+		    gitHttpsUsername          : ` + account.GitHttpsUsername + `
 		    gitHttpsPassword         : ` + account.GitHttpsPassword + `
 		    githubOAuthAccessToken   : ` + account.GithubOAuthAccessToken + `
 		    sshPrivateKeyFilePath    : ` + account.SshPrivateKeyFilePath + `

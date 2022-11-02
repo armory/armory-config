@@ -21,7 +21,7 @@ message AppEngineAcc {
     string project = 4;
     string jsonPath = 5;
     string localRepositoryDirectory = 6;
-    string gitHttpUsername = 7;
+    string gitHttpsUsername = 7;
     string gitHttpsPassword = 8;
     string githubOAuthAccessToken = 9;
     string sshPrivateKeyFilePath = 10;

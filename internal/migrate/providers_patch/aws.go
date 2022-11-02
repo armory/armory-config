@@ -33,8 +33,8 @@ func (ProvidersData *Providers) SetAwsData(providersRef *providers.Providers) er
 	str := `enabled: ` + strconv.FormatBool(providersRef.Aws.Enabled) + `
 	primaryAccount: ` + providersRef.Aws.PrimaryAccount + `                # Must be one of the configured AWS accounts` +
 		GetAwsAccounts(providersRef) +
-		GetAwsBakeryDefault(providersRef.Aws.BakeryDefault) + `
-	accessKeyId: ` + providersRef.Aws.AccessKey + `      # Only needed if cluster worker nodes don't have IAM roles for talking to the target aws account
+		GetAwsBakeryDefault(providersRef.Aws.BakeryDefaults) + `
+	accessKeyId: ` + providersRef.Aws.AccessKeyId + `      # Only needed if cluster worker nodes don't have IAM roles for talking to the target aws account
 	secretAccessKey: ` + providersRef.Aws.SecretAccessKey + `  # Only needed if cluster worker nodes don't have IAM roles for talking to the target aws account
 	defaultKeyPairTemplate: '` + providersRef.Aws.DefaultKeyPairTemplate + `'` +
 		strings.Replace(getAwsRegions(providersRef.Aws.DefaultRegions, "defaultRegions"), "\t", "    ", -1) + `
