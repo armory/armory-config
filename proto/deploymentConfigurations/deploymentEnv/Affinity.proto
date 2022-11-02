@@ -33,7 +33,6 @@ message ServiceAffinity {
 
 message PodAntiAffinity {
     repeated PAARDSIDE requiredDuringSchedulingIgnoredDuringExecution = 1;
-    string topologyKey = 2;
 }
 
 message NodeAffinity {
@@ -61,6 +60,7 @@ message NodeSelectorTerms {
 
 message LabelSelector {
     repeated MatchExpressions matchExpressions = 1;
+    string topologyKey = 2;
 
 }
 
