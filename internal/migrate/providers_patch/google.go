@@ -50,7 +50,7 @@ func GetGoogleAccounts(accounts []*providers.GoogleAcc) string {
 		        agentEndpoint: ` + account.Consul.AgentEndpoint + `
 		        agentPort: ` + helpers.IntToString(account.Consul.AgentPort) +
 				strings.Replace(getProvidersStringArray(account.Consul.Datacenters, "datacenters"), "\t", "     ", -1) +
-				getProvidersStringArrayAppend(account.Consul.Regions, "regions", "- ")
+				getProvidersStringArrayAppend(account.Regions, "regions", "- ")
 		}
 	} else {
 		str += `

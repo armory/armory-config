@@ -10,8 +10,8 @@ message Aws {
     bool enabled = 1;
     string primaryAccount = 2;
     repeated AwsAcc accounts = 3;
-    AwsBakeryDefaults bakeryDefault = 4;
-    string accessKey = 5;
+    AwsBakeryDefaults bakeryDefaults = 4;
+    string accessKeyId = 5;
     string secretAccessKey = 6;
     string defaultKeyPairTemplate = 7;
     repeated AwsRegions defaultRegions = 8;
@@ -32,7 +32,8 @@ message AwsAcc {
     string discovery = 7;
     string accountId = 8;
     repeated AwsRegions regions = 9;
-    repeated LifecycleHooks lifecycleHooks = 10;
+    string assumeRole = 10;
+    repeated LifecycleHooks lifecycleHooks = 11;
 
 }
 

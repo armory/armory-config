@@ -25,6 +25,7 @@ message GoogleAcc {
     repeated string imageProjects = 7;
     Consul consul = 8;
     string environment = 9;
+    repeated string regions = 10;
 
 }
 
@@ -34,7 +35,6 @@ message Consul {
     string agentEndpoint = 2;
     int32 agentPort = 3;
     repeated string datacenters = 4;
-    repeated string regions = 5;
 
 }
 

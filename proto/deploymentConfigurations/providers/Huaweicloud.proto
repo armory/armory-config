@@ -65,7 +65,7 @@ message HuaweiVS {
     string instanceType = 2;
     string sourceImageId = 3;
     string sshUserName = 4;
-    string eiptype = 5;
+    string eipType = 5;
 }
 /*
 

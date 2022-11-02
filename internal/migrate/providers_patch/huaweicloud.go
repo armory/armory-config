@@ -110,7 +110,7 @@ func GetHuaweiBaseImages(baseImages []*providers.HuaweiBaseImages) string {
 			        instanceType: ` + virtualSetting.InstanceType + `
 			        sourceImageId: ` + virtualSetting.SourceImageId + `
 			        sshUserName: ` + virtualSetting.SshUserName + `
-			        eiptype: ` + virtualSetting.Eiptype //TODO Missing Proto (typo)
+			        eiptype: ` + virtualSetting.EipType //TODO Missing Proto (typo)
 				}
 			}
 		}

@@ -25,6 +25,8 @@ message TencentAccounts {
 message TencentBakery {
     string templateFile = 1;
     repeated TencentBaseImages baseImages = 2;
+    string secretId = 3;
+    string secretKey = 4;
 }
 
 message TencentBaseImages {

@@ -47,12 +47,13 @@ message AzureBaseImages {
 message AzureBaseImage {
   string id = 1;
   string shortDescription = 2;
-  string packageType = 3;
-  string templateFile = 4;
-  string publisher = 5;
-  string offer = 6;
-  string sku = 7;
-  string version = 8;
+  string detailedDescription = 3;
+  string packageType = 4;
+  string templateFile = 5;
+  string publisher = 6;
+  string offer = 7;
+  string sku = 8;
+  string version = 9;
 }
 
 /*

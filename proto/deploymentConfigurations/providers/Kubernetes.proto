@@ -36,6 +36,7 @@ message KubernetesAcc {
     bool checkPermissionsOnStartup = 19;
     bool liveManifestCalls = 20;
     RawResourcesEndpointConfig rawResourcesEndpointConfig = 21;
+    string context = 22;
 
 }
 
