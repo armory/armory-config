@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/austinthao5/golang_proto_test/config/deploymentConfigurations/providers"
+	"github.com/austinthao5/golang_proto_test/internal/helpers"
 )
 
 func (ProvidersData *Providers) SetGoogle(providersRef *providers.Providers) error {
@@ -47,7 +48,7 @@ func GetGoogleAccounts(accounts []*providers.GoogleAcc) string {
 		      consul:` + account.Environment + `
 		        enabled: ` + strconv.FormatBool(account.Consul.Enabled) + `
 		        agentEndpoint: ` + account.Consul.AgentEndpoint + `
-		        agentPort: ` + strconv.FormatInt(int64(account.Consul.AgentPort), 10) +
+		        agentPort: ` + helpers.IntToString(account.Consul.AgentPort) +
 				strings.Replace(getProvidersStringArray(account.Consul.Datacenters, "datacenters"), "\t", "     ", -1) +
 				getProvidersStringArrayAppend(account.Consul.Regions, "regions", "- ")
 		}

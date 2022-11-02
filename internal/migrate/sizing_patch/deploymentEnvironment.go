@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/austinthao5/golang_proto_test/config/deploymentConfigurations/deploymentEnv"
+	"github.com/austinthao5/golang_proto_test/internal/helpers"
 	"github.com/austinthao5/golang_proto_test/internal/migrate/structs"
 )
 
@@ -156,7 +157,7 @@ func getServiceSizing(serviceSizingReference *deploymentEnv.ServiceSizing, name 
 	if nil != serviceSizingReference {
 		str = `
 		  ` + name + `:` + `
-		    replicas: ` + strconv.FormatInt(int64(serviceSizingReference.Replicas), 10) +
+		    replicas: ` + helpers.IntToString(serviceSizingReference.Replicas) +
 			getSizing(serviceSizingReference.Limits, "limits") +
 			getSizing(serviceSizingReference.Requests, "requests")
 	} else {
@@ -173,7 +174,7 @@ func getSizing(sizingReference *deploymentEnv.Sizing, name string) string {
 	if nil != sizingReference {
 		str = `
 		    ` + name + `:` + `
-		      cpu: ` + strconv.FormatInt(int64(sizingReference.Cpu), 10) + `
+		      cpu: ` + helpers.IntToString(sizingReference.Cpu) + `
 		      memory: ` + sizingReference.Memory
 	} else {
 		str = `
@@ -304,7 +305,7 @@ func GetDeploymentEnvLivenessProbeConfig(livenessProbeConfigRef *deploymentEnv.L
 		str = `
 		livenessProbeConfig:
 		  enabled: ` + strconv.FormatBool(livenessProbeConfigRef.Enabled) + `
-		  initialDelaySeconds: ` + strconv.FormatInt(int64(livenessProbeConfigRef.InitialDelaySeconds), 10)
+		  initialDelaySeconds: ` + helpers.IntToString(livenessProbeConfigRef.InitialDelaySeconds)
 	} else {
 		str = `
 		livenessProbeConfig: {}`
@@ -551,7 +552,7 @@ func GetDeploymentEnvVolumes(volumesRef []*deploymentEnv.Volumes) string {
 				str += `
 			    secret:
 			      secretName: ` + volume.Secret.SecretName + `
-			      defaultMode: ` + strconv.FormatInt(int64(volume.Secret.DefaultMode), 10)
+			      defaultMode: ` + strconv.FormatInt(volume.Secret.DefaultMode, 10)
 			} else {
 				str += `
 			    secret: {}`

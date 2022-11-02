@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/austinthao5/golang_proto_test/config/deploymentConfigurations/providers"
+	"github.com/austinthao5/golang_proto_test/internal/helpers"
 )
 
 func (ProvidersData *Providers) SetHuaweicloud(providersRef *providers.Providers) error {
@@ -75,7 +76,7 @@ func GetHuaweiBakeryDefaultsAccounts(bakeryDefault *providers.HuaweiBakery) stri
 		    vpcId: ` + bakeryDefault.VpcId + `
 		    subnetId: ` + bakeryDefault.SubnetId + `
 		    securityGroup: ` + bakeryDefault.SecurityGroup + `
-		    eipBandwidthSize: ` + strconv.FormatInt(int64(bakeryDefault.EipBandwidthSize), 10)
+		    eipBandwidthSize: ` + helpers.IntToString(bakeryDefault.EipBandwidthSize)
 	} else {
 		str += `
 		  bakeryDefaults: []`
@@ -109,7 +110,7 @@ func GetHuaweiBaseImages(baseImages []*providers.HuaweiBaseImages) string {
 			        instanceType: ` + virtualSetting.InstanceType + `
 			        sourceImageId: ` + virtualSetting.SourceImageId + `
 			        sshUserName: ` + virtualSetting.SshUserName + `
-			        eiptype: ` + virtualSetting.Eiptype		//TODO Missing Proto (typo)
+			        eiptype: ` + virtualSetting.Eiptype //TODO Missing Proto (typo)
 				}
 			}
 		}

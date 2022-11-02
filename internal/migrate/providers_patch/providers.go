@@ -91,7 +91,7 @@ func (ProvidersData *Providers) SetProvidersData(KustomizeData structs.Kustomize
 	for _, function := range functionCalls {
 		err := function(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Providers)
 		if err != nil {
-			fmt.Println("Error while executing the function:%s Error:(%s)", function, err)
+			fmt.Printf("Error while executing the function:%p Error:(%v)", function, err)
 			return err
 			// return fmt.Errorf("Error while executing the function:%s Error:(%s)", function, err)
 		}

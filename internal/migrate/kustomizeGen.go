@@ -2,6 +2,7 @@
 package migrate
 
 import (
+	"fmt"
 	"strings"
 
 	"github.com/austinthao5/golang_proto_test/internal/fileio"
@@ -57,9 +58,9 @@ func CreateKustomization(KustomizeData *structs.Kustomize) error {
 	KustomizeData.CurrentDeploymentPos = GetCurrentDeploymentPosition(*KustomizeData)
 
 	//This should never ocurre because of the validation validateCurrentDeploymentExists
-	// if -1 == KustomizeData.CurrentDeploymentPos {
-	// 	return fmt.Errorf("Error while getting current deployment position")
-	// }
+	if -1 == KustomizeData.CurrentDeploymentPos {
+		return fmt.Errorf("Error while getting current deployment position")
+	}
 
 	// Slice of function calls to generate all the kustomize files
 	functionCalls := []func(structs.Kustomize) error{

@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/austinthao5/golang_proto_test/config/deploymentConfigurations/providers"
+	"github.com/austinthao5/golang_proto_test/internal/helpers"
 )
 
 func (ProvidersData *Providers) SetAppEngineData(providersRef *providers.Providers) error {
@@ -54,7 +55,7 @@ func GetAppEngineAccounts(provider *providers.Providers) string {
 				strings.Replace(getProvidersStringArrayAppend(account.Versions, "versions", "- "), "\t", "   ", -1) +
 				strings.Replace(getProvidersStringArrayAppend(account.OmitServices, "omitServices", "- "), "\t", "   ", -1) +
 				strings.Replace(getProvidersStringArrayAppend(account.OmitVersions, "omitVersions", "- "), "\t", "   ", -1) + `
-		    cachingIntervalSeconds   : ` + strconv.FormatInt(int64(account.CachingIntervalSeconds), 10)
+		    cachingIntervalSeconds   : ` + helpers.IntToString(account.CachingIntervalSeconds)
 			//TODO missing Proto for providerVersion
 		}
 	} else {

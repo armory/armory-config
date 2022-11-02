@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/austinthao5/golang_proto_test/config/deploymentConfigurations/providers"
+	"github.com/austinthao5/golang_proto_test/internal/helpers"
 )
 
 func (ProvidersData *Providers) SetKubernetes(providersRef *providers.Providers) error {
@@ -50,7 +51,7 @@ func GetKubernetesAccounts(accounts []*providers.KubernetesAcc) string {
 		      providerVersion: ` + account.ProviderVersion + `
 		      configureImagePullSecrets: ` + strconv.FormatBool(account.ConfigureImagePullSecrets) + `
 		      serviceAccount: ` + strconv.FormatBool(account.ServiceAccount) + `
-		      cacheThreads: ` + strconv.FormatInt(int64(account.CacheThreads), 10) +
+		      cacheThreads: ` + helpers.IntToString(account.CacheThreads) +
 				getProvidersStringArrayAppend(account.Namespaces, "namespaces", "- ") + `
 		      kubeconfigFile: ` + account.KubeconfigFile +
 				getProvidersStringArrayAppend(account.OmitNamespaces, "omitNamespaces", "- ") +

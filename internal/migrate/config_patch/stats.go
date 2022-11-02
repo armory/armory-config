@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/austinthao5/golang_proto_test/config/deploymentConfigurations/stats"
+	"github.com/austinthao5/golang_proto_test/internal/helpers"
 	"github.com/austinthao5/golang_proto_test/internal/migrate/structs"
 )
 
@@ -23,8 +24,8 @@ func GetStatsConfig(statsReference *stats.Stats) string {
 	endpoint: ` + statsReference.Endpoint + `
 	instanceId: ` + statsReference.InstanceId +
 		getDeploymentMethodStats(statsReference) + `
-	connectionTimeoutMillis: ` + strconv.FormatInt(int64(statsReference.ConnectionTimeoutMillis), 10) + `
-	readTimeoutMillis: ` + strconv.FormatInt(int64(statsReference.ReadTimeoutMillis), 10)
+	connectionTimeoutMillis: ` + helpers.IntToString(statsReference.ConnectionTimeoutMillis) + `
+	readTimeoutMillis: ` + helpers.IntToString(statsReference.ReadTimeoutMillis)
 
 	str = strings.Replace(str, "\t", "        ", -1)
 	return str

@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/austinthao5/golang_proto_test/config/deploymentConfigurations/providers"
+	"github.com/austinthao5/golang_proto_test/internal/helpers"
 )
 
 func (ProvidersData *Providers) SetAwsData(providersRef *providers.Providers) error {
@@ -109,7 +110,7 @@ func getAwsLifecycleHooks(lifeCycles []*providers.LifecycleHooks) string {
 		for _, lifeCycle := range lifeCycles {
 			str += `
 		    - defaultResult: ` + lifeCycle.DefaultResult + `
-		      heartbeatTimeout: ` + strconv.FormatInt(int64(lifeCycle.HeartbeatTimeout), 10) + `
+		      heartbeatTimeout: ` + helpers.IntToString(lifeCycle.HeartbeatTimeout) + `
 		      lifecycleTransition: ` + lifeCycle.LifecycleTransition + `
 		      notificationTargetARN: ` + lifeCycle.NotificationTargetARN + `
 		      roleARN: ` + lifeCycle.RoleARN

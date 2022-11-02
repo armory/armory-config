@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/austinthao5/golang_proto_test/config/deploymentConfigurations/metricStores"
+	"github.com/austinthao5/golang_proto_test/internal/helpers"
 	"github.com/austinthao5/golang_proto_test/internal/migrate/structs"
 )
 
@@ -110,7 +111,7 @@ func GetNewrelicMetrics(metricsReference *metricStores.MetricStores) string {
 func GetMetricStoresGenMetrics(metricsReference *metricStores.MetricStores) string {
 
 	str := `
-	period: ` + strconv.FormatInt(int64(metricsReference.Period), 10) + `
+	period: ` + helpers.IntToString(metricsReference.Period) + `
 	enabled: ` + strconv.FormatBool(metricsReference.Enabled)
 
 	str = strings.Replace(str, "\t", "        ", -1)

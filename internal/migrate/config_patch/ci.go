@@ -6,6 +6,7 @@ import (
 
 	"github.com/austinthao5/golang_proto_test/config/deploymentConfigurations/ci"
 	"github.com/austinthao5/golang_proto_test/config/deploymentConfigurations/permissions"
+	"github.com/austinthao5/golang_proto_test/internal/helpers"
 	"github.com/austinthao5/golang_proto_test/internal/migrate/structs"
 )
 
@@ -87,7 +88,7 @@ func GetTravisCiMasters(travis *ci.Travis) string {
 		      Address: ` + master.Address + `
 		      BaseUrl: ` + master.BaseUrl + `
 		      githubToken: ` + master.GithubToken + `
-		      numberOfRepositories: ` + strconv.FormatInt(int64(master.NumberOfRepositories), 10) +
+		      numberOfRepositories: ` + helpers.IntToString(master.NumberOfRepositories) +
 				getFilteredRepositories(master.FilteredRepositories, "filteredRepositories", "- ")
 		}
 	} else {

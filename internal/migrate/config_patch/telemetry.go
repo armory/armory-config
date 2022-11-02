@@ -20,8 +20,8 @@ func GetTelemetry(KustomizeData structs.Kustomize) string {
 // 	endpoint: ` + telemetryReference.Endpoint + `
 // 	instanceId: ` + telemetryReference.InstanceId /*+
 // 	getDeploymentMethodStats(telemetryReference) */+`
-// 	connectionTimeoutMillis: ` + strconv.FormatInt(int64(telemetryReference.ConnectionTimeoutMillis), 10) + `
-// 	readTimeoutMillis: ` + strconv.FormatInt(int64(telemetryReference.ReadTimeoutMillis), 10)
+// 	connectionTimeoutMillis: ` + helpers.IntToString(telemetryReference.ConnectionTimeoutMillis) + `
+// 	readTimeoutMillis: ` + helpers.IntToString(telemetryReference.ReadTimeoutMillis)
 
 // 	str = strings.Replace(str, "\t", "        ", -1)
 // 	return str

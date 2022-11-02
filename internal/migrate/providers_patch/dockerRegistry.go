@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/austinthao5/golang_proto_test/config/deploymentConfigurations/providers"
+	"github.com/austinthao5/golang_proto_test/internal/helpers"
 )
 
 func (ProvidersData *Providers) SetDockerRegistry(providersRef *providers.Providers) error {
@@ -41,10 +42,10 @@ func GetDockerRegistryAccounts(accounts []*providers.DockerRegistryAcc) string {
 		    address: ` + account.Address + `
 		    username: ` + account.Username + `
 		    email: ` + account.Email + `
-		    cacheIntervalSeconds: ` + strconv.FormatInt(int64(account.CacheIntervalSeconds), 10) + `
-		    clientTimeoutMillis: ` + strconv.FormatInt(int64(account.ClientTimeoutMillis), 10) + `
-		    cacheThreads: ` + strconv.FormatInt(int64(account.CacheThreads), 10) + `
-		    paginateSize: ` + strconv.FormatInt(int64(account.PaginateSize), 10) + `
+		    cacheIntervalSeconds: ` + helpers.IntToString(account.CacheIntervalSeconds) + `
+		    clientTimeoutMillis: ` + helpers.IntToString(account.ClientTimeoutMillis) + `
+		    cacheThreads: ` + helpers.IntToString(account.CacheThreads) + `
+		    paginateSize: ` + helpers.IntToString(account.PaginateSize) + `
 		    sortTagsByDate: ` + strconv.FormatBool(account.SortTagsByDate) + `
 		    trackDigests: ` + strconv.FormatBool(account.TrackDigests) + `
 		    insecureRegistry: ` + strconv.FormatBool(account.InsecureRegistry) + `

@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/austinthao5/golang_proto_test/config/deploymentConfigurations/pubsub"
+	"github.com/austinthao5/golang_proto_test/internal/helpers"
 	"github.com/austinthao5/golang_proto_test/internal/migrate/structs"
 )
 
@@ -47,7 +48,7 @@ func GetGoogleSubscriptions(google *pubsub.Google) string {
 		      subscriptionName: ` + account.SubscriptionName + `
 		      jsonPath: ` + account.JsonPath + `
 		      templatePath: ` + account.TemplatePath + `
-		      ackDeadlineSeconds: ` + strconv.FormatInt(int64(account.AckDeadlineSeconds), 10) + `
+		      ackDeadlineSeconds: ` + helpers.IntToString(account.AckDeadlineSeconds) + `
 		      messageFormat: ` + account.MessageFormat
 		}
 	} else {
