@@ -51,7 +51,7 @@ func GetGcsStorage(storageReference *persistentStorage.PersistentStorage) string
 	str := ""
 
 	if nil != storageReference.Gcs &&
-		"" != storageReference.Gcs.JsonPath {
+		"" != storageReference.Gcs.Bucket {
 		str = `  gcs:
 			jsonPath: ` + storageReference.Gcs.JsonPath + `
 			project: ` + storageReference.Gcs.Project + `
@@ -70,6 +70,7 @@ func GetGcsStorage(storageReference *persistentStorage.PersistentStorage) string
 func GetRedisStorage(storageReference *persistentStorage.PersistentStorage) string {
 	str := ""
 
+	//Todo Missing proto
 	/*if nil != storageReference.R &&
 		"" != storageReference.Gcs.JsonPath {
 			str = `  redis: `

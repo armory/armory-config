@@ -68,6 +68,13 @@ func getCanaryAccounts(accounts []*canary.CanaryAccounts) string {
 		str += `
 		    accounts:`
 		for _, account := range accounts {
+
+			//To avoid null pointers
+			baseUrlEndpoint := ""
+			if nil != account.Endpoint {
+				baseUrlEndpoint = account.Endpoint.BaseUrl
+			}
+
 			str += `
 		      - name: ` + account.Name + `
 		        project: ` + account.Project + `
@@ -77,7 +84,7 @@ func getCanaryAccounts(accounts []*canary.CanaryAccounts) string {
 		        rootFolder: ` + account.RootFolder +
 				getSupportedTypes(account.SupportedTypes) + `
 		        endpoint:
-		          baseUrl: ` + account.Endpoint.BaseUrl + `
+		          baseUrl: ` + baseUrlEndpoint + `
 		        username: ` + account.Username + `
 		        password: ` + account.Password + `
 		        usernamePasswordFile: ` + account.UsernamePasswordFile + `
@@ -104,14 +111,14 @@ func getSupportedTypes(supTypes []string) string {
 
 	if nil != supTypes {
 		str += `
-		          supportedTypes:`
+		        supportedTypes:`
 		for _, supType := range supTypes {
 			str += `
-		            ` + supType
+		          - ` + supType
 		}
 	} else {
 		str += `
-		          supportedTypes: []`
+		        supportedTypes: []`
 	}
 
 	return str

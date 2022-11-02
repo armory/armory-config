@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/austinthao5/golang_proto_test/config/deploymentConfigurations/providers"
+	"github.com/austinthao5/golang_proto_test/internal/helpers"
 )
 
 func (ProvidersData *Providers) SetKubernetes(providersRef *providers.Providers) error {
@@ -34,34 +35,62 @@ func GetKubernetesAccounts(accounts []*providers.KubernetesAcc) string {
 		str += `
 		  accounts:`
 		for _, account := range accounts {
+			//To avoid null pointers
+			var ResourceEndpointKindExpressions []string
+			var ResourceEndpointKindOmitExpressions []string
+			if nil != account.RawResourcesEndpointConfig {
+				ResourceEndpointKindExpressions = account.RawResourcesEndpointConfig.KindExpressions
+				ResourceEndpointKindOmitExpressions = account.RawResourcesEndpointConfig.OmitKindExpressions
+			}
+
 			str += `
 		    - name: ` + account.Name +
-				getProvidersStringArray(account.RequiredGroupMembership, "requiredGroupMembership") + `
-		      dockerRegistries: []` /*+ account.KubeDockerRegistries +*/ + `
+				getProvidersStringArrayAppend(account.RequiredGroupMembership, "requiredGroupMembership", "- ") +
+				strings.Replace(getPermissions(account.Permissions), "\t", "     ", -1) +
+				getDockerRegistries(account.DockerRegistries) + `
 		      providerVersion: ` + account.ProviderVersion + `
 		      configureImagePullSecrets: ` + strconv.FormatBool(account.ConfigureImagePullSecrets) + `
 		      serviceAccount: ` + strconv.FormatBool(account.ServiceAccount) + `
-		      cacheThreads: ` + strconv.FormatInt(int64(account.CacheThreads), 10) +
-				getProvidersStringArray(account.Namespaces, "namespaces") + `
+		      cacheThreads: ` + helpers.IntToString(account.CacheThreads) +
+				getProvidersStringArrayAppend(account.Namespaces, "namespaces", "- ") + `
 		      kubeconfigFile: ` + account.KubeconfigFile +
-				getProvidersStringArray(account.OmitNamespaces, "omitNamespaces") +
-				getProvidersStringArray(account.Kinds, "kinds") +
-				getProvidersStringArray(account.OmitKinds, "omitKinds") +
-				getProvidersStringArray(account.CustomResources, "customResources") +
-				getProvidersStringArray(account.CachingPolicies, "cachingPolicies") +
-				getProvidersStringArray(account.OauthScopes, "oauthScopes") + `
+				getProvidersStringArrayAppend(account.OmitNamespaces, "omitNamespaces", "- ") +
+				getProvidersStringArrayAppend(account.Kinds, "kinds", "- ") +
+				getProvidersStringArrayAppend(account.OmitKinds, "omitKinds", "- ") +
+				getProvidersStringArrayAppend(account.CustomResources, "customResources", "- ") +
+				getProvidersStringArrayAppend(account.CachingPolicies, "cachingPolicies", "- ") +
+				getProvidersStringArrayAppend(account.OauthScopes, "oauthScopes", "- ") + `
 		      onlySpinnakerManaged: ` + strconv.FormatBool(account.OnlySpinnakerManaged) + `
 		      environment: ` + account.Environment + `
 		      checkPermissionsOnStartup: ` + strconv.FormatBool(account.CheckPermissionsOnStartup) + `
 		      liveManifestCalls: ` + strconv.FormatBool(account.LiveManifestCalls) + `
 		      rawResourcesEndpointConfig:` +
-				strings.Replace(getProvidersStringArray(account.RawResourcesEndpointConfig.KindExpressions, "kindExpressions"), "\t", "     ", -1) +
-				strings.Replace(getProvidersStringArray(account.RawResourcesEndpointConfig.OmitKindExpressions, "omitKindExpressions"), "\t", "     ", -1) + `
-		      permission: {}` //TODO + account.Permission`
+				strings.Replace(getProvidersStringArray(ResourceEndpointKindExpressions, "kindExpressions"), "\t", "     ", -1) +
+				strings.Replace(getProvidersStringArray(ResourceEndpointKindOmitExpressions, "omitKindExpressions"), "\t", "     ", -1)
 		}
 	} else {
 		str += `
 		  accounts: []`
+	}
+
+	str = strings.Replace(str, "\t", "    ", -1)
+	return str
+}
+
+func getDockerRegistries(registries []*providers.KubeDockerRegistries) string {
+	str := ""
+
+	if nil != registries {
+		str += `
+		      dockerRegistries:`
+		for _, account := range registries {
+			str += `
+		        - accountName: ` + account.AccountName +
+				strings.Replace(getProvidersStringArrayAppend(account.Namespaces, "Namespaces", "- "), "\t", "      ", -1)
+		}
+	} else {
+		str += `
+		      dockerRegistries: []`
 	}
 
 	str = strings.Replace(str, "\t", "    ", -1)
