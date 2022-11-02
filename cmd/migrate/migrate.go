@@ -27,7 +27,7 @@ var convertCmd = &cobra.Command{
 
 		if len(halconfig_dir) > 0 && len(output_dir) > 0 {
 
-			migrator(halconfig_dir, output_dir, deployment_dir, spin_flavor, skip_validations)
+			migrator(halconfig_dir, output_dir, override_deployment_dir, spin_flavor, skip_validations)
 
 		}
 	},
@@ -38,13 +38,13 @@ func init() {
 	rootCmd.AddCommand(convertCmd)
 	convertCmd.Flags().StringVar(&halconfig_dir, "halconfig", "~/.hal", "Provide the Halconfig directory to convert")
 	convertCmd.Flags().StringVar(&output_dir, "output", "./operatorConfig", "Select an output directory")
-	convertCmd.Flags().StringVar(&deployment_dir, "deployment", "default", "Select the deployment name being used by Halyard. This is the subdirectory in the ./hal folder where the profiles and service-settings live")
+	convertCmd.Flags().StringVar(&override_deployment_dir, "override_deployment", "", "Select the deployment name being used by Halyard. This is the subdirectory in the ./hal folder where the profiles and service-settings live, by default the code uses the one in currentDeployment in the config")
 	convertCmd.Flags().StringVar(&spin_flavor, "spin_flavor", "ARMORY", "Select Spinnaker Operator flavor to use (ARMORY, OSS)")
 	convertCmd.Flags().StringVar(&skip_validations, "skip_validations", "N", "Toggle Validations of using Y, by default N (N,Y)")
 }
 
 // Read contents of halconfig and setup profiles patches for each service.
-func migrator(halconfig_dir string, output_dir string, deployment_dir string, spin_flavor string, skip_validations string) {
+func migrator(halconfig_dir string, output_dir string, override_deployment_dir string, spin_flavor string, skip_validations string) {
 
 	// Halconfig stuff
 	halconfig_file, err := fileio.FindFileInDir(halconfig_dir, "config")
@@ -58,6 +58,16 @@ func migrator(halconfig_dir string, output_dir string, deployment_dir string, sp
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)
+	}
+
+	deployment_dir := ""
+
+	if "" != override_deployment_dir {
+		deployment_dir = override_deployment_dir
+	} else if "" != halyard.CurrentDeployment {
+		deployment_dir = halyard.CurrentDeployment
+	} else {
+		deployment_dir = "default"
 	}
 
 	// Profiles stuff

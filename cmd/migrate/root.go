@@ -10,7 +10,7 @@ import (
 var (
 	halconfig_dir                 string
 	output_dir                    string
-	deployment_dir                string
+	override_deployment_dir       string
 	spin_flavor                   string
 	halconfig                     string
 	skip_validations              string
