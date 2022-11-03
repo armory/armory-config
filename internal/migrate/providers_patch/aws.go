@@ -34,8 +34,8 @@ func (ProvidersData *Providers) SetAwsData(providersRef *providers.Providers) er
 	primaryAccount: ` + providersRef.Aws.PrimaryAccount + `                # Must be one of the configured AWS accounts` +
 		GetAwsAccounts(providersRef) +
 		GetAwsBakeryDefault(providersRef.Aws.BakeryDefaults) + `
-	accessKeyId: ` + providersRef.Aws.AccessKeyId + `      # Only needed if cluster worker nodes don't have IAM roles for talking to the target aws account
-	secretAccessKey: ` + providersRef.Aws.SecretAccessKey + `  # Only needed if cluster worker nodes don't have IAM roles for talking to the target aws account
+	accessKeyId: '` + providersRef.Aws.AccessKeyId + `'      # Only needed if cluster worker nodes don't have IAM roles for talking to the target aws account
+	secretAccessKey: '` + providersRef.Aws.SecretAccessKey + `'  # Only needed if cluster worker nodes don't have IAM roles for talking to the target aws account
 	defaultKeyPairTemplate: '` + providersRef.Aws.DefaultKeyPairTemplate + `'` +
 		strings.Replace(getAwsRegions(providersRef.Aws.DefaultRegions, "defaultRegions"), "\t", "    ", -1) + `
 	defaults:
@@ -70,8 +70,8 @@ func GetAwsAccounts(provider *providers.Providers) string {
 		    discovery: ` + account.Discovery + `
 		    accountId: '` + account.AccountId + `'` +
 				strings.Replace(getAwsRegions(account.Regions, "regions"), "\t", "     ", -1) +
-				strings.Replace(getAwsLifecycleHooks(account.LifecycleHooks), "\t", "     ", -1)
-			//TODO assumeRole Missing proto
+				strings.Replace(getAwsLifecycleHooks(account.LifecycleHooks), "\t", "     ", -1) + `
+		    assumeRole: ` + account.AssumeRole
 			//TODO providerVersion Missing proto
 		}
 	} else {
@@ -126,12 +126,11 @@ func getAwsLifecycleHooks(lifeCycles []*providers.LifecycleHooks) string {
 func GetAwsBakeryDefault(bakeryDefaults *providers.AwsBakeryDefaults) string {
 	str := ""
 
-	//TODO Check null pointer
 	if nil != bakeryDefaults {
 		str += `
 		  bakeryDefaults:` + `
 		    templateFile: ` + bakeryDefaults.TemplateFile + `
-		    awsAccessKey: ` + bakeryDefaults.AwsAccessKey + `
+		    awsAccessKey: '` + bakeryDefaults.AwsAccessKey + `'
 		    awsSecretKey: ` + bakeryDefaults.AwsSecretKey +
 			GetAwsBaseImages(bakeryDefaults.BaseImages) + `
 		    awsAssociatePublicIpAddress: ` + strconv.FormatBool(bakeryDefaults.AwsAssociatePublicIpAddress) + `
@@ -147,38 +146,39 @@ func GetAwsBakeryDefault(bakeryDefaults *providers.AwsBakeryDefaults) string {
 	return str
 }
 
-func GetAwsBaseImages(baseImages *providers.AWSBaseImages) string {
+func GetAwsBaseImages(baseImages []*providers.AWSBaseImages) string {
 	str := ""
 
 	if nil != baseImages {
 		str += `
 		    baseImages:`
-		if nil != baseImages.BaseImage {
-			for _, baseImage := range baseImages.BaseImage {
+		for _, baseImageArray := range baseImages {
+			if nil != baseImageArray.BaseImage {
+				baseImage := baseImageArray.BaseImage
 				str += `
 		      - baseImage:
-		        id: ` + baseImage.Id + `
-		        shortDescription: ` + baseImage.ShortDescription + `
-		        detailedDescription: ` + baseImage.DetailedDescription + `
-		        packageType: ` + baseImage.PackageType + `
-		        templateFile: ` + baseImage.TemplateFile
-				if nil != baseImage.VirtualizationSettings {
-					str += `
+		          id: ` + baseImage.Id + `
+		          shortDescription: ` + baseImage.ShortDescription + `
+		          detailedDescription: ` + baseImage.DetailedDescription + `
+		          packageType: ` + baseImage.PackageType + `
+		          templateFile: ` + baseImage.TemplateFile
+			}
+			if nil != baseImageArray.VirtualizationSettings {
+				str += `
 		        virtualizationSettings:`
-					for _, virtualSettings := range baseImage.VirtualizationSettings {
-						str += `
+				for _, virtualSettings := range baseImageArray.VirtualizationSettings {
+					str += `
 		          - region: ` + virtualSettings.Region + `
 		            virtualizationType: ` + virtualSettings.VirtualizationType + `
 		            instanceType: ` + virtualSettings.InstanceType + `
 		            sourceAmi: ` + virtualSettings.SourceAmi + /*`
-							  winRmUserName: ` + virtualSettings.WinRmUserName + */`
+						  winRmUserName: ` + virtualSettings.WinRmUserName + */`
 		            spotPrice: ` + virtualSettings.SpotPrice + `
 		            spotPriceAutoProduct: ` + virtualSettings.SpotPriceAutoProduct
-					}
-				} else {
-					str += `
-		        virtualizationSettings: []`
 				}
+			} else {
+				str += `
+		        virtualizationSettings: []`
 			}
 		}
 	} else {

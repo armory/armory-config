@@ -91,7 +91,7 @@ func GetGoogleBaseImages(baseImages []*providers.GoogleBaseImages) string {
 			for _, baseImage := range baseImages {
 				if nil != baseImage.BaseImage {
 					str += `
-			  - baseImage:
+			- baseImage:
 			    id: ` + baseImage.BaseImage.Id + `
 			    shortDescription: ` + baseImage.BaseImage.ShortDescription + `
 			    detailedDescription: ` + baseImage.BaseImage.DetailedDescription + `
@@ -101,12 +101,12 @@ func GetGoogleBaseImages(baseImages []*providers.GoogleBaseImages) string {
 				}
 				if nil != baseImage.VirtualizationSettings {
 					str += `
-			    virtualizationSettings:`
+			  virtualizationSettings:`
 					virtualSettings := baseImage.VirtualizationSettings
 					//for _, virtualSettings := range baseImage.VirtualizationSettings {
 					str += `
-			      - sourceImage: ` + virtualSettings.SourceImage + `
-			        sourceImageFamily: ` + virtualSettings.SourceImageFamily
+			    sourceImage: ` + virtualSettings.SourceImage + `
+			    sourceImageFamily: ` + virtualSettings.SourceImageFamily
 					// }
 				} else {
 					str += `
