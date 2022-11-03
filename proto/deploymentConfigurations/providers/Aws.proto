@@ -56,7 +56,7 @@ message AwsBakeryDefaults {
     string templateFile = 1;
     string awsAccessKey = 2;
     string awsSecretKey = 3;
-    AWSBaseImages baseImages = 4;
+    repeated AWSBaseImages baseImages = 4;
     bool awsAssociatePublicIpAddress = 5;
     string defaultVirtualizationType = 6;
     string awsSubnetId = 7;
@@ -82,7 +82,8 @@ message Lambda {
 
 message AWSBaseImages {
 
-    repeated AWSBaseImage baseImage = 1;
+    AWSBaseImage baseImage = 1;
+    repeated AWSVirtualizationSettings virtualizationSettings  = 2;
 
 }
 
@@ -92,7 +93,6 @@ message AWSBaseImage {
     string shortDescription = 3;
     string packageType = 4;
     string templateFile = 5;
-    repeated AWSVirtualizationSettings virtualizationSettings  = 6;
 }
 
 message AWSVirtualizationSettings {
