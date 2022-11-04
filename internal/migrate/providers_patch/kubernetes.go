@@ -48,6 +48,7 @@ func GetKubernetesAccounts(accounts []*providers.KubernetesAcc) string {
 				getProvidersStringArrayAppend(account.RequiredGroupMembership, "requiredGroupMembership", "- ") +
 				strings.Replace(getPermissions(account.Permissions), "\t", "     ", -1) +
 				getDockerRegistries(account.DockerRegistries) + `
+		      context: ` + account.Context + `
 		      providerVersion: ` + account.ProviderVersion + `
 		      configureImagePullSecrets: ` + strconv.FormatBool(account.ConfigureImagePullSecrets) + `
 		      serviceAccount: ` + strconv.FormatBool(account.ServiceAccount) + `

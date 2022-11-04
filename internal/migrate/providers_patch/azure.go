@@ -50,7 +50,7 @@ func GetAzureAccounts(accounts []*providers.AzureAcc) string {
 		      packerResourceGroup: ` + account.PackerResourceGroup + `
 		      packerStorageAccount: ` + account.PackerStorageAccount +
 				getProvidersStringArrayAppend(account.Regions, "regions", "- ") + `
-		      useSshPublicKey: ` + account.UseSshPublicKey
+		      useSshPublicKey: '` + account.UseSshPublicKey + `'`
 		}
 	} else {
 		str += `
@@ -89,8 +89,8 @@ func GetAzureBaseImages(baseImages []*providers.AzureBaseImages) string {
 				str += `
 			  - baseImage:
 			    id: ` + baseImage.BaseImage.Id + `
-			    shortDescription: ` + baseImage.BaseImage.ShortDescription + /*`
-					  detailedDescription: ` + baseImage.BaseImage.DetailedDescription +*/`
+			    shortDescription: ` + baseImage.BaseImage.ShortDescription + `
+			    detailedDescription: ` + baseImage.BaseImage.DetailedDescription + `
 			    packageType: ` + baseImage.BaseImage.PackageType + `
 			    templateFile: ` + baseImage.BaseImage.TemplateFile + `
 			    publisher: ` + baseImage.BaseImage.Publisher + `

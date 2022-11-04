@@ -33,7 +33,7 @@ func GetDeploymentEnvironment(KustomizeData structs.Kustomize) string {
 			GetDeploymentEnvLivenessProbeConfig(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].DeploymentEnvironment.LivenessProbeConfig) +
 			GetDeploymentEnvHaServices(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].DeploymentEnvironment.HaServices) +
 			GetDeploymentEnvAffinity(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].DeploymentEnvironment.Affinity) +
-			GetDeploymentEnvContainers(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].DeploymentEnvironment.Container) +
+			GetDeploymentEnvContainers(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].DeploymentEnvironment.Containers) +
 			GetDeploymentEnvVolumes(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].DeploymentEnvironment.Volumes)
 	}
 
@@ -142,9 +142,9 @@ func GetDeploymentEnvCustomSizing(sizingReference *deploymentEnv.CustomSizing) s
 			getServiceSizing(sizingReference.Igor, "igor") +
 			getServiceSizing(sizingReference.Orca, "orca") +
 			getServiceSizing(sizingReference.Rosco, "rosco") +
-			getServiceSizing(sizingReference.SpinFront50, "spin-front50") //+
-			// TODO MISSING PROTO getServiceSizing(sizingReference.SpinTerraformer, "spin-terraformer") +
-			// TODO MISSING PROTO getServiceSizing(sizingReference.SpinDinghy, "spin-dinghy")
+			getServiceSizing(sizingReference.SpinFront50, "spin-front50") +
+			getServiceSizing(sizingReference.SpinTerraformer, "spin-terraformer") +
+			getServiceSizing(sizingReference.SpinDinghy, "spin-dinghy")
 
 		str = strings.Replace(str, "\t", "    ", -1)
 	}
@@ -197,11 +197,12 @@ func GetDeploymentEnvInitContainers(initReference *deploymentEnv.InitContainers)
 			getServiceInitContainers(initReference.Gate, "gate") +
 			getServiceInitContainers(initReference.Deck, "deck") +
 			getServiceInitContainers(initReference.Igor, "igor") //+
-			// TODO MISSING PROTO getServiceInitContainers(initReference.SpinOrca, "spin-orca")
-			// TODO MISSING PROTO getServiceInitContainers(initReference.SpinKayenta, "spin-kayenta")
-			// TODO MISSING PROTO getServiceInitContainers(initReference.SpinIgor, "spin-igor")
-			// TODO MISSING PROTO getServiceInitContainers(initReference.SpinEcho, "spin-echo")
-			// TODO MISSING PROTO getServiceInitContainers(initReference.SpinClouddriverRw, "spin-clouddriver-rw")
+			//TODO Check the following Services the "args:"field" has an issue
+			// getServiceInitContainers(initReference.SpinOrca, "spin-orca") +
+			// getServiceInitContainers(initReference.SpinKayenta, "spin-kayenta") +
+			// getServiceInitContainers(initReference.SpinIgor, "spin-igor") +
+			// getServiceInitContainers(initReference.SpinEcho, "spin-echo") +
+			// getServiceInitContainers(initReference.SpinClouddriverRw, "spin-clouddriver-rw")
 
 		str = strings.Replace(str, "\t", "    ", -1)
 	}
@@ -240,7 +241,7 @@ func GetDeploymentEnvHostAliases(hostAliasesRef *deploymentEnv.HostAliases) stri
 		str = `
 		hostAliases: {}`
 	}
-	str = strings.Replace(str, "\t", "   ", -1)
+	str = strings.Replace(str, "\t", "    ", -1)
 
 	return str
 }
@@ -259,7 +260,7 @@ func GetDeploymentEnvTolerations(tolerationsRef *deploymentEnv.Tolerations) stri
 		str = `
 		tolerations: {}`
 	}
-	str = strings.Replace(str, "\t", "   ", -1)
+	str = strings.Replace(str, "\t", "    ", -1)
 
 	return str
 }
@@ -276,7 +277,7 @@ func GetDeploymentEnvNodeSelectors(nodeSelectorsRef *deploymentEnv.NodeSelectors
 		str = `
 		nodeSelectors: {}`
 	}
-	str = strings.Replace(str, "\t", "   ", -1)
+	str = strings.Replace(str, "\t", "    ", -1)
 
 	return str
 }
@@ -293,7 +294,7 @@ func GetDeploymentEnvGitConfig(gitConfigRef *deploymentEnv.GitConfig) string {
 		str = `
 		gitConfig: {}`
 	}
-	str = strings.Replace(str, "\t", "   ", -1)
+	str = strings.Replace(str, "\t", "    ", -1)
 
 	return str
 }
@@ -310,7 +311,7 @@ func GetDeploymentEnvLivenessProbeConfig(livenessProbeConfigRef *deploymentEnv.L
 		str = `
 		livenessProbeConfig: {}`
 	}
-	str = strings.Replace(str, "\t", "   ", -1)
+	str = strings.Replace(str, "\t", "    ", -1)
 
 	return str
 }
@@ -327,7 +328,7 @@ func GetDeploymentEnvHaServices(haServicesRef *deploymentEnv.HaServices) string 
 		str = `
 		haServices: {}`
 	}
-	str = strings.Replace(str, "\t", "   ", -1)
+	str = strings.Replace(str, "\t", "    ", -1)
 
 	return str
 }
@@ -344,7 +345,7 @@ func getCloudDriverHa(clouddriverHaRef *deploymentEnv.ClouddriverHA) string {
 		str = `
 		clouddriver: {}`
 	}
-	str = strings.Replace(str, "\t", "   ", -1)
+	str = strings.Replace(str, "\t", "    ", -1)
 
 	return str
 }
@@ -363,7 +364,7 @@ func getEchoHa(echoHaRef *deploymentEnv.EchoHA) string {
 		str = `
 		  echo: {}`
 	}
-	str = strings.Replace(str, "\t", "   ", -1)
+	str = strings.Replace(str, "\t", "    ", -1)
 
 	return str
 }
@@ -373,7 +374,7 @@ func GetDeploymentEnvAffinity(affinityRef *deploymentEnv.Affinity) string {
 
 	if nil != affinityRef {
 		str = `
-	  affinity:` +
+		affinity:` +
 			getServiceServiceAffinity(affinityRef.SpinClouddriver, "spin-clouddriver") +
 			getServiceServiceAffinity(affinityRef.SpinClouddriverCaching, "spin-clouddriver-caching") +
 			getServiceServiceAffinity(affinityRef.SpinClouddriverRo, "spin-clouddriver-ro") /* TODO Regex error*/ +
@@ -387,13 +388,13 @@ func GetDeploymentEnvAffinity(affinityRef *deploymentEnv.Affinity) string {
 			getServiceServiceAffinity(affinityRef.SpinIgor, "spin-igor") +
 			getServiceServiceAffinity(affinityRef.SpinOrca, "spin-orca") +
 			getServiceServiceAffinity(affinityRef.SpinRedis, "spin-redis") +
-			getServiceServiceAffinity(affinityRef.SpinRosco, "spin-rosco") //+
-		// TODO MISSING PROTO getServiceServiceAffinity(affinityRef.SpinKayenta, "spin-kayenta")
-		// TODO MISSING PROTO getServiceServiceAffinity(affinityRef.Echo, "echo")
-		// TODO MISSING PROTO getServiceServiceAffinity(affinityRef.Clouddriver, "clouddriver")
+			getServiceServiceAffinity(affinityRef.SpinRosco, "spin-rosco") +
+			getServiceServiceAffinity(affinityRef.SpinKayenta, "spin-kayenta") +
+			getServiceServiceAffinity(affinityRef.Echo, "echo") +
+			getServiceServiceAffinity(affinityRef.Clouddriver, "clouddriver")
 	} else {
 		str = `
-	  affinity: {}`
+		affinity: {}`
 	}
 	str = strings.Replace(str, "\t", "    ", -1)
 
@@ -431,7 +432,7 @@ func getServiceServiceAffinity(servicesAffinityRef *deploymentEnv.ServiceAffinit
 		` + name + `: {}`
 	}
 
-	str = strings.Replace(str, "\t", "    ", -1)
+	str = strings.Replace(str, "\t", "     ", -1)
 
 	return str
 }
@@ -451,12 +452,12 @@ func getLabelSelector(parSidesRef []*deploymentEnv.PAARDSIDE) string {
 						str += `
 		            - key: ` + matchExpression.Key + `
 		              operator: ` + matchExpression.Operator +
-							strings.Replace(getDeploymentEnArray(matchExpression.Values, "values"), "\t", "       ", -1)
+							strings.Replace(getDeploymentEnArray(matchExpression.Values, "values"), "\t", "        ", -1)
 					}
 				}
 			}
-			/*str += `
-			  topologyKey: ` + parSide.LabelSelector.TopologyKey */
+			str += `
+			   topologyKey: ` + parSide.TopologyKey
 		}
 	} else {
 		str += `
@@ -494,39 +495,39 @@ func GetDeploymentEnvContainers(containersRef []*deploymentEnv.Containers) strin
 
 	if nil != containersRef {
 		str = `
-		  containers:`
+		containers:`
 		for _, container := range containersRef {
 			str += `
-			  - name: ` + container.Name + `
-			    image: ` + container.Image +
-				strings.Replace(getDeploymentEnArray(container.Command, "command"), "\t", " ", -1)
+		  - name: ` + container.Name + `
+		    image: ` + container.Image +
+				strings.Replace(getDeploymentEnArray(container.Command, "command"), "\t", "  ", -1)
 
 			if nil != container.Env {
 				str += `
-			    env:`
+		    env:`
 				for _, containerEnv := range container.Env {
 					str += `
-			      - name: ` + containerEnv.Name + `
-			        value: ` + containerEnv.Value
+		      - name: ` + containerEnv.Name + `
+		        value: ` + containerEnv.Value
 				}
 			}
 
 			if nil != container.VolumeMounts {
 				str += `
-			    volumeMounts:`
+		    volumeMounts:`
 				for _, containerVolumeMounts := range container.VolumeMounts {
 					str += `
-			      - mountPath: ` + containerVolumeMounts.MountPath + `
-			        name: ` + containerVolumeMounts.Name
+		      - mountPath: ` + containerVolumeMounts.MountPath + `
+		        name: ` + containerVolumeMounts.Name
 				}
 			}
 		}
 	} else {
 		str = `
-	  containers: {}`
+		containers: {}`
 	}
 
-	str = strings.Replace(str, "\t", "  ", -1)
+	str = strings.Replace(str, "\t", "    ", -1)
 	return str
 }
 
@@ -538,24 +539,24 @@ func GetDeploymentEnvVolumes(volumesRef []*deploymentEnv.Volumes) string {
 		volumes:`
 		for _, volume := range volumesRef {
 			str += `
-			  - name: ` + volume.Name
+		  - name: ` + volume.Name
 
 			if nil != volume.EmptyDir && "" != volume.EmptyDir.Test {
 				str += `
-			    emptyDir: ` + volume.EmptyDir.Test
+		    emptyDir: ` + volume.EmptyDir.Test
 			} else {
 				str += `
-			    emptyDir: {}`
+		    emptyDir: {}`
 			}
 
 			if nil != volume.Secret {
 				str += `
-			    secret:
-			      secretName: ` + volume.Secret.SecretName + `
-			      defaultMode: ` + strconv.FormatInt(volume.Secret.DefaultMode, 10)
+		    secret:
+		      secretName: ` + volume.Secret.SecretName + `
+		      defaultMode: ` + strconv.FormatInt(volume.Secret.DefaultMode, 10)
 			} else {
 				str += `
-			    secret: {}`
+		    secret: {}`
 			}
 		}
 	} else {
@@ -563,7 +564,7 @@ func GetDeploymentEnvVolumes(volumesRef []*deploymentEnv.Volumes) string {
 		volumes: {}`
 	}
 
-	str = strings.Replace(str, "\t", "  ", -1)
+	str = strings.Replace(str, "\t", "    ", -1)
 	return str
 }
 

@@ -70,20 +70,39 @@ func GetAuthnSecurity(securityReference *security.Security) string {
 	if nil != securityReference.Authn.Oauth2 {
 		str += `
 		  oauth2:
-		    enabled: ` + strconv.FormatBool(securityReference.Authn.Oauth2.Enabled) + `
+		    enabled: ` + strconv.FormatBool(securityReference.Authn.Oauth2.Enabled)
+		if nil != securityReference.Authn.Oauth2.Client && "" != securityReference.Authn.Oauth2.Client.ClientId {
+			str += `
 		    client:
 		      clientId: ` + securityReference.Authn.Oauth2.Client.ClientId + `
 		      clientSecret: ` + securityReference.Authn.Oauth2.Client.ClientSecret + `
 		      accessTokenUri: ` + securityReference.Authn.Oauth2.Client.AccessTokenUri + `
 		      userAuthorizationUri: ` + securityReference.Authn.Oauth2.Client.UserAuthorizationUri + `
-		      scope: ` + securityReference.Authn.Oauth2.Client.Scope + `
+		      scope: ` + securityReference.Authn.Oauth2.Client.Scope
+		} else {
+			str += `
+		    client: {}`
+		}
+
+		// if nil != securityReference.Authn.Oauth2.Client.Resource && "" != securityReference.Authn.Oauth2.Client.Resource.userInfoUri {
+		str += `
 		    resource:
 		      userInfoUri: XXXX` + /*+ securityReference.Authn.Oauth2.Resource.UserInfoUri + ` // TODO Missing proto fields
+			else {
+				str += `
+			    resource: {}`
+			}
+			if nil != securityReference.Authn.Oauth2.Client.UserInfoMapping && "" != securityReference.Authn.Oauth2.Client.UserInfoMapping.Email {
+			str += `
 			  userInfoMapping:
 			    email: ` + securityReference.Authn.Oauth2.UserInfoMapping.Email + `
 			    firstName: ` + securityReference.Authn.Oauth2.UserInfoMapping.FirstName + `
 			    lastName: "` + securityReference.Authn.Oauth2.UserInfoMapping.LastName + `"
-			    username: ` + securityReference.Authn.Oauth2.UserInfoMapping.UserName +*/`
+			    username: ` + securityReference.Authn.Oauth2.UserInfoMapping.UserName +
+			else {
+				str += `
+			    userInfoMapping: {}`
+			}*/`
 		    provider: ` + securityReference.Authn.Oauth2.Provider + `                # One of AZURE, GITHUB, ORACLE, OTHER, GOOGLE`
 	}
 
@@ -97,8 +116,21 @@ func GetAuthnSecurity(securityReference *security.Security) string {
 		    keyStore: ` + securityReference.Authn.Saml.KeyStore + `
 		    keyStorePassword: ` + securityReference.Authn.Saml.KeyStorePassword + `
 		    keyStoreAliasName: ` + securityReference.Authn.Saml.KeyStoreAliasName + `
-		    serviceAddress: ` + securityReference.Authn.Saml.ServiceAddress + `
-		    userAttributeMapping: {}` //TODO
+		    serviceAddress: ` + securityReference.Authn.Saml.ServiceAddress
+
+		if nil != securityReference.Authn.Saml.UserInfoMapping {
+			str += `
+		    userAttributeMapping:
+		      email: ` + securityReference.Authn.Saml.UserInfoMapping.Email + `
+		      firstname: ` + securityReference.Authn.Saml.UserInfoMapping.Firstname + `
+		      lastname: ` + securityReference.Authn.Saml.UserInfoMapping.Lastname + `
+		      username: ` + securityReference.Authn.Saml.UserInfoMapping.Username + `
+		      roles: ` + securityReference.Authn.Saml.UserInfoMapping.Roles + `
+		      rolesDelimiter: ` + securityReference.Authn.Saml.UserInfoMapping.RolesDelimiter
+		} else {
+			str += `
+		    userAttributeMapping: {}`
+		}
 	}
 
 	if nil != securityReference.Authn.Ldap {
@@ -153,14 +185,20 @@ func GetAuthzSecurity(securityReference *security.Security) string {
 		str += `
 		    google:
 		      roleProviderType: ` + securityReference.Authz.GroupMembership.Google.RoleProviderType + `
-		      path: ` + securityReference.Authz.GroupMembership.Google.Path
+		      path: ` + securityReference.Authz.GroupMembership.Google.Path + `
+		      credentialPath: ` + securityReference.Authz.GroupMembership.Google.CredentialPath + `
+		      adminUsername: ` + securityReference.Authz.GroupMembership.Google.AdminUsername + `
+		      domain: ` + securityReference.Authz.GroupMembership.Google.Domain
 	}
 
 	if nil != securityReference.Authz.GroupMembership.Github {
 		str += `
 		    github:
 		      roleProviderType: ` + securityReference.Authz.GroupMembership.Github.RoleProviderType + `
-		      path: ` + securityReference.Authz.GroupMembership.Github.Path
+		      path: ` + securityReference.Authz.GroupMembership.Github.Path + `
+		      credentialPath: ` + securityReference.Authz.GroupMembership.Github.CredentialPath + `
+		      adminUsername: ` + securityReference.Authz.GroupMembership.Github.AdminUsername + `
+		      domain: ` + securityReference.Authz.GroupMembership.Github.Domain
 	}
 	// TODO Missing proto fields
 	//     github:
@@ -173,15 +211,24 @@ func GetAuthzSecurity(securityReference *security.Security) string {
 		str += `
 		    file:
 		      roleProviderType: ` + securityReference.Authz.GroupMembership.File.RoleProviderType + `
-		      path: ` + securityReference.Authz.GroupMembership.File.Path
+		      path: ` + securityReference.Authz.GroupMembership.File.Path + `
+		      credentialPath: ` + securityReference.Authz.GroupMembership.File.CredentialPath + `
+		      adminUsername: ` + securityReference.Authz.GroupMembership.File.AdminUsername + `
+		      domain: ` + securityReference.Authz.GroupMembership.File.Domain
 	}
 
 	if nil != securityReference.Authz.GroupMembership.Ldap {
 		str += `
 		    ldap:
 		      roleProviderType: ` + securityReference.Authz.GroupMembership.Ldap.RoleProviderType + `
-		      path: ` + securityReference.Authz.GroupMembership.Ldap.Path
+		      path: ` + securityReference.Authz.GroupMembership.Ldap.Path + `
+		      credentialPath: ` + securityReference.Authz.GroupMembership.Ldap.CredentialPath + `
+		      adminUsername: ` + securityReference.Authz.GroupMembership.Ldap.AdminUsername + `
+		      domain: ` + securityReference.Authz.GroupMembership.Ldap.Domain
 	}
+
+	str += `
+	      enabled: ` + strconv.FormatBool(securityReference.Authz.Enabled)
 
 	str = strings.Replace(str, "\t", "    ", -1)
 	return str

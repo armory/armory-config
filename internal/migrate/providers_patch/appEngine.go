@@ -38,12 +38,13 @@ func GetAppEngineAccounts(provider *providers.Providers) string {
 			str += `
 		  - name: ` + account.Name + `
 		    environment              : ` + account.Environment +
-				strings.Replace(getProvidersStringArrayAppend(account.RequiredGroupMembership, "requiredGroupMembership", "- "), "\t", "   ", -1) +
+				strings.Replace(getProvidersStringArrayAppend(account.RequiredGroupMembership, "requiredGroupMembership", "- "), "\t", "   ", -1) + `
+		    providerVersion          : ` + account.ProviderVersion +
 				getPermissions(account.Permissions) + `
 		    project                  : ` + account.Project + `
 		    jsonPath                 : ` + account.JsonPath + `
 		    localRepositoryDirectory : ` + account.LocalRepositoryDirectory + `
-		    gitHttpsUsername          : ` + account.GitHttpsUsername + `
+		    gitHttpsUsername         : ` + account.GitHttpsUsername + `
 		    gitHttpsPassword         : ` + account.GitHttpsPassword + `
 		    githubOAuthAccessToken   : ` + account.GithubOAuthAccessToken + `
 		    sshPrivateKeyFilePath    : ` + account.SshPrivateKeyFilePath + `
@@ -56,7 +57,6 @@ func GetAppEngineAccounts(provider *providers.Providers) string {
 				strings.Replace(getProvidersStringArrayAppend(account.OmitServices, "omitServices", "- "), "\t", "   ", -1) +
 				strings.Replace(getProvidersStringArrayAppend(account.OmitVersions, "omitVersions", "- "), "\t", "   ", -1) + `
 		    cachingIntervalSeconds   : ` + helpers.IntToString(account.CachingIntervalSeconds)
-			//TODO missing Proto for providerVersion
 		}
 	} else {
 		str += `

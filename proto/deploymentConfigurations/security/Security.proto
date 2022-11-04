@@ -57,7 +57,7 @@ message Authn {
 
 message Authz {
     GroupMembership groupMembership = 1;
-
+    bool enabled = 2;
 }
 
 message GroupMembership {
@@ -74,6 +74,9 @@ message GroupMembership {
 message RoleType {
   string roleProviderType = 1;
   string path = 2;
+  string credentialPath = 3;
+  string adminUsername = 4;
+  string domain = 5;
 }
 
 /* 

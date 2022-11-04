@@ -103,6 +103,7 @@ message AWSVirtualizationSettings {
     string spotPriceAutoProduct = 5;
     string sshUserName = 6;
     string virtualizationType = 7;
+    string winRmUserName = 8;
 }
 /*
 

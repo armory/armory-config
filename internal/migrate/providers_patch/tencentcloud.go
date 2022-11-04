@@ -60,7 +60,9 @@ func GetTencentBakeryDefaultsAccounts(bakeryDefault *providers.TencentBakery) st
 		str += `
 		  bakeryDefaults:` + `
 		    templateFile: ` + bakeryDefault.TemplateFile +
-			GetTencentBaseImages(bakeryDefault.BaseImages)
+			GetTencentBaseImages(bakeryDefault.BaseImages) + `
+		    secretId: ` + bakeryDefault.SecretId + `
+		    secretKey: ` + bakeryDefault.SecretKey
 	} else {
 		str += `
 		  bakeryDefaults: []`
@@ -91,6 +93,7 @@ func GetTencentBaseImages(baseImages []*providers.TencentBaseImages) string {
 					str += `
 			    virtualizationSettings:
 			      - region: ` + virtualSetting.Region + `
+			        zone: ` + virtualSetting.Zone + `
 			        instanceType: ` + virtualSetting.InstanceType + `
 			        sourceImageId: ` + virtualSetting.SourceImageId + `
 			        sshUserName: ` + virtualSetting.SshUserName

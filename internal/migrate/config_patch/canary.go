@@ -25,7 +25,7 @@ func GetCanaryConfig(canaryReference *canary.Canary) string {
 		str += GetCanaryServiceIntegrations(canaryReference)
 	}
 	str += `
-		reduxLogger: ` + strconv.FormatBool(canaryReference.ReduxLogger) + `
+		reduxLoggerEnabled: ` + strconv.FormatBool(canaryReference.ReduxLogger) + `
 		defaultJudge: ` + canaryReference.DefaultJudge + `
 		stagesEnabled: ` + strconv.FormatBool(canaryReference.StagesEnabled) + `
 		templatesEnabled: ` + strconv.FormatBool(canaryReference.TemplatesEnabled) + `

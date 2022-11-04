@@ -29,7 +29,7 @@ func GetSpinnakerExtensibility(spinnakerReference *spinnaker.Spinnaker) string {
 		extensibility:`
 
 		if nil != spinnakerReference.Extensibility.Plugins {
-			GetSpinnakerExtensibilityPlugins(spinnakerReference.Extensibility.Plugins)
+			str += GetSpinnakerExtensibilityPlugins(spinnakerReference.Extensibility.Plugins)
 		} else {
 			str += `
 		  plugins: []`
@@ -58,17 +58,18 @@ func GetSpinnakerExtensibilityPlugins(pluginsReference *spinnaker.Test) string {
 	if nil != pluginsReference.Plugins {
 		for _, plugin := range pluginsReference.Plugins {
 			str += `
-		    ` + /*plugin.name + */ `
-		    id: ` + plugin.Id + `
-		    enabled: ` + strconv.FormatBool(plugin.Enabled) + `
-		    version: ` + plugin.Version +
+		  plugins:
+		    PLUGIN` + /*TODO plugin.name + */ `
+		      id: ` + plugin.Id + `
+		      enabled: ` + strconv.FormatBool(plugin.Enabled) + `
+		      version: ` + plugin.Version +
 				GetSpinnakerPluginConfig(plugin.Config) +
 				GetSpinnakerPluginExtensions(plugin.Extensions)
 		}
-	} /*else {
+	} else {
 		str += `
-		plugins: []`
-	}*/
+		  plugins: []`
+	}
 
 	return str
 }
@@ -78,7 +79,7 @@ func GetSpinnakerPluginConfig(pluginConfigRef *spinnaker.Config) string {
 
 	if nil != pluginConfigRef {
 		str += `	//TODO Missing proto
-		    config: ` /*
+		      config: ` /*
 		   enabled: ` + strconv.FormatBool(plugin.Enabled) + `
 		   version: ` + plugin.Version*/
 	} else {

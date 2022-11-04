@@ -33,6 +33,10 @@ func GetSpecificConfig(KustomizeData structs.Kustomize) string {
 	  persistentStorage:` +
 		GetPersistentStorage(KustomizeData) + `
 
+# === Features ===
+	  features:` +
+		GetFeatures(KustomizeData) + `
+
 # === Metric Stores ===
 	  metricStores:` +
 		GetMetricStores(KustomizeData) + `
@@ -44,6 +48,10 @@ func GetSpecificConfig(KustomizeData structs.Kustomize) string {
 # === Ci ===
 	  ci:` +
 		GetCi(KustomizeData) + `
+
+# === Repository ===
+	  repository:` +
+		GetRepository(KustomizeData) + `
 
 # === Security ===
 	  security:` +

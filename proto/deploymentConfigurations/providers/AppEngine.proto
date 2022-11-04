@@ -35,6 +35,7 @@ message AppEngineAcc {
     repeated string omitVersions = 18;
     int32 cachingIntervalSeconds = 19;
     permissions.Permissions permissions = 20;
+    string providerVersion = 21;
 }
 
 
