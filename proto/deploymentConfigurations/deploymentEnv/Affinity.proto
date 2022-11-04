@@ -21,6 +21,9 @@ message Affinity {
     ServiceAffinity spin_orca = 12;
     ServiceAffinity spin_redis = 13;
     ServiceAffinity spin_rosco = 14;
+    ServiceAffinity spin_kayenta = 15;
+    ServiceAffinity echo = 16;
+    ServiceAffinity clouddriver = 17;
 
 }
 
@@ -43,7 +46,7 @@ message NodeAffinity {
 
 message PAARDSIDE {
     LabelSelector labelSelector = 1;
-
+    string topologyKey = 2;
 }
 
 // NARDSIDE = Node Affinity's requiredDuringSchedulingIgnoredDuringExecution
@@ -60,8 +63,6 @@ message NodeSelectorTerms {
 
 message LabelSelector {
     repeated MatchExpressions matchExpressions = 1;
-    string topologyKey = 2;
-
 }
 
 message MatchExpressions {

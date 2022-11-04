@@ -98,8 +98,8 @@ func GetOracleBaseImages(baseImages []*providers.OracleBaseImages) string {
 			if nil != baseImage.VirtualizationSettings {
 				str += `
 			    virtualizationSettings:
-			      - baseImageId: ` + baseImage.VirtualizationSettings.BaseImageId + `
-			        sshUserName: ` + baseImage.VirtualizationSettings.SshUserName
+			      baseImageId: ` + baseImage.VirtualizationSettings.BaseImageId + `
+			      sshUserName: ` + baseImage.VirtualizationSettings.SshUserName
 			}
 			//}
 		}

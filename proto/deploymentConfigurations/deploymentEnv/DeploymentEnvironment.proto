@@ -45,7 +45,7 @@ message DeploymentEnvironment {
     LivenessProbeConfig livenessProbeConfig = 17;
     HaServices haServices = 18;
     Affinity affinity = 19;
-    repeated Containers container = 20;
+    repeated Containers containers = 20;
     repeated Volumes volumes = 21;
 
 }

@@ -48,10 +48,10 @@ func GetJenkinsCiMasters(jenkins *ci.Jenkins) string {
 			str += `
 		    - name: ` + master.Name +
 				getCiPermissions(master.Permission) + `
-		      Address: ` + master.Address + `
-		      Username: ` + master.Username + `
-		      Password: ` + master.Password + `
-		      Csrf: ` + strconv.FormatBool(master.Csrf)
+		      address: ` + master.Address + `
+		      username: ` + master.Username + `
+		      password: ` + master.Password + `
+		      csrf: ` + strconv.FormatBool(master.Csrf)
 		}
 	} else {
 		str += `
@@ -85,8 +85,8 @@ func GetTravisCiMasters(travis *ci.Travis) string {
 			str += `
 		    - name: ` + master.Name +
 				getCiPermissions(master.Permission) + `
-		      Address: ` + master.Address + `
-		      BaseUrl: ` + master.BaseUrl + `
+		      address: ` + master.Address + `
+		      baseUrl: ` + master.BaseUrl + `
 		      githubToken: ` + master.GithubToken + `
 		      numberOfRepositories: ` + helpers.IntToString(master.NumberOfRepositories) +
 				getFilteredRepositories(master.FilteredRepositories, "filteredRepositories", "- ")
@@ -123,9 +123,9 @@ func GetWerckerCiMasters(wercker *ci.Wercker) string {
 			str += `
 		    - name: ` + master.Name +
 				getCiPermissions(master.Permission) + `
-		      Address: ` + master.Address + `
+		      address: ` + master.Address + `
 		      user: ` + master.User + `
-		     token: ` + master.Token
+		      token: ` + master.Token
 		}
 	} else {
 		str += `

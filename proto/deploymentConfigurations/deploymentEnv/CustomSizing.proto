@@ -54,6 +54,8 @@ message CustomSizing {
     ServiceSizing orca = 48;
     ServiceSizing rosco = 49;
     ServiceSizing spin_front50 = 50;
+    ServiceSizing spin_terraformer = 51;
+    ServiceSizing spin_dinghy = 52;
 }
 
 

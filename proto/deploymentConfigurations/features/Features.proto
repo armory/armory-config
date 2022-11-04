@@ -12,6 +12,10 @@ message Features {
     bool artifactsRewrite = 4;
     bool managedPipelineTemplatesV2UI = 5;
     bool gremlin = 6;
+    bool auth = 7;
+    bool fiat = 8;
+    bool entityTags = 9;
+    bool appengineContainerImageUrlDeployments = 10;
 
     
 }

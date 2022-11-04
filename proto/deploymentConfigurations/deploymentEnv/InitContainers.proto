@@ -15,6 +15,11 @@ message InitContainers {
     repeated Service gate = 5;
     repeated Service deck = 6;
     repeated Service igor = 7;
+    repeated Service spin_orca = 8;
+    repeated Service spin_kayenta = 9;
+    repeated Service spin_igor = 10;
+    repeated Service spin_echo = 11;
+    repeated Service spin_clouddriver_rw = 12;
 
 }
 

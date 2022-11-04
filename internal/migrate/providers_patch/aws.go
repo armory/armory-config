@@ -72,7 +72,7 @@ func GetAwsAccounts(provider *providers.Providers) string {
 				strings.Replace(getAwsRegions(account.Regions, "regions"), "\t", "     ", -1) +
 				strings.Replace(getAwsLifecycleHooks(account.LifecycleHooks), "\t", "     ", -1) + `
 		    assumeRole: ` + account.AssumeRole
-			//TODO providerVersion Missing proto
+			//TODO Check if providerVersion Missing proto
 		}
 	} else {
 		str += `
@@ -171,8 +171,8 @@ func GetAwsBaseImages(baseImages []*providers.AWSBaseImages) string {
 		          - region: ` + virtualSettings.Region + `
 		            virtualizationType: ` + virtualSettings.VirtualizationType + `
 		            instanceType: ` + virtualSettings.InstanceType + `
-		            sourceAmi: ` + virtualSettings.SourceAmi + /*`
-						  winRmUserName: ` + virtualSettings.WinRmUserName + */`
+		            sourceAmi: ` + virtualSettings.SourceAmi + `
+		            winRmUserName: ` + virtualSettings.WinRmUserName + `
 		            spotPrice: ` + virtualSettings.SpotPrice + `
 		            spotPriceAutoProduct: ` + virtualSettings.SpotPriceAutoProduct
 				}

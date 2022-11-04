@@ -40,8 +40,6 @@ func GetEcsAccounts(accounts []*providers.EcsAcc) string {
 				strings.Replace(getPermissions(account.Permissions), "\t", "     ", -1) + `
 		      awsAccount: ` + account.AwsAccount + `
 		      environment: ` + account.Environment
-			//TODO assumeRole Missing proto
-			//TODO providerVersion Missing proto
 		}
 	} else {
 		str += `

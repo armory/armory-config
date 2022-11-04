@@ -25,7 +25,7 @@ func GetWebhookData(webhookReference *webhook.Webhook) string {
 		trust:
 		  enabled: ` + strconv.FormatBool(webhookReference.Trust.Enabled) + `
 		  trustStore: ` + webhookReference.Trust.TrustStore + `
-		  trustStorePassword: ` + webhookReference.Trust.TrustStorePassword
+		  trustStorePassword: '` + webhookReference.Trust.TrustStorePassword + `'`
 	} else {
 		str += `
 		trust: []`
