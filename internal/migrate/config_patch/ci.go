@@ -47,7 +47,7 @@ func GetJenkinsCiMasters(jenkins *ci.Jenkins) string {
 		for _, master := range jenkins.Masters {
 			str += `
 		    - name: ` + master.Name +
-				getCiPermissions(master.Permission) + `
+				getCiPermissions(master.Permissions) + `
 		      address: ` + master.Address + `
 		      username: ` + master.Username + `
 		      password: ` + master.Password + `
@@ -248,17 +248,17 @@ func getCiPermissions(permissionsRef *permissions.Permissions) string {
 
 	if nil != permissionsRef {
 		str += `
-		    permissions:
-		      READ:`
+		      permissions:
+		        READ:`
 		for _, permissionRead := range permissionsRef.READ {
 			str += `
-		        - ` + permissionRead
+		          - ` + permissionRead
 		}
 		str += `
-		      WRITE:`
+		        WRITE:`
 		for _, permissionWrite := range permissionsRef.WRITE {
 			str += `
-		        - ` + permissionWrite
+		          - ` + permissionWrite
 		}
 	} else {
 		str += `

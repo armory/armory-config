@@ -32,10 +32,10 @@ func GetSpinnakerExtensibility(spinnakerReference *spinnaker.Spinnaker) string {
 			str += GetSpinnakerExtensibilityPlugins(spinnakerReference.Extensibility.Plugins)
 		} else {
 			str += `
-		  plugins: []`
+		  plugins: {}`
 		}
 
-		if nil != spinnakerReference.Extensibility.Repositories {
+		if nil != spinnakerReference.Extensibility.Repositories /*&& "" != spinnakerReference.Extensibility.Repositories.Name*/ {
 			str += `
 		  repositories:
 		    ` + spinnakerReference.Extensibility.Repositories.Name + `:
@@ -43,7 +43,7 @@ func GetSpinnakerExtensibility(spinnakerReference *spinnaker.Spinnaker) string {
 		      url:` + spinnakerReference.Extensibility.Repositories.Url
 		} else {
 			str += `
-		  repositories: []`
+		  repositories: {}`
 		}
 
 		str = strings.Replace(str, "\t", "    ", -1)
@@ -68,7 +68,7 @@ func GetSpinnakerExtensibilityPlugins(pluginsReference *spinnaker.Test) string {
 		}
 	} else {
 		str += `
-		  plugins: []`
+		  plugins: {}`
 	}
 
 	return str
