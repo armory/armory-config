@@ -36,8 +36,8 @@ message resource {
 
 message OauthuserInfoMapping {
   string email = 1;
-  string firstname = 2;
-  string lastname = 3;
+  string firstName = 2;
+  string lastName = 3;
   string username = 4;
 }
 

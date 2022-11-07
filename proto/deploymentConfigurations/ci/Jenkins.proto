@@ -15,7 +15,7 @@ message Jenkins {
 
 message JenkinsMasters {
     string name = 1;
-    permissions.Permissions permission = 2;
+    permissions.Permissions permissions = 2;
     string address = 3;
     string username = 4;
     string password = 5;

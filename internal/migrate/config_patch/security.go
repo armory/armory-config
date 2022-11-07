@@ -84,25 +84,28 @@ func GetAuthnSecurity(securityReference *security.Security) string {
 		    client: {}`
 		}
 
-		// if nil != securityReference.Authn.Oauth2.Client.Resource && "" != securityReference.Authn.Oauth2.Client.Resource.userInfoUri {
-		str += `
-		    resource:
-		      userInfoUri: XXXX` + /*+ securityReference.Authn.Oauth2.Resource.UserInfoUri + ` // TODO Missing proto fields
-			else {
-				str += `
-			    resource: {}`
-			}
-			if nil != securityReference.Authn.Oauth2.Client.UserInfoMapping && "" != securityReference.Authn.Oauth2.Client.UserInfoMapping.Email {
+		if nil != securityReference.Authn.Oauth2.Resource && "" != securityReference.Authn.Oauth2.Resource.UserInfoUri {
 			str += `
-			  userInfoMapping:
-			    email: ` + securityReference.Authn.Oauth2.UserInfoMapping.Email + `
-			    firstName: ` + securityReference.Authn.Oauth2.UserInfoMapping.FirstName + `
-			    lastName: "` + securityReference.Authn.Oauth2.UserInfoMapping.LastName + `"
-			    username: ` + securityReference.Authn.Oauth2.UserInfoMapping.UserName +
-			else {
-				str += `
-			    userInfoMapping: {}`
-			}*/`
+		    resource:
+		      userInfoUri: XXXX` + securityReference.Authn.Oauth2.Resource.UserInfoUri
+		} else {
+			str += `
+			    resource: {}`
+		}
+
+		if nil != securityReference.Authn.Oauth2.UserInfoMapping && "" != securityReference.Authn.Oauth2.UserInfoMapping.Email {
+			str += `
+		    userInfoMapping:
+		      email: ` + securityReference.Authn.Oauth2.UserInfoMapping.Email + `
+		      firstName: ` + securityReference.Authn.Oauth2.UserInfoMapping.FirstName + `
+		      lastName: "` + securityReference.Authn.Oauth2.UserInfoMapping.LastName + `"
+		      username: ` + securityReference.Authn.Oauth2.UserInfoMapping.Username
+		} else {
+			str += `
+		    userInfoMapping: {}`
+		}
+
+		str += `
 		    provider: ` + securityReference.Authn.Oauth2.Provider + `                # One of AZURE, GITHUB, ORACLE, OTHER, GOOGLE`
 	}
 
