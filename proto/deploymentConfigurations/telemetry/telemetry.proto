@@ -1,0 +1,30 @@
+syntax = "proto3";
+package proto.telemetry;
+
+option go_package = "config/deploymentConfigurations/telemetry";
+
+// Configuration for deploymentConfigurations.deploymentEnvironment.affinity
+
+message Telemetry {
+    bool enabled = 1;
+    string endpoint = 2;
+    string instanceId = 3;
+    int32 connectionTimeoutMillis = 4;
+    int32 readTimeoutMillis = 5;
+
+}
+
+
+/*
+
+
+Example Config:
+
+  telemetry:
+    enabled: false
+    endpoint: https://stats.spinnaker.io
+    instanceId: 01E1A6SBZWBDF622HNTD0QWVCV
+    connectionTimeoutMillis: 3000
+    readTimeoutMillis: 5000
+
+*/
