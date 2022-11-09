@@ -51,15 +51,12 @@ package main
 // }
 
 import (
-	"fmt"
-
 	"github.com/austinthao5/golang_proto_test/cmd/migrate"
-	"github.com/austinthao5/golang_proto_test/internal/parser"
 )
 
 func main() {
 
-	path := "/Users/austinthao/kustom_github/austin-spin-ftw/proto_tests/Austin.yml"
+	// path := "/Users/austinthao/kustom_github/austin-spin-ftw/proto_tests/Austin.yml"
 
 	// data, err := fileio.ReadFile(path)
 
@@ -75,14 +72,14 @@ func main() {
 	// s := string(json)
 	// fmt.Println(s)
 
-	test, err := parser.ParseHalConfig(path)
+	// test, err := parser.ParseHalConfig(path)
 
-	fmt.Println("TESTING IN MAIN")
-	if err != nil {
-		fmt.Println(err)
-	} else {
-		fmt.Println(test.DeploymentConfigurations[0].Providers)
-	}
+	// fmt.Println("TESTING IN MAIN")
+	// if err != nil {
+	// 	fmt.Println(err)
+	// } else {
+	// 	fmt.Println(test.DeploymentConfigurations[0].Providers)
+	// }
 
 	migrate.Execute()
 }
