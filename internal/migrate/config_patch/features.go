@@ -1,10 +1,8 @@
 package config_patch
 
 import (
-	"strconv"
-	"strings"
-
 	"github.com/austinthao5/golang_proto_test/config/deploymentConfigurations/features"
+	"github.com/austinthao5/golang_proto_test/internal/helpers"
 	"github.com/austinthao5/golang_proto_test/internal/migrate/structs"
 )
 
@@ -20,18 +18,15 @@ func GetFeatures(KustomizeData structs.Kustomize) string {
 func GetFeaturesData(featuresReference *features.Features) string {
 	str := ""
 
-	str = `
-		auth: ` + strconv.FormatBool(featuresReference.Auth) + `
-		fiat: ` + strconv.FormatBool(featuresReference.Fiat) + `
-		chaos: ` + strconv.FormatBool(featuresReference.Chaos) + `
-		entityTags: ` + strconv.FormatBool(featuresReference.EntityTags) + `
-		pipelineTemplates: ` + strconv.FormatBool(featuresReference.PipelineTemplates) + `
-		artifacts: ` + strconv.FormatBool(featuresReference.Artifacts) + `
-		appengineContainerImageUrlDeployments: ` + strconv.FormatBool(featuresReference.AppengineContainerImageUrlDeployments) + `
-		managedPipelineTemplatesV2UI: ` + strconv.FormatBool(featuresReference.ManagedPipelineTemplatesV2UI) + `
-		gremlin: ` + strconv.FormatBool(featuresReference.Gremlin)
-
-	str = strings.Replace(str, "\t", "    ", -1)
+	str = helpers.PrintFmtBool(`auth: `, featuresReference.Auth, 4, true) +
+		helpers.PrintFmtBool(`fiat: `, featuresReference.Auth, 4, true) +
+		helpers.PrintFmtBool(`chaos: `, featuresReference.Chaos, 4, true) +
+		helpers.PrintFmtBool(`entityTags: `, featuresReference.EntityTags, 4, true) +
+		helpers.PrintFmtBool(`pipelineTemplates: `, featuresReference.PipelineTemplates, 4, true) +
+		helpers.PrintFmtBool(`artifacts: `, featuresReference.Artifacts, 4, true) +
+		helpers.PrintFmtBool(`appengineContainerImageUrlDeployments: `, featuresReference.AppengineContainerImageUrlDeployments, 4, true) +
+		helpers.PrintFmtBool(`managedPipelineTemplatesV2UI: `, featuresReference.ManagedPipelineTemplatesV2UI, 4, true) +
+		helpers.PrintFmtBool(`gremlin: `, featuresReference.Gremlin, 4, true)
 
 	return str
 }

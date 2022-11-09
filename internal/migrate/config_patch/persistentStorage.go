@@ -1,10 +1,8 @@
 package config_patch
 
 import (
-	"strconv"
-	"strings"
-
 	"github.com/austinthao5/golang_proto_test/config/deploymentConfigurations/persistentStorage"
+	"github.com/austinthao5/golang_proto_test/internal/helpers"
 	"github.com/austinthao5/golang_proto_test/internal/migrate/structs"
 )
 
@@ -23,10 +21,7 @@ func GetPersistentStorage(KustomizeData structs.Kustomize) string {
 }
 
 func GetPersistentStoreType(storageReference *persistentStorage.PersistentStorage) string {
-	str := `
-	persistentStoreType: ` + storageReference.PersistentStoreType
-	str = strings.Replace(str, "\t", "        ", -1)
-	return str
+	return helpers.PrintFmtStr(`persistentStoreType: `, storageReference.PersistentStoreType, 4, true)
 }
 
 func GetAzsStorage(storageReference *persistentStorage.PersistentStorage) string {
@@ -34,16 +29,16 @@ func GetAzsStorage(storageReference *persistentStorage.PersistentStorage) string
 
 	if nil != storageReference.Azs &&
 		"" != storageReference.Azs.StorageAccountName {
-		str = `  azs:
-			StorageAccountName: ` + storageReference.Azs.StorageAccountName + `
-			StorageAccountKey: ` + storageReference.Azs.StorageAccountKey + `
-			StorageContainerName: ` + storageReference.Azs.StorageContainerName
+		str = `
+		azs:` +
+			helpers.PrintFmtStr(`storageAccountName: `, storageReference.Azs.StorageAccountName, 5, true) +
+			helpers.PrintFmtStr(`storageAccountKey: `, storageReference.Azs.StorageAccountKey, 5, true) +
+			helpers.PrintFmtStr(`storageContainerName: `, storageReference.Azs.StorageContainerName, 5, true)
 	} else {
-		str = `  azs: {}`
+		str = `
+		azs: {}`
 	}
 
-	str = strings.Replace(str, "  ", "\n        ", -1)
-	str = strings.Replace(str, "\t\t\t", "          ", -1)
 	return str
 }
 
@@ -52,18 +47,18 @@ func GetGcsStorage(storageReference *persistentStorage.PersistentStorage) string
 
 	if nil != storageReference.Gcs &&
 		"" != storageReference.Gcs.Bucket {
-		str = `  gcs:
-			jsonPath: ` + storageReference.Gcs.JsonPath + `
-			project: ` + storageReference.Gcs.Project + `
-			bucket: ` + storageReference.Gcs.Bucket + `
-			rootFolder: ` + storageReference.Gcs.RootFolder + `
-			bucketLocation: ` + storageReference.Gcs.BucketLocation
+		str = `
+		gcs:` +
+			helpers.PrintFmtStr(`jsonPath: `, storageReference.Gcs.JsonPath, 5, true) +
+			helpers.PrintFmtStr(`project: `, storageReference.Gcs.Project, 5, true) +
+			helpers.PrintFmtStr(`bucket: `, storageReference.Gcs.Bucket, 5, true) +
+			helpers.PrintFmtStr(`rootFolder: `, storageReference.Gcs.RootFolder, 5, true) +
+			helpers.PrintFmtStr(`bucketLocation: `, storageReference.Gcs.BucketLocation, 5, true)
 	} else {
-		str = `  gcs: {}`
+		str = `
+		gcs: {}`
 	}
 
-	str = strings.Replace(str, "  ", "\n        ", -1)
-	str = strings.Replace(str, "\t\t\t", "          ", -1)
 	return str
 }
 
@@ -71,22 +66,19 @@ func GetRedisStorage(storageReference *persistentStorage.PersistentStorage) stri
 	str := ""
 
 	//Todo Missing proto
-	/*if nil != storageReference.R &&
+	/*if nil != storageReference.Redis &&
 		"" != storageReference.Gcs.JsonPath {
-			str = `  redis: `
-		} else {
-			str = `  redis: {}
-	`
-		}
-
-	str = strings.Replace(str, "  ", "\n        ", -1)
-	str = strings.Replace(str, "\t\t\t", "          ", -1)
-	return str*/
+		str = `
+		redis: ` +
+			helpers.PrintFmtStr(`AAAAa: `, storageReference.Redis.AAAAa, 5, true) +
+	} else {
+			str = `
+		redis: {}`
+	}*/
 
 	str = `
-	redis: {}`
+		redis: {}`
 
-	str = strings.Replace(str, "\t", "        ", -1)
 	return str
 }
 
@@ -95,19 +87,19 @@ func GetS3Storage(storageReference *persistentStorage.PersistentStorage) string 
 
 	if nil != storageReference.S3 &&
 		"" != storageReference.S3.Bucket {
-		str = `  s3:
-			bucket: ` + storageReference.S3.Bucket + `
-			rootFolder: ` + storageReference.S3.RootFolder + `
-			region: ` + storageReference.S3.Region + `
-			pathStyleAccess: ` + strconv.FormatBool(storageReference.S3.PathStyleAccess) + `
-			accessKeyId: ` + storageReference.S3.AccessKeyId + `
-			secretAccessKey: ` + storageReference.S3.SecretAccessKey
+		str = `
+		s3:` +
+			helpers.PrintFmtStr(`bucket: `, storageReference.S3.Bucket, 5, true) +
+			helpers.PrintFmtStr(`rootFolder: `, storageReference.S3.RootFolder, 5, true) +
+			helpers.PrintFmtStr(`region: `, storageReference.S3.Region, 5, true) +
+			helpers.PrintFmtBool(`pathStyleAccess: `, storageReference.S3.PathStyleAccess, 5, true) +
+			helpers.PrintFmtStr(`accessKeyId: `, storageReference.S3.AccessKeyId, 5, true) +
+			helpers.PrintFmtStr(`secretAccessKey: `, storageReference.S3.SecretAccessKey, 5, true)
 	} else {
-		str = `    s3: {}`
+		str = `
+		s3: {}`
 	}
 
-	str = strings.Replace(str, "  ", "\n        ", -1)
-	str = strings.Replace(str, "\t\t\t", "          ", -1)
 	return str
 }
 
@@ -116,21 +108,21 @@ func GetOracleStorage(storageReference *persistentStorage.PersistentStorage) str
 
 	if nil != storageReference.Oracle &&
 		"" != storageReference.Oracle.BucketName {
-		str = `  oracle:
-			bucketName: ` + storageReference.Oracle.BucketName + `
-			namespace: ` + storageReference.Oracle.Namespace + `
-			compartmentId: ` + storageReference.Oracle.CompartmentId + `
-			region: ` + storageReference.Oracle.Region + `
-			userId: ` + storageReference.Oracle.UserId + `
-			fingerprint: ` + storageReference.Oracle.Fingerprint + `
-			sshPrivateKeyFilePath: ` + storageReference.Oracle.SshPrivateKeyFilePath + `
-			privateKeyPassphrase: ` + storageReference.Oracle.PrivateKeyPassphrase + `
-			tenancyId: ` + storageReference.Oracle.TenancyId
+		str = `
+		oracle:` +
+			helpers.PrintFmtStr(`bucketName: `, storageReference.Oracle.BucketName, 5, true) +
+			helpers.PrintFmtStr(`namespace: `, storageReference.Oracle.Namespace, 5, true) +
+			helpers.PrintFmtStr(`compartmentId: `, storageReference.Oracle.CompartmentId, 5, true) +
+			helpers.PrintFmtStr(`region: `, storageReference.Oracle.Region, 5, true) +
+			helpers.PrintFmtStr(`userId: `, storageReference.Oracle.UserId, 5, true) +
+			helpers.PrintFmtStr(`fingerprint: `, storageReference.Oracle.Fingerprint, 5, true) +
+			helpers.PrintFmtStr(`sshPrivateKeyFilePath: `, storageReference.Oracle.SshPrivateKeyFilePath, 5, true) +
+			helpers.PrintFmtStr(`privateKeyPassphrase: `, storageReference.Oracle.PrivateKeyPassphrase, 5, true) +
+			helpers.PrintFmtStr(`tenancyId: `, storageReference.Oracle.TenancyId, 5, true)
 	} else {
-		str = `  oracle: {}`
+		str = `
+		oracle: {}`
 	}
 
-	str = strings.Replace(str, "  ", "\n        ", -1)
-	str = strings.Replace(str, "\t\t\t", "          ", -1)
 	return str
 }

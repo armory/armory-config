@@ -1,9 +1,6 @@
 package config_patch
 
 import (
-	"strconv"
-	"strings"
-
 	"github.com/austinthao5/golang_proto_test/config/deploymentConfigurations/pubsub"
 	"github.com/austinthao5/golang_proto_test/internal/helpers"
 	"github.com/austinthao5/golang_proto_test/internal/migrate/structs"
@@ -19,18 +16,15 @@ func GetPubsub(KustomizeData structs.Kustomize) string {
 }
 
 func GetPubsubConfig(pubsubReference *pubsub.Pubsub) string {
-	str := `
-	    enabled: ` + strconv.FormatBool(pubsubReference.Enabled)
+	str := helpers.PrintFmtBool(`enabled: `, pubsubReference.Enabled, 4, true)
 
 	if nil != pubsubReference.Google {
 		str += `
-		google:
-		  enabled: ` + strconv.FormatBool(pubsubReference.Google.Enabled) + `
-		  pubsubType: ` + pubsubReference.Google.PubsubType +
+		google:` +
+			helpers.PrintFmtBool(`enabled: `, pubsubReference.Google.Enabled, 5, true) +
+			helpers.PrintFmtStr(`pubsubType: `, pubsubReference.Google.PubsubType, 5, true) +
 			GetGoogleSubscriptions(pubsubReference.Google) +
 			GetGooglePublishers(pubsubReference.Google)
-
-		str = strings.Replace(str, "\t", "    ", -1)
 	}
 	return str
 }
@@ -40,16 +34,15 @@ func GetGoogleSubscriptions(google *pubsub.Google) string {
 
 	if nil != google.Subscriptions {
 		str += `
-		  subscriptions: `
+		  subscriptions:`
 		for _, account := range google.Subscriptions {
-			str += `
-		    - name: ` + account.Name + `
-		      project: ` + account.Project + `
-		      subscriptionName: ` + account.SubscriptionName + `
-		      jsonPath: ` + account.JsonPath + `
-		      templatePath: ` + account.TemplatePath + `
-		      ackDeadlineSeconds: ` + helpers.IntToString(account.AckDeadlineSeconds) + `
-		      messageFormat: ` + account.MessageFormat
+			str += helpers.PrintFmtStr(`- name: `, account.Name, 6, true) +
+				helpers.PrintFmtStr(`project: `, account.Project, 7, true) +
+				helpers.PrintFmtStr(`subscriptionName: `, account.SubscriptionName, 7, true) +
+				helpers.PrintFmtStr(`jsonPath: `, account.JsonPath, 7, true) +
+				helpers.PrintFmtStr(`templatePath: `, account.TemplatePath, 7, true) +
+				helpers.PrintFmtInt(`ackDeadlineSeconds: `, account.AckDeadlineSeconds, 7, true) +
+				helpers.PrintFmtStr(`messageFormat: `, account.MessageFormat, 7, true)
 		}
 	} else {
 		str += `
@@ -66,12 +59,11 @@ func GetGooglePublishers(google *pubsub.Google) string {
 		str += `
 		  publishers:`
 		for _, account := range google.Publishers {
-			str += `
-		    - name: ` + account.Name + `
-		      project: ` + account.Project + `
-		      topicName: ` + account.TopicName + `
-		      jsonPath: ` + account.JsonPath + `
-		      content: ` + account.Content
+			str += helpers.PrintFmtStr(`- name: `, account.Name, 6, true) +
+				helpers.PrintFmtStr(`project: `, account.Project, 7, true) +
+				helpers.PrintFmtStr(`topicName: `, account.TopicName, 7, true) +
+				helpers.PrintFmtStr(`jsonPath: `, account.JsonPath, 7, true) +
+				helpers.PrintFmtStr(`content: `, account.Content, 7, true)
 		}
 	} else {
 		str += `
