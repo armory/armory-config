@@ -8,6 +8,8 @@ import "proto/deploymentConfigurations/deploymentEnv/InitContainers.proto";
 import "proto/deploymentConfigurations/deploymentEnv/CustomSizing.proto";
 import "proto/deploymentConfigurations/deploymentEnv/Affinity.proto";
 import "proto/deploymentConfigurations/deploymentEnv/Volumes.proto";
+import "proto/deploymentConfigurations/deploymentEnv/Sidecars.proto";
+import "proto/deploymentConfigurations/deploymentEnv/HostAliases.proto";
 
 // Configuration for the clouddriver microservice.
 
@@ -36,7 +38,7 @@ message DeploymentEnvironment {
     Vault vault = 8;
     string location = 9;
     CustomSizing customSizing = 10;
-    // Sidecar sidecars = 11;
+    Sidecars sidecars = 11;
     InitContainers initContainers = 12;
     HostAliases hostAliases = 13;
     Tolerations tolerations = 14;
@@ -53,11 +55,6 @@ message DeploymentEnvironment {
 message NodeSelectors {
   // I'm not sure if this functionality works
   // https://github.com/spinnaker/spinnaker/issues/5916
-}
-
-message HostAliases {
-  // Doesn't look like HostAliases are currently supported. Only reference to this I see is below
-  // https://github.com/spinnaker/spinnaker/issues/2010
 }
 
 message Tolerations {

@@ -1,0 +1,64 @@
+syntax = "proto3";
+package proto.deploymentEnvironment;
+
+option go_package = "config/deploymentConfigurations/deploymentEnv";
+
+// Configuration for the clouddriver microservice.
+message Sidecars {
+
+    repeated SideCarService spin_kayenta = 1;
+    repeated SideCarService clouddriver = 2;
+    repeated SideCarService echo = 3;
+    repeated SideCarService fiat = 4;
+    repeated SideCarService spin_igor = 5;
+    repeated SideCarService spin_gate = 6;
+    repeated SideCarService spin_orca = 7;
+
+
+}
+
+message SideCarService {
+    string name = 1;
+    string dockerImage = 2;
+    map<string, string> env = 3; // Need to reconfigure
+    repeated string args = 4;
+    repeated string command = 5;
+    ConfigMapVolumeMounts configMapVolumeMounts = 6;
+    repeated string secretVolumeMounts = 7; // Need to reconfigure
+    string mountPath = 8;
+    SecurityContext securityContext = 9;
+
+}
+
+message SecurityContext {
+    bool privileged = 1;
+
+}
+
+message ConfigMapVolumeMounts {
+    string configMapName = 1;
+    string mountPath = 2;
+}
+
+
+/*
+
+Example Config:
+
+    sidecars:
+      spin-kayenta:
+      - name: envoy
+        dockerImage: some-image
+        env:
+          TESTING: test
+        args: []
+        command: []
+        configMapVolumeMounts:
+        - configMapName: configMap
+          mountPath: /some/path
+        secretVolumeMounts: []
+        securityContext:
+          privileged: true
+
+
+*/

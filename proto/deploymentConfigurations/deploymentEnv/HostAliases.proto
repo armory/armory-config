@@ -1,0 +1,57 @@
+syntax = "proto3";
+package proto.deploymentEnvironment;
+
+option go_package = "config/deploymentConfigurations/deploymentEnv";
+
+// Configuration for the clouddriver microservice.
+message HostAliases {
+    HostAliasService spin_igor = 1;
+    HostAliasService spin_kayenta = 2;
+    HostAliasService spin_orca = 3;
+    HostAliasService spin_echo = 4;
+    HostAliasService spin_clouddriver = 5;
+    HostAliasService spin_front50 = 6;
+    HostAliasService spin_rosco = 7;
+    HostAliasService spin_deck = 8;
+    HostAliasService spin_gate = 9;
+    HostAliasService spin_fiat = 10;
+
+}
+
+message HostAliasService {
+    string ip = 1;
+    repeated string hostnames = 2;
+}
+
+/*
+
+Example Config:
+
+    hostAliases:
+      spin-igor:
+      - ip: 127.0.0.1
+        hostnames:
+        - search-jenkins.sc-corp.net
+        - dashboard.sc-corp.net
+      spin-kayenta:
+      - ip: 127.0.0.1
+        hostnames:
+        - search-jenkins.sc-corp.net
+        - dashboard.sc-corp.net
+        - security-overlord.sc-corp.net
+        - graphite.snap
+      spin-orca:
+      - ip: 127.0.0.1
+        hostnames:
+        - search-jenkins.sc-corp.net
+        - dashboard.sc-corp.net
+        - security-overlord.sc-corp.net
+        - mesh-health.snap
+        - ap-webhook.snap
+      spin-echo:
+      - ip: 127.0.0.1
+        hostnames:
+        - mesh-notifications.snap
+
+
+*/
