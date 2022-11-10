@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/austinthao5/golang_proto_test/config/deploymentConfigurations/armory"
+	"github.com/austinthao5/golang_proto_test/internal/helpers"
 	"github.com/austinthao5/golang_proto_test/internal/migrate/structs"
 )
 
@@ -32,19 +33,19 @@ func GetDinghyArmory(armoryReference *armory.Armory) string {
 		}
 
 		str = `
-		dinghy:
-		  enabled: ` + strconv.FormatBool(armoryReference.Dinghy.Enabled) + `
-		  templateOrg: ` + armoryReference.Dinghy.TemplateOrg + `
-		  templateRepo: ` + armoryReference.Dinghy.TemplateRepo + `
-		  githubToken: ` + armoryReference.Dinghy.GithubToken + `
-		  githubEndpoint: ` + armoryReference.Dinghy.GithubEndpoint + `
-		  repositoryRawdataProcessing: ` + strconv.FormatBool(armoryReference.Dinghy.RepositoryRawdataProcessing) + `
-		  dinghyFilename: ` + armoryReference.Dinghy.DinghyFilename + `
-		  autoLockPipelines: ` + strconv.FormatBool(armoryReference.Dinghy.AutoLockPipelines) + `
-		  fiatUser: ` + armoryReference.Dinghy.FiatUser + `
+		dinghy:` +
+			helpers.PrintFmtBool(`enabled: `, armoryReference.Dinghy.Enabled, 5, true) +
+			helpers.PrintFmtStr(`templateOrg: `, armoryReference.Dinghy.TemplateOrg, 5, true) +
+			helpers.PrintFmtStr(`templateRepo: `, armoryReference.Dinghy.TemplateRepo, 5, true) +
+			helpers.PrintFmtStr(`githubToken: `, armoryReference.Dinghy.GithubToken, 5, true) +
+			helpers.PrintFmtStr(`githubEndpoint: `, armoryReference.Dinghy.GithubEndpoint, 5, true) +
+			helpers.PrintFmtBool(`repositoryRawdataProcessing: `, armoryReference.Dinghy.RepositoryRawdataProcessing, 5, true) +
+			helpers.PrintFmtStr(`dinghyFilename: `, armoryReference.Dinghy.DinghyFilename, 5, true) +
+			helpers.PrintFmtBool(`autoLockPipelines: `, armoryReference.Dinghy.AutoLockPipelines, 5, true) +
+			helpers.PrintFmtStr(`fiatUser: `, armoryReference.Dinghy.FiatUser, 5, true) + `
 		  notifiers:
-		    slack:
-		      enabled: ` + notifiersSlack
+		    slack:` +
+			helpers.PrintFmtStr(`enabled: `, notifiersSlack, 7, true)
 		str = strings.Replace(str, "\t", "    ", -1)
 	}
 
@@ -86,12 +87,12 @@ func GetDiagnosticsArmory(armoryReference *armory.Armory) string {
 		}
 
 		str = `
-		diagnostics:
-		  enabled: ` + strconv.FormatBool(armoryReference.Diagnostics.Enabled) + `
-		  uuid: ` + armoryReference.Diagnostics.Uuid + `
-		  logging:
-		    enabled: ` + loggingEnabled + `
-		    endpoint: ` + loggingEndpoint
+		diagnostics:` +
+			helpers.PrintFmtBool(`enabled: `, armoryReference.Diagnostics.Enabled, 5, true) +
+			helpers.PrintFmtStr(`uuid: `, armoryReference.Diagnostics.Uuid, 5, true) + `
+		  logging:` +
+			helpers.PrintFmtStr(`enabled: `, loggingEnabled, 6, true) +
+			helpers.PrintFmtStr(`endpoint: `, loggingEndpoint, 6, true)
 		str = strings.Replace(str, "\t", "    ", -1)
 	}
 
@@ -111,11 +112,11 @@ func GetTerraformArmory(armoryReference *armory.Armory) string {
 		}
 
 		str = `
-		terraform:
-		  enabled: ` + strconv.FormatBool(armoryReference.Terraform.Enabled) + `
-		  git:
-		    enabled: ` + gitEnabled + `
-		    endpoint: ` + gitEndpoint
+		terraform:` +
+			helpers.PrintFmtBool(`enabled: `, armoryReference.Terraform.Enabled, 5, true) + `
+		  git:` +
+			helpers.PrintFmtStr(`enabled: `, gitEnabled, 6, true) +
+			helpers.PrintFmtStr(`endpoint: `, gitEndpoint, 6, true)
 		str = strings.Replace(str, "\t", "    ", -1)
 	}
 

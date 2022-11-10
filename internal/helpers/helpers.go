@@ -6,6 +6,14 @@ import (
 	"strings"
 )
 
+func IntToString64(value int64) string {
+	return strconv.FormatInt(value, 10)
+}
+
+func PrintFmtInt64(key string, value int64, amountTabs int, addNewline bool) string {
+	return PrintFmtStr(key, IntToString64(value), amountTabs, addNewline)
+}
+
 func IntToString(value int32) string {
 	return strconv.FormatInt(int64(value), 10)
 }

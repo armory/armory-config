@@ -43,16 +43,13 @@ func GetDeploymentEnvironment(KustomizeData structs.Kustomize) string {
 func GetDeploymentEnvironmentData(deploymentEnvRef *deploymentEnv.DeploymentEnvironment) string {
 	str := ""
 
-	str = `
-	size: ` + deploymentEnvRef.Size + `
-	type: ` + deploymentEnvRef.Type + `
-	accountName: ` + deploymentEnvRef.AccountName + `
-	imageVariant: ` + deploymentEnvRef.ImageVariant + `
-	bootstrapOnly: ` + strconv.FormatBool(deploymentEnvRef.BootstrapOnly) + `
-	updateVersions: ` + strconv.FormatBool(deploymentEnvRef.UpdateVersions) + `
-	location: ` + deploymentEnvRef.Location
-
-	str = strings.Replace(str, "\t", "        ", -1)
+	str += helpers.PrintFmtStr(`size: `, deploymentEnvRef.Size, 4, true) +
+		helpers.PrintFmtStr(`type: `, deploymentEnvRef.Type, 4, true) +
+		helpers.PrintFmtStr(`accountName: `, deploymentEnvRef.AccountName, 4, true) +
+		helpers.PrintFmtStr(`imageVariant: `, deploymentEnvRef.ImageVariant, 4, true) +
+		helpers.PrintFmtStr(`bootstrapOnly: `, strconv.FormatBool(deploymentEnvRef.BootstrapOnly), 4, true) +
+		helpers.PrintFmtStr(`updateVersions: `, strconv.FormatBool(deploymentEnvRef.UpdateVersions), 4, true) +
+		helpers.PrintFmtStr(`location: `, deploymentEnvRef.Location, 4, true)
 
 	return str
 }
@@ -62,9 +59,9 @@ func getDeploymentEnvConsul(consulReference *deploymentEnv.Consul) string {
 
 	if nil != consulReference {
 		str = `
-	    consul:
-	      enabled: ` + strconv.FormatBool(consulReference.Enabled) + `
-	      address: ` + consulReference.Address
+	    consul:` +
+			helpers.PrintFmtBool(`enabled: `, consulReference.Enabled, 5, true) +
+			helpers.PrintFmtStr(`address: `, consulReference.Address, 5, true)
 
 		str = strings.Replace(str, "\t", "    ", -1)
 	}
@@ -77,9 +74,9 @@ func getDeploymentEnvVault(vaultReference *deploymentEnv.Vault) string {
 
 	if nil != vaultReference {
 		str = `
-	    vault:
-	      enabled: ` + strconv.FormatBool(vaultReference.Enabled) + `
-	      address: ` + vaultReference.Address
+	    vault:` +
+			helpers.PrintFmtBool(`enabled: `, vaultReference.Enabled, 5, true) +
+			helpers.PrintFmtStr(`address: `, vaultReference.Address, 5, true)
 
 		str = strings.Replace(str, "\t", "    ", -1)
 	}
@@ -156,8 +153,8 @@ func getServiceSizing(serviceSizingReference *deploymentEnv.ServiceSizing, name 
 
 	if nil != serviceSizingReference {
 		str = `
-		  ` + name + `:` + `
-		    replicas: ` + helpers.IntToString(serviceSizingReference.Replicas) +
+		  ` + name + `:` +
+			helpers.PrintFmtInt(`replicas: `, serviceSizingReference.Replicas, 6, true) +
 			getSizing(serviceSizingReference.Limits, "limits") +
 			getSizing(serviceSizingReference.Requests, "requests")
 	} else {
@@ -173,9 +170,9 @@ func getSizing(sizingReference *deploymentEnv.Sizing, name string) string {
 
 	if nil != sizingReference {
 		str = `
-		    ` + name + `:` + `
-		      cpu: ` + helpers.IntToString(sizingReference.Cpu) + `
-		      memory: ` + sizingReference.Memory
+		    ` + name + `:` +
+			helpers.PrintFmtInt(`cpu: `, sizingReference.Cpu, 7, true) +
+			helpers.PrintFmtStr(`memory: `, sizingReference.Memory, 7, true)
 	} else {
 		str = `
 		    ` + name + `: {}`
@@ -215,9 +212,9 @@ func getServiceInitContainers(servicesRef []*deploymentEnv.Service, name string)
 	if nil != servicesRef {
 		for _, services := range servicesRef {
 			str = `
-		    ` + name + `:` + `
-		      - name: ` + services.Name + `
-		        image: ` + services.Image +
+		    ` + name + `:` +
+				helpers.PrintFmtStr(`- name: `, services.Name, 7, true) +
+				helpers.PrintFmtStr(`image: `, services.Image, 8, true) +
 				getDeploymentEnArray(services.Args, "args") +
 				getVolumeMounts(services.VolumeMounts)
 		}
@@ -251,11 +248,11 @@ func GetDeploymentEnvTolerations(tolerationsRef *deploymentEnv.Tolerations) stri
 
 	if nil != tolerationsRef && "" != tolerationsRef.Key {
 		str = `
-		tolerations:
-		  key: ` + tolerationsRef.Key + `
-		  operator: ` + tolerationsRef.Operator + `
-		  value: ` + tolerationsRef.Value + `
-		  effect: ` + tolerationsRef.Effect
+		tolerations:` +
+			helpers.PrintFmtStr(`key: `, tolerationsRef.Key, 5, true) +
+			helpers.PrintFmtStr(`operator: `, tolerationsRef.Operator, 5, true) +
+			helpers.PrintFmtStr(`value: `, tolerationsRef.Value, 5, true) +
+			helpers.PrintFmtStr(`effect: `, tolerationsRef.Effect, 5, true)
 	} else {
 		str = `
 		tolerations: {}`
@@ -287,9 +284,9 @@ func GetDeploymentEnvGitConfig(gitConfigRef *deploymentEnv.GitConfig) string {
 
 	if nil != gitConfigRef {
 		str = `
-		gitConfig:
-		  UpstreamUser: ` + gitConfigRef.UpstreamUser + `
-		  originUser: ` + gitConfigRef.OriginUser
+		gitConfig:` +
+			helpers.PrintFmtStr(`UpstreamUser: `, gitConfigRef.UpstreamUser, 5, true) +
+			helpers.PrintFmtStr(`originUser: `, gitConfigRef.OriginUser, 5, true)
 	} else {
 		str = `
 		gitConfig: {}`
@@ -304,9 +301,9 @@ func GetDeploymentEnvLivenessProbeConfig(livenessProbeConfigRef *deploymentEnv.L
 
 	if nil != livenessProbeConfigRef {
 		str = `
-		livenessProbeConfig:
-		  enabled: ` + strconv.FormatBool(livenessProbeConfigRef.Enabled) + `
-		  initialDelaySeconds: ` + helpers.IntToString(livenessProbeConfigRef.InitialDelaySeconds)
+		livenessProbeConfig:` +
+			helpers.PrintFmtBool(`enabled: `, livenessProbeConfigRef.Enabled, 5, true) +
+			helpers.PrintFmtInt(`initialDelaySeconds: `, livenessProbeConfigRef.InitialDelaySeconds, 5, true)
 	} else {
 		str = `
 		livenessProbeConfig: {}`
@@ -338,9 +335,9 @@ func getCloudDriverHa(clouddriverHaRef *deploymentEnv.ClouddriverHA) string {
 
 	if nil != clouddriverHaRef {
 		str = `
-		  clouddriver:
-		    enabled: ` + strconv.FormatBool(clouddriverHaRef.Enabled) + `
-		    disableClouddriverRoDeck: ` + strconv.FormatBool(clouddriverHaRef.DisableClouddriverRoDeck)
+		  clouddriver:` +
+			helpers.PrintFmtBool(`enabled: `, clouddriverHaRef.Enabled, 6, true) +
+			helpers.PrintFmtBool(`disableClouddriverRoDeck: `, clouddriverHaRef.DisableClouddriverRoDeck, 6, true)
 	} else {
 		str = `
 		clouddriver: {}`
@@ -355,9 +352,9 @@ func getEchoHa(echoHaRef *deploymentEnv.EchoHA) string {
 
 	if nil != echoHaRef {
 		str = `
-		  echo:
-		    enabled: ` + strconv.FormatBool(echoHaRef.Enabled) + `
-		    image: ` + echoHaRef.Image +
+		  echo:` +
+			helpers.PrintFmtBool(`enabled: `, echoHaRef.Enabled, 6, true) +
+			helpers.PrintFmtStr(`image: `, echoHaRef.Image, 6, true) +
 			strings.Replace(getDeploymentEnArray(echoHaRef.Args, "args"), "  ", " ", -1) +
 			strings.Replace(getVolumeMounts(echoHaRef.VolumeMounts), "  ", " ", -1)
 	} else {
@@ -449,15 +446,13 @@ func getLabelSelector(parSidesRef []*deploymentEnv.PAARDSIDE) string {
 		          matchExpressions:`
 				for _, matchExpression := range parSide.LabelSelector.MatchExpressions {
 					if nil != matchExpression {
-						str += `
-		            - key: ` + matchExpression.Key + `
-		              operator: ` + matchExpression.Operator +
+						str += helpers.PrintFmtStr(`- key: `, matchExpression.Key, 11, true) +
+							helpers.PrintFmtStr(`operator: `, matchExpression.Operator, 12, true) +
 							strings.Replace(getDeploymentEnArray(matchExpression.Values, "values"), "\t", "        ", -1)
 					}
 				}
 			}
-			str += `
-			   topologyKey: ` + parSide.TopologyKey
+			str += helpers.PrintFmtStr(`topologyKey: `, parSide.TopologyKey, 9, true)
 		}
 	} else {
 		str += `
@@ -476,9 +471,9 @@ func getNodeSelectorTerms(NodeSelectorTermsRef []*deploymentEnv.NodeSelectorTerm
 		      nodeSelectorTerms:`
 			for _, matchExpression := range NodeSelectorTerm.MatchExpressions {
 				str += `
-		        - matchExpressions:
-		          - key: ` + matchExpression.Key + `
-		            operator: ` + matchExpression.Operator +
+		        - matchExpressions:` +
+					helpers.PrintFmtStr(`- key: `, matchExpression.Key, 10, true) +
+					helpers.PrintFmtStr(`operator: `, matchExpression.Operator, 11, true) +
 					strings.Replace(getDeploymentEnArray(matchExpression.Values, "values"), "\t", "      ", -1)
 			}
 		}
@@ -497,18 +492,16 @@ func GetDeploymentEnvContainers(containersRef []*deploymentEnv.Containers) strin
 		str = `
 		containers:`
 		for _, container := range containersRef {
-			str += `
-		  - name: ` + container.Name + `
-		    image: ` + container.Image +
+			str += helpers.PrintFmtStr(`- name: `, container.Name, 5, true) +
+				helpers.PrintFmtStr(`image: `, container.Image, 6, true) +
 				strings.Replace(getDeploymentEnArray(container.Command, "command"), "\t", "  ", -1)
 
 			if nil != container.Env {
 				str += `
 		    env:`
 				for _, containerEnv := range container.Env {
-					str += `
-		      - name: ` + containerEnv.Name + `
-		        value: ` + containerEnv.Value
+					str += helpers.PrintFmtStr(`- name: `, containerEnv.Name, 7, true) +
+						helpers.PrintFmtStr(`value: `, containerEnv.Value, 8, true)
 				}
 			}
 
@@ -516,9 +509,8 @@ func GetDeploymentEnvContainers(containersRef []*deploymentEnv.Containers) strin
 				str += `
 		    volumeMounts:`
 				for _, containerVolumeMounts := range container.VolumeMounts {
-					str += `
-		      - mountPath: ` + containerVolumeMounts.MountPath + `
-		        name: ` + containerVolumeMounts.Name
+					str += helpers.PrintFmtStr(`- mountPath: `, containerVolumeMounts.MountPath, 7, true) +
+						helpers.PrintFmtStr(`name: `, containerVolumeMounts.Name, 8, true)
 				}
 			}
 		}
@@ -538,8 +530,7 @@ func GetDeploymentEnvVolumes(volumesRef []*deploymentEnv.Volumes) string {
 		str = `
 		volumes:`
 		for _, volume := range volumesRef {
-			str += `
-		  - name: ` + volume.Name
+			str += helpers.PrintFmtStr(`- name: `, volume.Name, 5, true)
 
 			if nil != volume.EmptyDir && "" != volume.EmptyDir.Test {
 				str += `
@@ -551,9 +542,9 @@ func GetDeploymentEnvVolumes(volumesRef []*deploymentEnv.Volumes) string {
 
 			if nil != volume.Secret {
 				str += `
-		    secret:
-		      secretName: ` + volume.Secret.SecretName + `
-		      defaultMode: ` + strconv.FormatInt(volume.Secret.DefaultMode, 10)
+		    secret:` +
+					helpers.PrintFmtStr(`secretName: `, volume.Secret.SecretName, 7, true) +
+					helpers.PrintFmtInt64(`defaultMode: `, volume.Secret.DefaultMode, 7, true)
 			} else {
 				str += `
 		    secret: {}`
