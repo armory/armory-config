@@ -60,13 +60,13 @@ func PrintFmtStr(key string, value string, amountTabs int, addNewline bool) stri
 			str += "\n"
 		}
 
-		str += getSpaces(amountTabs*2) + key + value
+		str += GetSpaces(amountTabs*2) + key + value
 	}
 	return str
 }
 
 // This function returns a string with the amount of spaces
-func getSpaces(amountSpaces int) string {
+func GetSpaces(amountSpaces int) string {
 	str := ""
 	for i := 0; i < amountSpaces; i++ {
 		str += " "

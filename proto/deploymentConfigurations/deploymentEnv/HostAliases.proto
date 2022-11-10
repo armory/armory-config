@@ -5,16 +5,16 @@ option go_package = "config/deploymentConfigurations/deploymentEnv";
 
 // Configuration for the clouddriver microservice.
 message HostAliases {
-    HostAliasService spin_igor = 1;
-    HostAliasService spin_kayenta = 2;
-    HostAliasService spin_orca = 3;
-    HostAliasService spin_echo = 4;
-    HostAliasService spin_clouddriver = 5;
-    HostAliasService spin_front50 = 6;
-    HostAliasService spin_rosco = 7;
-    HostAliasService spin_deck = 8;
-    HostAliasService spin_gate = 9;
-    HostAliasService spin_fiat = 10;
+    repeated HostAliasService spin_igor = 1;
+    repeated HostAliasService spin_kayenta = 2;
+    repeated HostAliasService spin_orca = 3;
+    repeated HostAliasService spin_echo = 4;
+    repeated HostAliasService spin_clouddriver = 5;
+    repeated HostAliasService spin_front50 = 6;
+    repeated HostAliasService spin_rosco = 7;
+    repeated HostAliasService spin_deck = 8;
+    repeated HostAliasService spin_gate = 9;
+    repeated HostAliasService spin_fiat = 10;
 
 }
 

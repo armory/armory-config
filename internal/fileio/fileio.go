@@ -133,11 +133,11 @@ func GetFilesAndData(profilesDir string, currentSubDir string) (map[string]strin
 		return nil, err
 	}
 
-	for _, profiles_files := range profiles_files {
+	for _, profiles_file := range profiles_files {
 
-		isDir, err := IsDirectory(profilesDir + "/" + profiles_files.Name())
+		isDir, err := IsDirectory(profilesDir + "/" + profiles_file.Name())
 		if isDir {
-			config_maps, err := GetFilesAndData(profilesDir+"/"+profiles_files.Name(), currentSubDir+"/"+profiles_files.Name())
+			config_maps, err := GetFilesAndData(profilesDir+"/"+profiles_file.Name(), currentSubDir+"/"+profiles_file.Name())
 			if err != nil {
 				return nil, err
 			}
@@ -149,7 +149,7 @@ func GetFilesAndData(profilesDir string, currentSubDir string) (map[string]strin
 			continue
 		}
 
-		local_file, err := ReadFile(profilesDir + "/" + profiles_files.Name())
+		local_file, err := ReadFile(profilesDir + "/" + profiles_file.Name())
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
@@ -158,12 +158,12 @@ func GetFilesAndData(profilesDir string, currentSubDir string) (map[string]strin
 		var buf = string(local_file)
 
 		if "" != currentSubDir {
-			profiles_config_files[currentSubDir+"/"+profiles_files.Name()] = buf
+			profiles_config_files[currentSubDir+"/"+profiles_file.Name()] = buf
 		} else {
-			profiles_config_files[profiles_files.Name()] = buf
+			profiles_config_files[profiles_file.Name()] = buf
 		}
 
-		// fmt.Println("Found " + profiles_files.Name())
+		// fmt.Println("Found " + profiles_file.Name())
 	}
 
 	return profiles_config_files, nil

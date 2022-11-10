@@ -28,7 +28,7 @@ func GetServiceSettings(KustomizeData structs.Kustomize) string {
 func GetClouddriverServiceSettings(KustomizeData structs.Kustomize) string {
 	str := `
 # === Clouddriver Config ===
-			clouddriver: {} # is the contents of ~/.hal/default/service-settings/clouddriver.yml`
+		clouddriver: {} # is the contents of ~/.hal/default/service-settings/clouddriver.yml`
 
 	if value, isMapContainsKey := KustomizeData.ServiceSettingsConfigFiles["clouddriver.yml"]; isMapContainsKey {
 		str = `
@@ -43,7 +43,7 @@ func GetClouddriverServiceSettings(KustomizeData structs.Kustomize) string {
 func GetDeckServiceSettings(KustomizeData structs.Kustomize) string {
 	str := `
 # === Deck Config ===
-			deck: {} # is the contents of ~/.hal/default/service-settings/deck.yml`
+		deck: {} # is the contents of ~/.hal/default/service-settings/deck.yml`
 
 	if value, isMapContainsKey := KustomizeData.ServiceSettingsConfigFiles["deck.yml"]; isMapContainsKey {
 		str = `
@@ -58,7 +58,7 @@ func GetDeckServiceSettings(KustomizeData structs.Kustomize) string {
 func GetEchoServiceSettings(KustomizeData structs.Kustomize) string {
 	str := `
 # === Echo Config ===
-			echo: {} # is the contents of ~/.hal/default/service-settings/echo.yml`
+		echo: {} # is the contents of ~/.hal/default/service-settings/echo.yml`
 
 	if value, isMapContainsKey := KustomizeData.ServiceSettingsConfigFiles["echo.yml"]; isMapContainsKey {
 		str = `
@@ -73,7 +73,7 @@ func GetEchoServiceSettings(KustomizeData structs.Kustomize) string {
 func GetFiatServiceSettings(KustomizeData structs.Kustomize) string {
 	str := `
 # === Fiat Config ===
-			fiat: {} # is the contents of ~/.hal/default/service-settings/fiat.yml`
+		fiat: {} # is the contents of ~/.hal/default/service-settings/fiat.yml`
 
 	if value, isMapContainsKey := KustomizeData.ServiceSettingsConfigFiles["fiat.yml"]; isMapContainsKey {
 		str = `
@@ -88,7 +88,7 @@ func GetFiatServiceSettings(KustomizeData structs.Kustomize) string {
 func GetFront50ServiceSettings(KustomizeData structs.Kustomize) string {
 	str := `
 # === Front50 Config ===
-			front50: {} # is the contents of ~/.hal/default/service-settings/front50.yml`
+		front50: {} # is the contents of ~/.hal/default/service-settings/front50.yml`
 
 	if value, isMapContainsKey := KustomizeData.ServiceSettingsConfigFiles["front50.yml"]; isMapContainsKey {
 		str = `
@@ -103,7 +103,7 @@ func GetFront50ServiceSettings(KustomizeData structs.Kustomize) string {
 func GetGateServiceSettings(KustomizeData structs.Kustomize) string {
 	str := `
 # === Gate Config ===
-			gate: {} # is the contents of ~/.hal/default/service-settings/gate.yml`
+		gate: {} # is the contents of ~/.hal/default/service-settings/gate.yml`
 
 	if value, isMapContainsKey := KustomizeData.ServiceSettingsConfigFiles["gate.yml"]; isMapContainsKey {
 		str = `
@@ -118,7 +118,7 @@ func GetGateServiceSettings(KustomizeData structs.Kustomize) string {
 func GetIgorServiceSettings(KustomizeData structs.Kustomize) string {
 	str := `
 # === Igor Config ===
-			igor: {} # is the contents of ~/.hal/default/service-settings/igor.yml`
+		igor: {} # is the contents of ~/.hal/default/service-settings/igor.yml`
 
 	if value, isMapContainsKey := KustomizeData.ServiceSettingsConfigFiles["igor.yml"]; isMapContainsKey {
 		str = `
@@ -133,7 +133,7 @@ func GetIgorServiceSettings(KustomizeData structs.Kustomize) string {
 func GetKayentaServiceSettings(KustomizeData structs.Kustomize) string {
 	str := `
 # === Kayenta Config ===
-			kayenta: {} # is the contents of ~/.hal/default/service-settings/kayenta.yml`
+		kayenta: {} # is the contents of ~/.hal/default/service-settings/kayenta.yml`
 
 	if value, isMapContainsKey := KustomizeData.ServiceSettingsConfigFiles["kayenta.yml"]; isMapContainsKey {
 		str = `
@@ -148,7 +148,7 @@ func GetKayentaServiceSettings(KustomizeData structs.Kustomize) string {
 func GetOrcaServiceSettings(KustomizeData structs.Kustomize) string {
 	str := `
 # === Orca Config ===
-			orca: {} # is the contents of ~/.hal/default/service-settings/orca.yml`
+		orca: {} # is the contents of ~/.hal/default/service-settings/orca.yml`
 
 	if value, isMapContainsKey := KustomizeData.ServiceSettingsConfigFiles["orca.yml"]; isMapContainsKey {
 		str = `
@@ -163,7 +163,7 @@ func GetOrcaServiceSettings(KustomizeData structs.Kustomize) string {
 func GetRoscoServiceSettings(KustomizeData structs.Kustomize) string {
 	str := `
 # === Rosco Config ===
-			rosco: {} # is the contents of ~/.hal/default/service-settings/rosco.yml`
+		rosco: {} # is the contents of ~/.hal/default/service-settings/rosco.yml`
 
 	if value, isMapContainsKey := KustomizeData.ServiceSettingsConfigFiles["rosco.yml"]; isMapContainsKey {
 		str = `

@@ -66,5 +66,8 @@ func ParseHalConfig(halPath string) (*deploymentConfigurations.HalFile, error) {
 		return nil, fmt.Errorf("unable to unmarshal %q: %v", halPath, err)
 	}
 
+	//Debug JSON
+	// fmt.Println("%#V", hal)
+
 	return hal, nil
 }
