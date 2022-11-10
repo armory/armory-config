@@ -121,15 +121,15 @@ type SideCarService struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Name                  string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
-	DockerImage           string                 `protobuf:"bytes,2,opt,name=dockerImage,proto3" json:"dockerImage,omitempty"`
-	Env                   map[string]string      `protobuf:"bytes,3,rep,name=env,proto3" json:"env,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"` // Need to reconfigure
-	Args                  []string               `protobuf:"bytes,4,rep,name=args,proto3" json:"args,omitempty"`
-	Command               []string               `protobuf:"bytes,5,rep,name=command,proto3" json:"command,omitempty"`
-	ConfigMapVolumeMounts *ConfigMapVolumeMounts `protobuf:"bytes,6,opt,name=configMapVolumeMounts,proto3" json:"configMapVolumeMounts,omitempty"`
-	SecretVolumeMounts    []string               `protobuf:"bytes,7,rep,name=secretVolumeMounts,proto3" json:"secretVolumeMounts,omitempty"` // Need to reconfigure
-	MountPath             string                 `protobuf:"bytes,8,opt,name=mountPath,proto3" json:"mountPath,omitempty"`
-	SecurityContext       *SecurityContext       `protobuf:"bytes,9,opt,name=securityContext,proto3" json:"securityContext,omitempty"`
+	Name                  string                   `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	DockerImage           string                   `protobuf:"bytes,2,opt,name=dockerImage,proto3" json:"dockerImage,omitempty"`
+	Env                   map[string]string        `protobuf:"bytes,3,rep,name=env,proto3" json:"env,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"` // Need to reconfigure
+	Args                  []string                 `protobuf:"bytes,4,rep,name=args,proto3" json:"args,omitempty"`
+	Command               []string                 `protobuf:"bytes,5,rep,name=command,proto3" json:"command,omitempty"`
+	ConfigMapVolumeMounts []*ConfigMapVolumeMounts `protobuf:"bytes,6,rep,name=configMapVolumeMounts,proto3" json:"configMapVolumeMounts,omitempty"`
+	SecretVolumeMounts    []string                 `protobuf:"bytes,7,rep,name=secretVolumeMounts,proto3" json:"secretVolumeMounts,omitempty"` // Need to reconfigure
+	MountPath             string                   `protobuf:"bytes,8,opt,name=mountPath,proto3" json:"mountPath,omitempty"`
+	SecurityContext       *SecurityContext         `protobuf:"bytes,9,opt,name=securityContext,proto3" json:"securityContext,omitempty"`
 }
 
 func (x *SideCarService) Reset() {
@@ -199,7 +199,7 @@ func (x *SideCarService) GetCommand() []string {
 	return nil
 }
 
-func (x *SideCarService) GetConfigMapVolumeMounts() *ConfigMapVolumeMounts {
+func (x *SideCarService) GetConfigMapVolumeMounts() []*ConfigMapVolumeMounts {
 	if x != nil {
 		return x.ConfigMapVolumeMounts
 	}
@@ -384,7 +384,7 @@ var file_proto_deploymentConfigurations_deploymentEnv_Sidecars_proto_rawDesc = [
 	0x6f, 0x6d, 0x6d, 0x61, 0x6e, 0x64, 0x18, 0x05, 0x20, 0x03, 0x28, 0x09, 0x52, 0x07, 0x63, 0x6f,
 	0x6d, 0x6d, 0x61, 0x6e, 0x64, 0x12, 0x68, 0x0a, 0x15, 0x63, 0x6f, 0x6e, 0x66, 0x69, 0x67, 0x4d,
 	0x61, 0x70, 0x56, 0x6f, 0x6c, 0x75, 0x6d, 0x65, 0x4d, 0x6f, 0x75, 0x6e, 0x74, 0x73, 0x18, 0x06,
-	0x20, 0x01, 0x28, 0x0b, 0x32, 0x32, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2e, 0x64, 0x65, 0x70,
+	0x20, 0x03, 0x28, 0x0b, 0x32, 0x32, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2e, 0x64, 0x65, 0x70,
 	0x6c, 0x6f, 0x79, 0x6d, 0x65, 0x6e, 0x74, 0x45, 0x6e, 0x76, 0x69, 0x72, 0x6f, 0x6e, 0x6d, 0x65,
 	0x6e, 0x74, 0x2e, 0x43, 0x6f, 0x6e, 0x66, 0x69, 0x67, 0x4d, 0x61, 0x70, 0x56, 0x6f, 0x6c, 0x75,
 	0x6d, 0x65, 0x4d, 0x6f, 0x75, 0x6e, 0x74, 0x73, 0x52, 0x15, 0x63, 0x6f, 0x6e, 0x66, 0x69, 0x67,

@@ -23,7 +23,7 @@ message SideCarService {
     map<string, string> env = 3; // Need to reconfigure
     repeated string args = 4;
     repeated string command = 5;
-    ConfigMapVolumeMounts configMapVolumeMounts = 6;
+    repeated ConfigMapVolumeMounts configMapVolumeMounts = 6;
     repeated string secretVolumeMounts = 7; // Need to reconfigure
     string mountPath = 8;
     SecurityContext securityContext = 9;
