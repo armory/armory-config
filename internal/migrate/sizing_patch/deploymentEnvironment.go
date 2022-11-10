@@ -1,6 +1,7 @@
 package sizing_patch
 
 import (
+	"regexp"
 	"strconv"
 	"strings"
 
@@ -193,13 +194,12 @@ func GetDeploymentEnvInitContainers(initReference *deploymentEnv.InitContainers)
 			getServiceInitContainers(initReference.Rosco, "rosco") +
 			getServiceInitContainers(initReference.Gate, "gate") +
 			getServiceInitContainers(initReference.Deck, "deck") +
-			getServiceInitContainers(initReference.Igor, "igor") //+
-			//TODO Check the following Services the "args:"field" has an issue
-			// getServiceInitContainers(initReference.SpinOrca, "spin-orca") +
-			// getServiceInitContainers(initReference.SpinKayenta, "spin-kayenta") +
-			// getServiceInitContainers(initReference.SpinIgor, "spin-igor") +
-			// getServiceInitContainers(initReference.SpinEcho, "spin-echo") +
-			// getServiceInitContainers(initReference.SpinClouddriverRw, "spin-clouddriver-rw")
+			getServiceInitContainers(initReference.Igor, "igor") +
+			getServiceInitContainers(initReference.SpinOrca, "spin-orca") +
+			getServiceInitContainers(initReference.SpinKayenta, "spin-kayenta") +
+			getServiceInitContainers(initReference.SpinIgor, "spin-igor") +
+			getServiceInitContainers(initReference.SpinEcho, "spin-echo") +
+			getServiceInitContainers(initReference.SpinClouddriverRw, "spin-clouddriver-rw")
 
 		str = strings.Replace(str, "\t", "    ", -1)
 	}
@@ -232,13 +232,41 @@ func GetDeploymentEnvHostAliases(hostAliasesRef *deploymentEnv.HostAliases) stri
 	if nil != hostAliasesRef {
 		//TODO Missing proto
 		str = `
-		hostAliases: {}` //TODO remove {}
+		hostAliases:` +
+			getHostAliasService(hostAliasesRef.SpinIgor, "spin-igor") +
+			getHostAliasService(hostAliasesRef.SpinKayenta, "spin-kayenta") +
+			getHostAliasService(hostAliasesRef.SpinOrca, "spin-orca") +
+			getHostAliasService(hostAliasesRef.SpinEcho, "spin-echo") +
+			getHostAliasService(hostAliasesRef.SpinClouddriver, "spin-clouddriver") +
+			getHostAliasService(hostAliasesRef.SpinFront50, "spin-front50") +
+			getHostAliasService(hostAliasesRef.SpinRosco, "spin-rosco") +
+			getHostAliasService(hostAliasesRef.SpinDeck, "spin-deck") +
+			getHostAliasService(hostAliasesRef.SpinGate, "spin-gate") +
+			getHostAliasService(hostAliasesRef.SpinFiat, "spin-fiat")
 
 	} else {
 		str = `
 		hostAliases: {}`
 	}
 	str = strings.Replace(str, "\t", "    ", -1)
+
+	return str
+}
+
+func getHostAliasService(hostAliasesRef []*deploymentEnv.HostAliasService, name string) string {
+	str := ""
+
+	if nil != hostAliasesRef {
+		for _, hostAlias := range hostAliasesRef {
+			str = `
+		  ` + name + `:` +
+				helpers.PrintFmtStr(`- ip: `, hostAlias.Ip, 5, true) +
+				strings.Replace(getDeploymentEnArray(hostAlias.Hostnames, "hostnames"), "   ", " ", -1)
+		}
+	} else {
+		str = `
+		  ` + name + `: {}`
+	}
 
 	return str
 }
@@ -566,8 +594,9 @@ func getDeploymentEnArray(stringArray []string, fieldName string) string {
 		str += `
 		        ` + fieldName + `:`
 		for _, stringValue := range stringArray {
+
 			str += `
-		          - ` + stringValue
+		          - ` + checkGetMultiline(stringValue, 10)
 		}
 	} else {
 		str += `
@@ -594,4 +623,13 @@ func getVolumeMounts(mounts []*deploymentEnv.VolumeMounts) string {
 	}
 
 	return str
+}
+
+func checkGetMultiline(str string, amountTabs int) string {
+	resp := ""
+
+	reg := regexp.MustCompile(`(.*)(\n)`)
+	resp = reg.ReplaceAllString(str, `|-$2`+helpers.GetSpaces(amountTabs*2)+`$1$2`+helpers.GetSpaces(amountTabs*2))
+
+	return resp
 }

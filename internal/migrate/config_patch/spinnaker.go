@@ -1,7 +1,6 @@
 package config_patch
 
 import (
-	"strconv"
 	"strings"
 
 	"github.com/austinthao5/golang_proto_test/config/deploymentConfigurations/spinnaker"
@@ -55,13 +54,13 @@ func GetSpinnakerExtensibilityPlugins(pluginsReference *spinnaker.Test) string {
 	str := ""
 
 	if nil != pluginsReference.Plugins {
-		for _, plugin := range pluginsReference.Plugins {
+		for key, plugin := range pluginsReference.Plugins {
 			str += `
 		  plugins:
-		    PLUGIN` + /*TODO plugin.name + */ `
-		      id: ` + plugin.Id + `
-		      enabled: ` + strconv.FormatBool(plugin.Enabled) + `
-		      version: ` + plugin.Version +
+		    ` + key + `:` +
+				helpers.PrintFmtStr(`id: `, plugin.Id, 7, true) +
+				helpers.PrintFmtBool(`enabled: `, plugin.Enabled, 7, true) +
+				helpers.PrintFmtStr(`version: `, plugin.Version, 7, true) +
 				GetSpinnakerPluginConfig(plugin.Config) +
 				GetSpinnakerPluginExtensions(plugin.Extensions)
 		}
@@ -95,9 +94,9 @@ func GetSpinnakerPluginExtensions(pluginExtensionRef []*spinnaker.Extensions) st
 	if nil != pluginExtensionRef {
 		for _, plugin := range pluginExtensionRef {
 			str += `
-		    ` + plugin.Name + `:
-		      id: ` + plugin.Id + `
-		      enabled: ` + strconv.FormatBool(plugin.Enabled) +
+		    ` + plugin.Name + `:` +
+				helpers.PrintFmtStr(`id: `, plugin.Id, 7, true) +
+				helpers.PrintFmtBool(`enabled: `, plugin.Enabled, 7, true) +
 				strings.Replace(GetSpinnakerPluginConfig(plugin.Config), "\t", "     ", -1)
 		}
 	} else {
