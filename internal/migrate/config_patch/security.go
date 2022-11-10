@@ -61,7 +61,8 @@ func GetAuthnSecurity(securityReference *security.Security) string {
 	}
 
 	str = `
-		authn:`
+		authn:` +
+		helpers.PrintFmtBool(`enabled: `, securityReference.Authn.Enabled, 5, true)
 
 	if nil != securityReference.Authn.Oauth2 {
 		str += `

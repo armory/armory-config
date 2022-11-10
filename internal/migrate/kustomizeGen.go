@@ -217,9 +217,9 @@ func GetSpinnakerServicePatch(KustomizeData structs.Kustomize) string {
         enabled: true
         accounts: []
       deck:
-      settings-local.js: |
-        window.spinnakerSettings.feature.kustomizeEnabled = true;
-        window.spinnakerSettings.feature.artifactsRewrite = true;
+        settings-local.js: |
+          window.spinnakerSettings.feature.kustomizeEnabled = true;
+          window.spinnakerSettings.feature.artifactsRewrite = true;
       echo: {}    # is the contents of ~/.hal/default/profiles/echo.yml
       fiat: {}    # is the contents of ~/.hal/default/profiles/fiat.yml
       front50: {} # is the contents of ~/.hal/default/profiles/front50.yml
@@ -242,11 +242,11 @@ func GetSpinnakerServicePatch(KustomizeData structs.Kustomize) string {
       rosco: {}
     files: {}
 
-    expose:
-    type: service
+  expose:
     service:
-      type: LoadBalancer
       overrides: {}
+      type: LoadBalancer
+    type: service
 `
 
 	return str

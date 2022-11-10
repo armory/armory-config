@@ -52,7 +52,7 @@ message Authn {
     Ldap ldap = 3;
     X509 x509 = 4;
     Iap iap = 5;
-
+    bool enabled = 6;
 }
 
 message Authz {
