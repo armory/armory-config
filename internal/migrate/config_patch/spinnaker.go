@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/austinthao5/golang_proto_test/config/deploymentConfigurations/spinnaker"
+	"github.com/austinthao5/golang_proto_test/internal/helpers"
 	"github.com/austinthao5/golang_proto_test/internal/migrate/structs"
 )
 
@@ -38,15 +39,13 @@ func GetSpinnakerExtensibility(spinnakerReference *spinnaker.Spinnaker) string {
 		if nil != spinnakerReference.Extensibility.Repositories /*&& "" != spinnakerReference.Extensibility.Repositories.Name*/ {
 			str += `
 		  repositories:
-		    ` + spinnakerReference.Extensibility.Repositories.Name + `:
-		      id:` + spinnakerReference.Extensibility.Repositories.Id + `
-		      url:` + spinnakerReference.Extensibility.Repositories.Url
+		    ` + spinnakerReference.Extensibility.Repositories.Name + `:` +
+				helpers.PrintFmtStr(`id: `, spinnakerReference.Extensibility.Repositories.Id, 7, true) +
+				helpers.PrintFmtStr(`url: `, spinnakerReference.Extensibility.Repositories.Url, 7, true)
 		} else {
 			str += `
 		  repositories: {}`
 		}
-
-		str = strings.Replace(str, "\t", "    ", -1)
 	}
 
 	return str

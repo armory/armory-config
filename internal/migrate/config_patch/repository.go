@@ -1,11 +1,11 @@
 package config_patch
 
 import (
-	"strconv"
 	"strings"
 
 	"github.com/austinthao5/golang_proto_test/config/deploymentConfigurations/permissions"
 	"github.com/austinthao5/golang_proto_test/config/deploymentConfigurations/repository"
+	"github.com/austinthao5/golang_proto_test/internal/helpers"
 	"github.com/austinthao5/golang_proto_test/internal/migrate/structs"
 )
 
@@ -24,8 +24,8 @@ func GetArtifactoryRepository(artifactoryRef *repository.Artifactory) string {
 
 	if nil != artifactoryRef {
 		str = `
-		artifactory:
-		  enabled: ` + strconv.FormatBool(artifactoryRef.Enabled) +
+		artifactory:` +
+			helpers.PrintFmtBool(`enabled: `, artifactoryRef.Enabled, 5, true) +
 			GetArtifactorySearches(artifactoryRef.Searches)
 		str = strings.Replace(str, "\t", "    ", -1)
 	} else {
@@ -45,15 +45,14 @@ func GetArtifactorySearches(artifactorySearchesRef []*repository.ArtifactorySear
 		str += `
 		  searches:`
 		for _, searches := range artifactorySearchesRef {
-			str += `
-		    - name: ` + searches.Name +
-				getArtifactoryPermissions(searches.Permissions) + `
-		      baseUrl: ` + searches.BaseUrl + `
-		      repo: ` + searches.Repo + `
-		      groupId: ` + searches.GroupId + `
-		      repoType: ` + searches.RepoType + `
-		      username: ` + searches.Username + `
-		      password: ` + searches.Password
+			str += helpers.PrintFmtStr(`- name: `, searches.Name, 6, true) +
+				getArtifactoryPermissions(searches.Permissions) +
+				helpers.PrintFmtStr(`baseUrl: `, searches.BaseUrl, 7, true) +
+				helpers.PrintFmtStr(`repo: `, searches.Repo, 7, true) +
+				helpers.PrintFmtStr(`groupId: `, searches.GroupId, 7, true) +
+				helpers.PrintFmtStr(`repoType: `, searches.RepoType, 7, true) +
+				helpers.PrintFmtStr(`username: `, searches.Username, 7, true) +
+				helpers.PrintFmtStr(`password: `, searches.Password, 7, true)
 		}
 	} else {
 		str += `
@@ -68,8 +67,8 @@ func GetNexusRepository(nexusRef *repository.Nexus) string {
 
 	if nil != nexusRef {
 		str = `
-		nexus:
-		  enabled: ` + strconv.FormatBool(nexusRef.Enabled) +
+		nexus:` +
+			helpers.PrintFmtBool(`enabled: `, nexusRef.Enabled, 5, true) +
 			GetNexusSearches(nexusRef.Searches)
 		str = strings.Replace(str, "\t", "    ", -1)
 	} else {
@@ -89,14 +88,13 @@ func GetNexusSearches(nexusSearchesRef []*repository.NexusSearch) string {
 		str += `
 		  searches:`
 		for _, searches := range nexusSearchesRef {
-			str += `
-		    - name: ` + searches.Name +
-				getArtifactoryPermissions(searches.Permissions) + `
-		      baseUrl: ` + searches.BaseUrl + `
-		      repo: ` + searches.Repo + `
-		      nodeId: ` + searches.NodeId + `
-		      username: ` + searches.Username + `
-		      password: ` + searches.Password
+			str += helpers.PrintFmtStr(`- name: `, searches.Name, 6, true) +
+				getArtifactoryPermissions(searches.Permissions) +
+				helpers.PrintFmtStr(`baseUrl: `, searches.BaseUrl, 7, true) +
+				helpers.PrintFmtStr(`repo: `, searches.Repo, 7, true) +
+				helpers.PrintFmtStr(`nodeId: `, searches.NodeId, 7, true) +
+				helpers.PrintFmtStr(`username: `, searches.Username, 7, true) +
+				helpers.PrintFmtStr(`password: `, searches.Password, 7, true)
 		}
 	} else {
 		str += `

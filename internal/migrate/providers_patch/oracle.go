@@ -1,10 +1,10 @@
 package providers_patch
 
 import (
-	"strconv"
 	"strings"
 
 	"github.com/austinthao5/golang_proto_test/config/deploymentConfigurations/providers"
+	"github.com/austinthao5/golang_proto_test/internal/helpers"
 )
 
 func (ProvidersData *Providers) SetOracle(providersRef *providers.Providers) error {
@@ -17,8 +17,8 @@ func (ProvidersData *Providers) SetOracle(providersRef *providers.Providers) err
 		ProvidersData.Enable = "oracle"
 	}
 
-	str := `enabled: ` + strconv.FormatBool(providersRef.Oracle.Enabled) + `
-	primaryAccount: ` + providersRef.Oracle.PrimaryAccount +
+	str := helpers.PrintFmtBool(`enabled: `, providersRef.Oracle.Enabled, 5, true) +
+		helpers.PrintFmtStr(`primaryAccount: `, providersRef.Oracle.PrimaryAccount, 5, true) +
 		GetOracleAccounts(providersRef.Oracle.Accounts) +
 		GetOracleBakeryDefaultsAccounts(providersRef.Oracle.BakeryDefaults)
 
@@ -35,18 +35,17 @@ func GetOracleAccounts(accounts []*providers.OracleAccounts) string {
 		str += `
 		  accounts:`
 		for _, account := range accounts {
-			str += `
-		    - name: ` + account.Name + `
-		      environment: ` + account.Environment +
+			str += helpers.PrintFmtStr(`- name: `, account.Name, 6, true) +
+				helpers.PrintFmtStr(`environment: `, account.Environment, 7, true) +
 				getProvidersStringArrayAppend(account.RequiredGroupMembership, "requiredGroupMembership", "- ") +
-				strings.Replace(getPermissions(account.Permissions), "\t", "     ", -1) + `
-		      compartmentId: ` + account.CompartmentId + `
-		      userId: ` + account.UserId + `
-		      fingerprint: ` + account.Fingerprint + `
-		      sshPrivateKeyFilePath: ` + account.SshPrivateKeyFilePath + `
-		      privateKeyPassphrase: ` + account.PrivateKeyPassphrase + `
-		      tenancyId: ` + account.TenancyId + `
-		      region: ` + account.Region
+				strings.Replace(getPermissions(account.Permissions), "\t", "     ", -1) +
+				helpers.PrintFmtStr(`compartmentId: `, account.CompartmentId, 7, true) +
+				helpers.PrintFmtStr(`userId: `, account.UserId, 7, true) +
+				helpers.PrintFmtStr(`fingerprint: `, account.Fingerprint, 7, true) +
+				helpers.PrintFmtStr(`sshPrivateKeyFilePath: `, account.SshPrivateKeyFilePath, 7, true) +
+				helpers.PrintFmtStr(`privateKeyPassphrase: `, account.PrivateKeyPassphrase, 7, true) +
+				helpers.PrintFmtStr(`tenancyId: `, account.TenancyId, 7, true) +
+				helpers.PrintFmtStr(`region: `, account.Region, 7, true)
 			//   getProvidersStringArray(account.Regions, "regions") + `
 		}
 	} else {
@@ -63,12 +62,12 @@ func GetOracleBakeryDefaultsAccounts(bakeryDefault *providers.OracleBakery) stri
 
 	if nil != bakeryDefault {
 		str += `
-		  bakeryDefaults:` + `
-		    templateFile: ` + bakeryDefault.TemplateFile +
-			GetOracleBaseImages(bakeryDefault.BaseImages) + `
-		    availabilityDomain: ` + bakeryDefault.AvailabilityDomain + `
-		    subnetId: ` + bakeryDefault.SubnetId + `
-		    instanceShape: ` + bakeryDefault.InstanceShape
+		  bakeryDefaults:` +
+			helpers.PrintFmtStr(`templateFile: `, bakeryDefault.TemplateFile, 6, true) +
+			GetOracleBaseImages(bakeryDefault.BaseImages) +
+			helpers.PrintFmtStr(`availabilityDomain: `, bakeryDefault.AvailabilityDomain, 6, true) +
+			helpers.PrintFmtStr(`subnetId: `, bakeryDefault.SubnetId, 6, true) +
+			helpers.PrintFmtStr(`instanceShape: `, bakeryDefault.InstanceShape, 6, true)
 	} else {
 		str += `
 		  bakeryDefaults: []`
@@ -87,19 +86,19 @@ func GetOracleBaseImages(baseImages []*providers.OracleBaseImages) string {
 		for _, baseImage := range baseImages {
 			if nil != baseImage.BaseImage {
 				str += `
-			  - baseImage:
-			    id: ` + baseImage.BaseImage.Id + `
-			    shortDescription: ` + baseImage.BaseImage.ShortDescription + `
-			    detailedDescription: ` + baseImage.BaseImage.DetailedDescription + `
-			    packageType: ` + baseImage.BaseImage.PackageType + `
-			    templateFile: ` + baseImage.BaseImage.TemplateFile
+			  - baseImage:` +
+					helpers.PrintFmtStr(`id: `, baseImage.BaseImage.Id, 8, true) +
+					helpers.PrintFmtStr(`shortDescription: `, baseImage.BaseImage.ShortDescription, 8, true) +
+					helpers.PrintFmtStr(`detailedDescription: `, baseImage.BaseImage.DetailedDescription, 8, true) +
+					helpers.PrintFmtStr(`packageType: `, baseImage.BaseImage.PackageType, 8, true) +
+					helpers.PrintFmtStr(`templateFile: `, baseImage.BaseImage.TemplateFile, 8, true)
 			}
 			//for _, virtualSetting := range baseImage.VirtualizationSettings {
 			if nil != baseImage.VirtualizationSettings {
 				str += `
-			    virtualizationSettings:
-			      baseImageId: ` + baseImage.VirtualizationSettings.BaseImageId + `
-			      sshUserName: ` + baseImage.VirtualizationSettings.SshUserName
+			    virtualizationSettings:` +
+					helpers.PrintFmtStr(`baseImageId: `, baseImage.VirtualizationSettings.BaseImageId, 9, true) +
+					helpers.PrintFmtStr(`sshUserName: `, baseImage.VirtualizationSettings.SshUserName, 9, true)
 			}
 			//}
 		}

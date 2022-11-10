@@ -1,7 +1,6 @@
 package config_patch
 
 import (
-	"strconv"
 	"strings"
 
 	"github.com/austinthao5/golang_proto_test/config/deploymentConfigurations/ci"
@@ -29,8 +28,8 @@ func GetJenkinsCi(ciReference *ci.Ci) string {
 
 	if nil != ciReference.Jenkins {
 		str = `
-		jenkins:
-		  enabled: ` + strconv.FormatBool(ciReference.Jenkins.Enabled) +
+		jenkins:` +
+			helpers.PrintFmtBool(`enabled: `, ciReference.Jenkins.Enabled, 5, true) +
 			GetJenkinsCiMasters(ciReference.Jenkins)
 		str = strings.Replace(str, "\t", "    ", -1)
 	}
@@ -45,13 +44,12 @@ func GetJenkinsCiMasters(jenkins *ci.Jenkins) string {
 		str += `
 		  masters:`
 		for _, master := range jenkins.Masters {
-			str += `
-		    - name: ` + master.Name +
-				getCiPermissions(master.Permissions) + `
-		      address: ` + master.Address + `
-		      username: ` + master.Username + `
-		      password: ` + master.Password + `
-		      csrf: ` + strconv.FormatBool(master.Csrf)
+			str += helpers.PrintFmtStr(`- name: `, master.Name, 6, true) +
+				getCiPermissions(master.Permissions) +
+				helpers.PrintFmtStr(`address: `, master.Address, 7, true) +
+				helpers.PrintFmtStr(`username: `, master.Username, 7, true) +
+				helpers.PrintFmtStr(`password: `, master.Password, 7, true) +
+				helpers.PrintFmtBool(`csrf: `, master.Csrf, 7, true)
 		}
 	} else {
 		str += `
@@ -66,8 +64,8 @@ func GetTravisCi(ciReference *ci.Ci) string {
 
 	if nil != ciReference.Travis {
 		str = `
-		travis:
-		  enabled: ` + strconv.FormatBool(ciReference.Travis.Enabled) +
+		travis:` +
+			helpers.PrintFmtBool(`enabled: `, ciReference.Travis.Enabled, 5, true) +
 			GetTravisCiMasters(ciReference.Travis)
 
 		str = strings.Replace(str, "\t", "    ", -1)
@@ -82,13 +80,12 @@ func GetTravisCiMasters(travis *ci.Travis) string {
 		str += `
 		  masters:`
 		for _, master := range travis.Masters {
-			str += `
-		    - name: ` + master.Name +
-				getCiPermissions(master.Permission) + `
-		      address: ` + master.Address + `
-		      baseUrl: ` + master.BaseUrl + `
-		      githubToken: ` + master.GithubToken + `
-		      numberOfRepositories: ` + helpers.IntToString(master.NumberOfRepositories) +
+			str += helpers.PrintFmtStr(`- name: `, master.Name, 6, true) +
+				getCiPermissions(master.Permission) +
+				helpers.PrintFmtStr(`address: `, master.Address, 7, true) +
+				helpers.PrintFmtStr(`baseUrl: `, master.BaseUrl, 7, true) +
+				helpers.PrintFmtStr(`githubToken: `, master.GithubToken, 7, true) +
+				helpers.PrintFmtInt(`numberOfRepositories: `, master.NumberOfRepositories, 7, true) +
 				getFilteredRepositories(master.FilteredRepositories, "filteredRepositories", "- ")
 		}
 	} else {
@@ -104,8 +101,8 @@ func GetWerckerCi(ciReference *ci.Ci) string {
 
 	if nil != ciReference.Wercker {
 		str = `
-		wercker:
-		  enabled: ` + strconv.FormatBool(ciReference.Wercker.Enabled) +
+		wercker:` +
+			helpers.PrintFmtBool(`enabled: `, ciReference.Wercker.Enabled, 5, true) +
 			GetWerckerCiMasters(ciReference.Wercker)
 
 		str = strings.Replace(str, "\t", "    ", -1)
@@ -120,12 +117,11 @@ func GetWerckerCiMasters(wercker *ci.Wercker) string {
 		str += `
 		  masters:`
 		for _, master := range wercker.Masters {
-			str += `
-		    - name: ` + master.Name +
-				getCiPermissions(master.Permission) + `
-		      address: ` + master.Address + `
-		      user: ` + master.User + `
-		      token: ` + master.Token
+			str += helpers.PrintFmtStr(`- name: `, master.Name, 6, true) +
+				getCiPermissions(master.Permission) +
+				helpers.PrintFmtStr(`address: `, master.Address, 7, true) +
+				helpers.PrintFmtStr(`user: `, master.User, 7, true) +
+				helpers.PrintFmtStr(`token: `, master.Token, 7, true)
 		}
 	} else {
 		str += `
@@ -140,8 +136,8 @@ func GetConcourseCi(ciReference *ci.Ci) string {
 
 	if nil != ciReference.Concourse {
 		str = `
-		concourse:
-		  enabled: ` + strconv.FormatBool(ciReference.Concourse.Enabled) +
+		concourse:` +
+			helpers.PrintFmtBool(`enabled: `, ciReference.Concourse.Enabled, 5, true) +
 			GetConcourseCiMasters(ciReference.Concourse)
 
 		str = strings.Replace(str, "\t", "    ", -1)
@@ -156,12 +152,11 @@ func GetConcourseCiMasters(concourse *ci.Concourse) string {
 		str += `
 		  masters:`
 		for _, master := range concourse.Masters {
-			str += `
-		    - name: ` + master.Name +
-				getCiPermissions(master.Permission) + `
-		      url: ` + master.Url + `
-		      username: ` + master.Username + `
-		      password: ` + master.Password
+			str += helpers.PrintFmtStr(`- name: `, master.Name, 6, true) +
+				getCiPermissions(master.Permission) +
+				helpers.PrintFmtStr(`url: `, master.Url, 7, true) +
+				helpers.PrintFmtStr(`username: `, master.Username, 7, true) +
+				helpers.PrintFmtStr(`password: `, master.Password, 7, true)
 		}
 	} else {
 		str += `
@@ -176,8 +171,8 @@ func GetGcbCi(ciReference *ci.Ci) string {
 
 	if nil != ciReference.Gcb {
 		str = `
-		gcb:
-		  enabled: ` + strconv.FormatBool(ciReference.Gcb.Enabled) +
+		gcb:` +
+			helpers.PrintFmtBool(`enabled: `, ciReference.Gcb.Enabled, 5, true) +
 			GetGcbCiAccounts(ciReference.Gcb)
 
 		str = strings.Replace(str, "\t", "    ", -1)
@@ -192,12 +187,11 @@ func GetGcbCiAccounts(gcb *ci.Gcb) string {
 		str += `
 		  accounts:`
 		for _, account := range gcb.Accounts {
-			str += `
-		    - name: ` + account.Name + `
-		      permission: ` + account.Permission + `
-		      project: ` + account.Project + `
-		      subscriptionName: ` + account.SubscriptionName + `
-		      jsonKey: ` + account.JsonKey
+			str += helpers.PrintFmtStr(`- name: `, account.Name, 6, true) +
+				helpers.PrintFmtStr(`permission: `, account.Permission, 7, true) +
+				helpers.PrintFmtStr(`project: `, account.Project, 7, true) +
+				helpers.PrintFmtStr(`subscriptionName: `, account.SubscriptionName, 7, true) +
+				helpers.PrintFmtStr(`jsonKey: `, account.JsonKey, 7, true)
 		}
 	} else {
 		str += `
@@ -212,8 +206,8 @@ func GetCodebuildCi(ciReference *ci.Ci) string {
 
 	if nil != ciReference.Codebuild {
 		str = `
-		codebuild:
-		  enabled: ` + strconv.FormatBool(ciReference.Codebuild.Enabled) +
+		codebuild:` +
+			helpers.PrintFmtBool(`enabled: `, ciReference.Codebuild.Enabled, 5, true) +
 			GetCodebuildCiAccounts(ciReference.Codebuild)
 
 		str = strings.Replace(str, "\t", "    ", -1)
@@ -228,12 +222,11 @@ func GetCodebuildCiAccounts(codebuild *ci.Codebuild) string {
 		str += `
 		  accounts:`
 		for _, account := range codebuild.Accounts {
-			str += `
-		    - name: ` + account.Name + `
-		      permission: ` + account.Permission + `
-		      accountId: ` + account.AccountId + `
-		      assumeRole: ` + account.AssumeRole + `
-		      region: ` + account.Region
+			str += helpers.PrintFmtStr(`- name: `, account.Name, 6, true) +
+				helpers.PrintFmtStr(`permission: `, account.Permission, 7, true) +
+				helpers.PrintFmtStr(`accountId: `, account.AccountId, 7, true) +
+				helpers.PrintFmtStr(`assumeRole: `, account.AssumeRole, 7, true) +
+				helpers.PrintFmtStr(`region: `, account.Region, 7, true)
 		}
 	} else {
 		str += `

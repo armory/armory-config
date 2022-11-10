@@ -1,7 +1,6 @@
 package config_patch
 
 import (
-	"strconv"
 	"strings"
 
 	"github.com/austinthao5/golang_proto_test/config/deploymentConfigurations/stats"
@@ -19,13 +18,12 @@ func GetStats(KustomizeData structs.Kustomize) string {
 }
 
 func GetStatsConfig(statsReference *stats.Stats) string {
-	str := `
-	enabled: ` + strconv.FormatBool(statsReference.Enabled) + `
-	endpoint: ` + statsReference.Endpoint + `
-	instanceId: ` + statsReference.InstanceId +
-		getDeploymentMethodStats(statsReference) + `
-	connectionTimeoutMillis: ` + helpers.IntToString(statsReference.ConnectionTimeoutMillis) + `
-	readTimeoutMillis: ` + helpers.IntToString(statsReference.ReadTimeoutMillis)
+	str := helpers.PrintFmtBool(`enabled: `, statsReference.Enabled, 4, true) +
+		helpers.PrintFmtStr(`endpoint: `, statsReference.Endpoint, 4, true) +
+		helpers.PrintFmtStr(`instanceId: `, statsReference.InstanceId, 4, true) +
+		getDeploymentMethodStats(statsReference) +
+		helpers.PrintFmtInt(`connectionTimeoutMillis: `, statsReference.ConnectionTimeoutMillis, 4, true) +
+		helpers.PrintFmtInt(`readTimeoutMillis: `, statsReference.ReadTimeoutMillis, 4, true)
 
 	str = strings.Replace(str, "\t", "        ", -1)
 	return str

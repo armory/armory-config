@@ -1,10 +1,8 @@
 package config_patch
 
 import (
-	"strconv"
-	"strings"
-
 	"github.com/austinthao5/golang_proto_test/config/deploymentConfigurations/canary"
+	"github.com/austinthao5/golang_proto_test/internal/helpers"
 	"github.com/austinthao5/golang_proto_test/internal/migrate/structs"
 )
 
@@ -18,20 +16,16 @@ func GetCanary(KustomizeData structs.Kustomize) string {
 }
 
 func GetCanaryConfig(canaryReference *canary.Canary) string {
-	str := `
-		enabled: ` + strconv.FormatBool(canaryReference.Enabled)
+	str := helpers.PrintFmtBool(`enabled: `, canaryReference.Enabled, 4, true)
 
 	if nil != canaryReference.ServiceIntegrations {
 		str += GetCanaryServiceIntegrations(canaryReference)
 	}
-	str += `
-		reduxLoggerEnabled: ` + strconv.FormatBool(canaryReference.ReduxLogger) + `
-		defaultJudge: ` + canaryReference.DefaultJudge + `
-		stagesEnabled: ` + strconv.FormatBool(canaryReference.StagesEnabled) + `
-		templatesEnabled: ` + strconv.FormatBool(canaryReference.TemplatesEnabled) + `
-		showAllConfigsEnabled: ` + strconv.FormatBool(canaryReference.ShowAllConfigsEnabled)
-
-	str = strings.Replace(str, "\t", "    ", -1)
+	str += helpers.PrintFmtBool(`reduxLoggerEnabled: `, canaryReference.ReduxLogger, 4, true) +
+		helpers.PrintFmtStr(`defaultJudge: `, canaryReference.DefaultJudge, 4, true) +
+		helpers.PrintFmtBool(`stagesEnabled: `, canaryReference.StagesEnabled, 4, true) +
+		helpers.PrintFmtBool(`templatesEnabled: `, canaryReference.TemplatesEnabled, 4, true) +
+		helpers.PrintFmtBool(`showAllConfigsEnabled: `, canaryReference.ShowAllConfigsEnabled, 4, true)
 
 	return str
 }
@@ -45,13 +39,12 @@ func GetCanaryServiceIntegrations(canary *canary.Canary) string {
 		serviceIntegrations:`
 
 		for _, serviceInteg := range canary.ServiceIntegrations {
-			str += `
-		  - name: ` + serviceInteg.Name + `
-		    enabled: ` + strconv.FormatBool(serviceInteg.Enabled) + `
-		    gcsEnabledd: ` + strconv.FormatBool(serviceInteg.GcsEnabled) +
-				getCanaryAccounts(serviceInteg.Accounts) + `
-		    stackdriverEnabled: ` + strconv.FormatBool(serviceInteg.StackdriverEnabled) + `
-		    s3Enabled: ` + strconv.FormatBool(serviceInteg.S3Enabled)
+			str += helpers.PrintFmtStr(`- name: `, serviceInteg.Name, 5, true) +
+				helpers.PrintFmtBool(`enabled: `, serviceInteg.Enabled, 6, true) +
+				helpers.PrintFmtBool(`gcsEnabled: `, serviceInteg.GcsEnabled, 6, true) +
+				getCanaryAccounts(serviceInteg.Accounts) +
+				helpers.PrintFmtBool(`stackdriverEnabled: `, serviceInteg.StackdriverEnabled, 6, true) +
+				helpers.PrintFmtBool(`s3Enabled: `, serviceInteg.S3Enabled, 6, true)
 		}
 	} else {
 		str += `
@@ -75,28 +68,27 @@ func getCanaryAccounts(accounts []*canary.CanaryAccounts) string {
 				baseUrlEndpoint = account.Endpoint.BaseUrl
 			}
 
-			str += `
-		      - name: ` + account.Name + `
-		        project: ` + account.Project + `
-		        jsonPath: ` + account.JsonPath + `
-		        bucket: ` + account.Bucket + `
-		        bucketLocation: ` + account.BucketLocation + `
-		        rootFolder: ` + account.RootFolder +
+			str += helpers.PrintFmtStr(`- name: `, account.Name, 6, true) +
+				helpers.PrintFmtStr(`project: `, account.Project, 7, true) +
+				helpers.PrintFmtStr(`jsonPath: `, account.JsonPath, 7, true) +
+				helpers.PrintFmtStr(`bucket: `, account.Bucket, 7, true) +
+				helpers.PrintFmtStr(`bucketLocation: `, account.BucketLocation, 7, true) +
+				helpers.PrintFmtStr(`rootFolder: `, account.RootFolder, 7, true) +
 				getSupportedTypes(account.SupportedTypes) + `
-		        endpoint:
-		          baseUrl: ` + baseUrlEndpoint + `
-		        username: ` + account.Username + `
-		        password: ` + account.Password + `
-		        usernamePasswordFile: ` + account.UsernamePasswordFile + `
-		        apiKey: ` + account.ApiKey + `
-		        applicationKey: ` + account.ApplicationKey + `
-		        accessToken: ` + account.AccessToken + `
-		        defaultScopeKey: ` + account.DefaultScopeKey + `
-		        defaultLocationKey: ` + account.DefaultLocationKey + `
-		        region: ` + account.Region + `
-		        profileName: ` + account.ProfileName + `
-		        accessKeyId: ` + account.AccessKeyId + `
-		        secretAccessKey: ` + account.SecretAccessKey
+		      endpoint:` +
+				helpers.PrintFmtStr(`baseUrl: `, baseUrlEndpoint, 8, true) +
+				helpers.PrintFmtStr(`username: `, account.Username, 7, true) +
+				helpers.PrintFmtStr(`password: `, account.Password, 7, true) +
+				helpers.PrintFmtStr(`usernamePasswordFile: `, account.UsernamePasswordFile, 7, true) +
+				helpers.PrintFmtStr(`apiKey: `, account.ApiKey, 7, true) +
+				helpers.PrintFmtStr(`applicationKey: `, account.ApplicationKey, 7, true) +
+				helpers.PrintFmtStr(`accessToken: `, account.AccessToken, 7, true) +
+				helpers.PrintFmtStr(`defaultScopeKey: `, account.DefaultScopeKey, 7, true) +
+				helpers.PrintFmtStr(`defaultLocationKey: `, account.DefaultLocationKey, 7, true) +
+				helpers.PrintFmtStr(`region: `, account.Region, 7, true) +
+				helpers.PrintFmtStr(`profileName: `, account.ProfileName, 7, true) +
+				helpers.PrintFmtStr(`accessKeyId: `, account.AccessKeyId, 7, true) +
+				helpers.PrintFmtStr(`secretAccessKey: `, account.SecretAccessKey, 7, true)
 		}
 	} else {
 		str += `
@@ -111,14 +103,14 @@ func getSupportedTypes(supTypes []string) string {
 
 	if nil != supTypes {
 		str += `
-		        supportedTypes:`
+		      supportedTypes:`
 		for _, supType := range supTypes {
 			str += `
-		          - ` + supType
+		        - ` + supType
 		}
 	} else {
 		str += `
-		        supportedTypes: []`
+		      supportedTypes: []`
 	}
 
 	return str

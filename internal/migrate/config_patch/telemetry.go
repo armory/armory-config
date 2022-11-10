@@ -1,9 +1,6 @@
 package config_patch
 
 import (
-	"strconv"
-	"strings"
-
 	"github.com/austinthao5/golang_proto_test/config/deploymentConfigurations/telemetry"
 	"github.com/austinthao5/golang_proto_test/internal/helpers"
 	"github.com/austinthao5/golang_proto_test/internal/migrate/structs"
@@ -20,13 +17,11 @@ func GetTelemetry(KustomizeData structs.Kustomize) string {
 
 func GetTelemetryConfig(telemetryReference *telemetry.Telemetry) string {
 
-	str := `
-	enabled: ` + strconv.FormatBool(telemetryReference.Enabled) + `
-	endpoint: ` + telemetryReference.Endpoint + `
-	instanceId: ` + telemetryReference.InstanceId + `
-	connectionTimeoutMillis: ` + helpers.IntToString(telemetryReference.ConnectionTimeoutMillis) + `
-	readTimeoutMillis: ` + helpers.IntToString(telemetryReference.ReadTimeoutMillis)
+	str := helpers.PrintFmtBool(`enabled: `, telemetryReference.Enabled, 4, true) +
+		helpers.PrintFmtStr(`endpoint: `, telemetryReference.Endpoint, 4, true) +
+		helpers.PrintFmtStr(`instanceId: `, telemetryReference.InstanceId, 4, true) +
+		helpers.PrintFmtInt(`connectionTimeoutMillis: `, telemetryReference.ConnectionTimeoutMillis, 4, true) +
+		helpers.PrintFmtInt(`readTimeoutMillis: `, telemetryReference.ReadTimeoutMillis, 4, true)
 
-	str = strings.Replace(str, "\t", "        ", -1)
 	return str
 }

@@ -1,7 +1,6 @@
 package providers_patch
 
 import (
-	"strconv"
 	"strings"
 
 	"github.com/austinthao5/golang_proto_test/config/deploymentConfigurations/providers"
@@ -18,8 +17,8 @@ func (ProvidersData *Providers) SetDockerRegistry(providersRef *providers.Provid
 		ProvidersData.Enable = "dockerRegistry"
 	}
 
-	str := `enabled: ` + strconv.FormatBool(providersRef.DockerRegistry.Enabled) + `
-	primaryAccount: ` + providersRef.DockerRegistry.PrimaryAccount +
+	str := helpers.PrintFmtBool(`enabled: `, providersRef.DockerRegistry.Enabled, 5, true) +
+		helpers.PrintFmtStr(`primaryAccount: `, providersRef.DockerRegistry.PrimaryAccount, 5, true) +
 		GetDockerRegistryAccounts(providersRef.DockerRegistry.Accounts)
 
 	str = strings.Replace(str, "\t", "          ", -1)
@@ -35,25 +34,24 @@ func GetDockerRegistryAccounts(accounts []*providers.DockerRegistryAcc) string {
 		str += `
 		  accounts:`
 		for _, account := range accounts {
-			str += `
-		  - name: ` + account.Name +
+			str += helpers.PrintFmtStr(`- name: `, account.Name, 5, true) +
 				strings.Replace(getProvidersStringArrayAppend(account.RequiredGroupMembership, "requiredGroupMembership", "- "), "\t", "   ", -1) +
-				getPermissions(account.Permissions) + `
-		    address: ` + account.Address + `
-		    username: ` + account.Username + `
-		    email: ` + account.Email + `
-		    cacheIntervalSeconds: ` + helpers.IntToString(account.CacheIntervalSeconds) + `
-		    clientTimeoutMillis: ` + helpers.IntToString(account.ClientTimeoutMillis) + `
-		    cacheThreads: ` + helpers.IntToString(account.CacheThreads) + `
-		    paginateSize: ` + helpers.IntToString(account.PaginateSize) + `
-		    sortTagsByDate: ` + strconv.FormatBool(account.SortTagsByDate) + `
-		    trackDigests: ` + strconv.FormatBool(account.TrackDigests) + `
-		    insecureRegistry: ` + strconv.FormatBool(account.InsecureRegistry) + `
-		    environment: ` + account.Environment + `
-		    password: ` + account.Password + `
-		    passwordCommand: ` + account.PasswordCommand +
-				strings.Replace(getProvidersStringArrayAppend(account.Repositories, "repositories", "- "), "\t", "   ", -1) + `
-		    passwordFile: ` + account.PasswordFile
+				getPermissions(account.Permissions) +
+				helpers.PrintFmtStr(`address: `, account.Address, 6, true) +
+				helpers.PrintFmtStr(`username: `, account.Username, 6, true) +
+				helpers.PrintFmtStr(`email: `, account.Email, 6, true) +
+				helpers.PrintFmtInt(`cacheIntervalSeconds: `, account.CacheIntervalSeconds, 6, true) +
+				helpers.PrintFmtInt(`clientTimeoutMillis: `, account.ClientTimeoutMillis, 6, true) +
+				helpers.PrintFmtInt(`cacheThreads: `, account.CacheThreads, 6, true) +
+				helpers.PrintFmtInt(`paginateSize: `, account.PaginateSize, 6, true) +
+				helpers.PrintFmtBool(`sortTagsByDate: `, account.SortTagsByDate, 6, true) +
+				helpers.PrintFmtBool(`trackDigests: `, account.TrackDigests, 6, true) +
+				helpers.PrintFmtBool(`insecureRegistry: `, account.InsecureRegistry, 6, true) +
+				helpers.PrintFmtStr(`environment: `, account.Environment, 6, true) +
+				helpers.PrintFmtStr(`password: `, account.Password, 6, true) +
+				helpers.PrintFmtStr(`passwordCommand: `, account.PasswordCommand, 6, true) +
+				strings.Replace(getProvidersStringArrayAppend(account.Repositories, "repositories", "- "), "\t", "   ", -1) +
+				helpers.PrintFmtStr(`passwordFile: `, account.PasswordFile, 6, true)
 		}
 	} else {
 		str += `

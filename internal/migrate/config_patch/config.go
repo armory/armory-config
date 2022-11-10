@@ -3,6 +3,8 @@ package config_patch
 import (
 	"strings"
 
+	"github.com/austinthao5/golang_proto_test/config/deploymentConfigurations"
+	"github.com/austinthao5/golang_proto_test/internal/helpers"
 	"github.com/austinthao5/golang_proto_test/internal/migrate/structs"
 )
 
@@ -10,25 +12,24 @@ func GetConfigData(KustomizeData structs.Kustomize) string {
 	str := ""
 
 	if nil != KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos] {
-		str = GetGeneralConfig(KustomizeData) +
+		str = GetGeneralConfig(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos]) +
 			GetSpecificConfig(KustomizeData)
 	}
 	return str
 }
 
-func GetGeneralConfig(KustomizeData structs.Kustomize) string {
+func GetGeneralConfig(deployConfigRef *deploymentConfigurations.DeploymentConfigurations) string {
 	str := `
-# === General Config ===
-	  version: ` + KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Version + `  # the version of Spinnaker to be deployed
-	  timezone: ` + KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Timezone + `
-`
+# === General Config ===` +
+		helpers.PrintFmtStr(`version: `, deployConfigRef.Version, 3, true) +
+		helpers.PrintFmtStr(`timezone: `, deployConfigRef.Timezone, 3, true)
 
-	str = strings.Replace(str, "\t", "    ", -1)
 	return str
 }
 
 func GetSpecificConfig(KustomizeData structs.Kustomize) string {
 	str := `
+
 # === Persistent Storage ===
 	  persistentStorage:` +
 		GetPersistentStorage(KustomizeData) + `

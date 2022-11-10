@@ -1,7 +1,6 @@
 package config_patch
 
 import (
-	"strconv"
 	"strings"
 
 	"github.com/austinthao5/golang_proto_test/config/deploymentConfigurations/metricStores"
@@ -25,12 +24,13 @@ func GetMetricStores(KustomizeData structs.Kustomize) string {
 func GetDatadogMetrics(metricsReference *metricStores.MetricStores) string {
 	str := ""
 
+	//TODO check if api_key or api-key, also add_source_metalabels, credentials_path
 	if nil != metricsReference.Datadog {
 		str = `
-		datadog:
-		  enabled: ` + strconv.FormatBool(metricsReference.Datadog.Enabled) + `
-		  api_key: ` + metricsReference.Datadog.ApiKey + `
-		  app_key: ` + metricsReference.Datadog.AppKey
+		datadog:` +
+			helpers.PrintFmtBool(`enabled: `, metricsReference.Datadog.Enabled, 5, true) +
+			helpers.PrintFmtStr(`api_key: `, metricsReference.Datadog.ApiKey, 5, true) +
+			helpers.PrintFmtStr(`app_key: `, metricsReference.Datadog.AppKey, 5, true)
 
 		if nil != metricsReference.Datadog.Tags {
 			str += `
@@ -55,12 +55,10 @@ func GetPrometheusMetrics(metricsReference *metricStores.MetricStores) string {
 
 	if nil != metricsReference.Prometheus {
 		str = `
-		prometheus:
-		  enabled: ` + strconv.FormatBool(metricsReference.Prometheus.Enabled) + `
-		  push-gateway: ` + metricsReference.Prometheus.PushGateway + `
-		  add_source_metalabels: ` + strconv.FormatBool(metricsReference.Prometheus.AddSourceMetalabels)
-
-		str = strings.Replace(str, "\t", "    ", -1)
+		prometheus:` +
+			helpers.PrintFmtBool(`enabled: `, metricsReference.Prometheus.Enabled, 5, true) +
+			helpers.PrintFmtStr(`push-gateway: `, metricsReference.Prometheus.PushGateway, 5, true) +
+			helpers.PrintFmtBool(`add_source_metalabels: `, metricsReference.Prometheus.AddSourceMetalabels, 5, true)
 	}
 	return str
 }
@@ -70,13 +68,11 @@ func GetStackdriverMetrics(metricsReference *metricStores.MetricStores) string {
 
 	if nil != metricsReference.Stackdriver {
 		str = `
-		stackdriver:
-		  enabled: ` + strconv.FormatBool(metricsReference.Stackdriver.Enabled) + `
-		  project: ` + metricsReference.Stackdriver.Project + `                              # (Required). The project Spinnaker’s metricsReference should be published to.
-		  zone: ` + metricsReference.Stackdriver.Zone + `                                    # (Required). The zone Spinnaker’s metricsReference should be associated with.
-		  credentials_path: ` + metricsReference.Stackdriver.CredentialsPath + `             # (Secret). A path to a Google JSON service account that has permission to publish metricsReference.`
-
-		str = strings.Replace(str, "\t", "    ", -1)
+		stackdriver:` +
+			helpers.PrintFmtBool(`enabled: `, metricsReference.Stackdriver.Enabled, 5, true) +
+			helpers.PrintFmtStr(`project: `, metricsReference.Stackdriver.Project, 5, true) +
+			helpers.PrintFmtStr(`zone: `, metricsReference.Stackdriver.Zone, 5, true) +
+			helpers.PrintFmtStr(`credentials_path: `, metricsReference.Stackdriver.CredentialsPath, 5, true)
 	}
 	return str
 }
@@ -86,10 +82,10 @@ func GetNewrelicMetrics(metricsReference *metricStores.MetricStores) string {
 
 	if nil != metricsReference.Newrelic {
 		str = `
-		newrelic:
-		  enabled: ` + strconv.FormatBool(metricsReference.Newrelic.Enabled) + `
-		  insert-key: ` + metricsReference.Newrelic.InsertKey + `
-		  host: ` + metricsReference.Newrelic.Host
+		newrelic:` +
+			helpers.PrintFmtBool(`enabled: `, metricsReference.Newrelic.Enabled, 5, true) +
+			helpers.PrintFmtStr(`insert-key: `, metricsReference.Newrelic.InsertKey, 5, true) +
+			helpers.PrintFmtStr(`host: `, metricsReference.Newrelic.Host, 5, true)
 
 		if nil != metricsReference.Newrelic &&
 			nil != metricsReference.Newrelic.Tags {
@@ -109,11 +105,6 @@ func GetNewrelicMetrics(metricsReference *metricStores.MetricStores) string {
 }
 
 func GetMetricStoresGenMetrics(metricsReference *metricStores.MetricStores) string {
-
-	str := `
-	period: ` + helpers.IntToString(metricsReference.Period) + `
-	enabled: ` + strconv.FormatBool(metricsReference.Enabled)
-
-	str = strings.Replace(str, "\t", "        ", -1)
-	return str
+	return helpers.PrintFmtInt(`period: `, metricsReference.Period, 4, true) +
+		helpers.PrintFmtBool(`enabled: `, metricsReference.Enabled, 4, true)
 }

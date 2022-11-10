@@ -1,10 +1,8 @@
 package config_patch
 
 import (
-	"strconv"
-	"strings"
-
 	"github.com/austinthao5/golang_proto_test/config/deploymentConfigurations/webhook"
+	"github.com/austinthao5/golang_proto_test/internal/helpers"
 	"github.com/austinthao5/golang_proto_test/internal/migrate/structs"
 )
 
@@ -22,16 +20,14 @@ func GetWebhookData(webhookReference *webhook.Webhook) string {
 
 	if nil != webhookReference.Trust {
 		str += `
-		trust:
-		  enabled: ` + strconv.FormatBool(webhookReference.Trust.Enabled) + `
-		  trustStore: ` + webhookReference.Trust.TrustStore + `
-		  trustStorePassword: '` + webhookReference.Trust.TrustStorePassword + `'`
+		trust:` +
+			helpers.PrintFmtBool(`enabled: `, webhookReference.Trust.Enabled, 5, true) +
+			helpers.PrintFmtStr(`trustStore: `, webhookReference.Trust.TrustStore, 5, true) +
+			helpers.PrintFmtStrApostrophe(`trustStorePassword: `, webhookReference.Trust.TrustStorePassword, 5, true)
 	} else {
 		str += `
 		trust: []`
 	}
-
-	str = strings.Replace(str, "\t", "    ", -1)
 
 	return str
 }

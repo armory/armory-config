@@ -1,10 +1,8 @@
 package config_patch
 
 import (
-	"strconv"
-	"strings"
-
 	"github.com/austinthao5/golang_proto_test/config/deploymentConfigurations/security"
+	"github.com/austinthao5/golang_proto_test/internal/helpers"
 	"github.com/austinthao5/golang_proto_test/internal/migrate/structs"
 )
 
@@ -25,34 +23,32 @@ func GetUiApiSecurity(securityReference *security.Security) string {
 	if nil != securityReference.ApiSecurity {
 		str = `
 		apiSecurity:
-		  ssl:
-		    enabled: ` + strconv.FormatBool(securityReference.ApiSecurity.Ssl.Enabled) + `
-		    keyAlias: ` + securityReference.ApiSecurity.Ssl.KeyAlias + `
-		    keyStore: ` + securityReference.ApiSecurity.Ssl.KeyStore + `
-		    keyStoreType: ` + securityReference.ApiSecurity.Ssl.KeyStoreType + `
-		    keyStorePassword: ` + securityReference.ApiSecurity.Ssl.KeyStorePassword + `
-		    trustStore: ` + securityReference.ApiSecurity.Ssl.TrustStore + `
-		    trustStoreType: ` + securityReference.ApiSecurity.Ssl.TrustStoreType + `
-		    trustStorePassword: ` + securityReference.ApiSecurity.Ssl.TrustStorePassword + `
-		  overrideBaseUrl: ` + securityReference.ApiSecurity.OverrideBaseUrl
+		  ssl:` +
+			helpers.PrintFmtBool(`enabled: `, securityReference.ApiSecurity.Ssl.Enabled, 6, true) +
+			helpers.PrintFmtStr(`keyAlias: `, securityReference.ApiSecurity.Ssl.KeyAlias, 6, true) +
+			helpers.PrintFmtStr(`keyStore: `, securityReference.ApiSecurity.Ssl.KeyStore, 6, true) +
+			helpers.PrintFmtStr(`keyStoreType: `, securityReference.ApiSecurity.Ssl.KeyStoreType, 6, true) +
+			helpers.PrintFmtStr(`keyStorePassword: `, securityReference.ApiSecurity.Ssl.KeyStorePassword, 6, true) +
+			helpers.PrintFmtStr(`trustStore: `, securityReference.ApiSecurity.Ssl.TrustStore, 6, true) +
+			helpers.PrintFmtStr(`trustStoreType: `, securityReference.ApiSecurity.Ssl.TrustStoreType, 6, true) +
+			helpers.PrintFmtStr(`trustStorePassword: `, securityReference.ApiSecurity.Ssl.TrustStorePassword, 6, true) +
+			helpers.PrintFmtStr(`overrideBaseUrl: `, securityReference.ApiSecurity.OverrideBaseUrl, 5, true)
 	}
 
 	if nil != securityReference.UiSecurity {
 		str += `
 		uiSecurity:
-		  ssl:
-		    enabled: ` + strconv.FormatBool(securityReference.UiSecurity.Ssl.Enabled) + `
-		    keyAlias: ` + securityReference.UiSecurity.Ssl.KeyAlias + `
-		    keyStore: ` + securityReference.UiSecurity.Ssl.KeyStore + `
-		    keyStoreType: ` + securityReference.UiSecurity.Ssl.KeyStoreType + `
-		    keyStorePassword: ` + securityReference.UiSecurity.Ssl.KeyStorePassword + `
-		    trustStore: ` + securityReference.UiSecurity.Ssl.TrustStore + `
-		    trustStoreType: ` + securityReference.UiSecurity.Ssl.TrustStoreType + `
-		    trustStorePassword: ` + securityReference.UiSecurity.Ssl.TrustStorePassword + `
-		  overrideBaseUrl: ` + securityReference.UiSecurity.OverrideBaseUrl
+		  ssl:` +
+			helpers.PrintFmtBool(`enabled: `, securityReference.UiSecurity.Ssl.Enabled, 6, true) +
+			helpers.PrintFmtStr(`keyAlias: `, securityReference.UiSecurity.Ssl.KeyAlias, 6, true) +
+			helpers.PrintFmtStr(`keyStore: `, securityReference.UiSecurity.Ssl.KeyStore, 6, true) +
+			helpers.PrintFmtStr(`keyStoreType: `, securityReference.UiSecurity.Ssl.KeyStoreType, 6, true) +
+			helpers.PrintFmtStr(`keyStorePassword: `, securityReference.UiSecurity.Ssl.KeyStorePassword, 6, true) +
+			helpers.PrintFmtStr(`trustStore: `, securityReference.UiSecurity.Ssl.TrustStore, 6, true) +
+			helpers.PrintFmtStr(`trustStoreType: `, securityReference.UiSecurity.Ssl.TrustStoreType, 6, true) +
+			helpers.PrintFmtStr(`trustStorePassword: `, securityReference.UiSecurity.Ssl.TrustStorePassword, 6, true) +
+			helpers.PrintFmtStr(`overrideBaseUrl: `, securityReference.UiSecurity.OverrideBaseUrl, 5, true)
 	}
-
-	str = strings.Replace(str, "\t", "    ", -1)
 
 	return str
 }
@@ -65,20 +61,21 @@ func GetAuthnSecurity(securityReference *security.Security) string {
 	}
 
 	str = `
-		authn:`
+		authn:` +
+		helpers.PrintFmtBool(`enabled: `, securityReference.Authn.Enabled, 5, true)
 
 	if nil != securityReference.Authn.Oauth2 {
 		str += `
-		  oauth2:
-		    enabled: ` + strconv.FormatBool(securityReference.Authn.Oauth2.Enabled)
+		  oauth2:` +
+			helpers.PrintFmtBool(`enabled: `, securityReference.Authn.Oauth2.Enabled, 6, true)
 		if nil != securityReference.Authn.Oauth2.Client && "" != securityReference.Authn.Oauth2.Client.ClientId {
 			str += `
-		    client:
-		      clientId: ` + securityReference.Authn.Oauth2.Client.ClientId + `
-		      clientSecret: ` + securityReference.Authn.Oauth2.Client.ClientSecret + `
-		      accessTokenUri: ` + securityReference.Authn.Oauth2.Client.AccessTokenUri + `
-		      userAuthorizationUri: ` + securityReference.Authn.Oauth2.Client.UserAuthorizationUri + `
-		      scope: ` + securityReference.Authn.Oauth2.Client.Scope
+		    client:` +
+				helpers.PrintFmtStr(`clientId: `, securityReference.Authn.Oauth2.Client.ClientId, 7, true) +
+				helpers.PrintFmtStr(`clientSecret: `, securityReference.Authn.Oauth2.Client.ClientSecret, 7, true) +
+				helpers.PrintFmtStr(`accessTokenUri: `, securityReference.Authn.Oauth2.Client.AccessTokenUri, 7, true) +
+				helpers.PrintFmtStr(`userAuthorizationUri: `, securityReference.Authn.Oauth2.Client.UserAuthorizationUri, 7, true) +
+				helpers.PrintFmtStr(`scope: `, securityReference.Authn.Oauth2.Client.Scope, 7, true)
 		} else {
 			str += `
 		    client: {}`
@@ -86,8 +83,8 @@ func GetAuthnSecurity(securityReference *security.Security) string {
 
 		if nil != securityReference.Authn.Oauth2.Resource && "" != securityReference.Authn.Oauth2.Resource.UserInfoUri {
 			str += `
-		    resource:
-		      userInfoUri: XXXX` + securityReference.Authn.Oauth2.Resource.UserInfoUri
+		    resource:` +
+				helpers.PrintFmtStr(`userInfoUri: `, securityReference.Authn.Oauth2.Resource.UserInfoUri, 7, true)
 		} else {
 			str += `
 			    resource: {}`
@@ -95,41 +92,40 @@ func GetAuthnSecurity(securityReference *security.Security) string {
 
 		if nil != securityReference.Authn.Oauth2.UserInfoMapping && "" != securityReference.Authn.Oauth2.UserInfoMapping.Email {
 			str += `
-		    userInfoMapping:
-		      email: ` + securityReference.Authn.Oauth2.UserInfoMapping.Email + `
-		      firstName: ` + securityReference.Authn.Oauth2.UserInfoMapping.FirstName + `
-		      lastName: "` + securityReference.Authn.Oauth2.UserInfoMapping.LastName + `"
-		      username: ` + securityReference.Authn.Oauth2.UserInfoMapping.Username
+		    userInfoMapping:` +
+				helpers.PrintFmtStr(`email: `, securityReference.Authn.Oauth2.UserInfoMapping.Email, 7, true) +
+				helpers.PrintFmtStr(`firstName: `, securityReference.Authn.Oauth2.UserInfoMapping.FirstName, 7, true) +
+				helpers.PrintFmtStrDoubleQuote(`lastName: `, securityReference.Authn.Oauth2.UserInfoMapping.LastName, 7, true) +
+				helpers.PrintFmtStr(`username: `, securityReference.Authn.Oauth2.UserInfoMapping.Username, 7, true)
 		} else {
 			str += `
 		    userInfoMapping: {}`
 		}
 
-		str += `
-		    provider: ` + securityReference.Authn.Oauth2.Provider + `                # One of AZURE, GITHUB, ORACLE, OTHER, GOOGLE`
+		str += helpers.PrintFmtStr(`provider: `, securityReference.Authn.Oauth2.Provider, 6, true)
 	}
 
 	if nil != securityReference.Authn.Saml {
 		str += `
-		  saml:
-		    enabled: ` + strconv.FormatBool(securityReference.Authn.Saml.Enabled) + `
-		    metadataRemote: ` + securityReference.Authn.Saml.MetadataRemote + `
-		    metadataLocal: ` + /*securityReference.Authn.Saml.MetadataLocal + */ `
-		    issuerId: ` + securityReference.Authn.Saml.IssuerId + `
-		    keyStore: ` + securityReference.Authn.Saml.KeyStore + `
-		    keyStorePassword: ` + securityReference.Authn.Saml.KeyStorePassword + `
-		    keyStoreAliasName: ` + securityReference.Authn.Saml.KeyStoreAliasName + `
-		    serviceAddress: ` + securityReference.Authn.Saml.ServiceAddress
+		  saml:` +
+			helpers.PrintFmtBool(`enabled: `, securityReference.Authn.Saml.Enabled, 6, true) +
+			helpers.PrintFmtStr(`metadataRemote: `, securityReference.Authn.Saml.MetadataRemote, 6, true) +
+			helpers.PrintFmtStr(`metadataLocal: `, securityReference.Authn.Saml.MetadataLocal, 6, true) +
+			helpers.PrintFmtStr(`issuerId: `, securityReference.Authn.Saml.IssuerId, 6, true) +
+			helpers.PrintFmtStr(`keyStore: `, securityReference.Authn.Saml.KeyStore, 6, true) +
+			helpers.PrintFmtStr(`keyStorePassword: `, securityReference.Authn.Saml.KeyStorePassword, 6, true) +
+			helpers.PrintFmtStr(`keyStoreAliasName: `, securityReference.Authn.Saml.KeyStoreAliasName, 6, true) +
+			helpers.PrintFmtStr(`serviceAddress: `, securityReference.Authn.Saml.ServiceAddress, 6, true)
 
 		if nil != securityReference.Authn.Saml.UserInfoMapping {
 			str += `
-		    userAttributeMapping:
-		      email: ` + securityReference.Authn.Saml.UserInfoMapping.Email + `
-		      firstname: ` + securityReference.Authn.Saml.UserInfoMapping.Firstname + `
-		      lastname: ` + securityReference.Authn.Saml.UserInfoMapping.Lastname + `
-		      username: ` + securityReference.Authn.Saml.UserInfoMapping.Username + `
-		      roles: ` + securityReference.Authn.Saml.UserInfoMapping.Roles + `
-		      rolesDelimiter: ` + securityReference.Authn.Saml.UserInfoMapping.RolesDelimiter
+		    userAttributeMapping:` +
+				helpers.PrintFmtStr(`email: `, securityReference.Authn.Saml.UserInfoMapping.Email, 7, true) +
+				helpers.PrintFmtStr(`firstname: `, securityReference.Authn.Saml.UserInfoMapping.Firstname, 7, true) +
+				helpers.PrintFmtStr(`lastname: `, securityReference.Authn.Saml.UserInfoMapping.Lastname, 7, true) +
+				helpers.PrintFmtStr(`username: `, securityReference.Authn.Saml.UserInfoMapping.Username, 7, true) +
+				helpers.PrintFmtStr(`roles: `, securityReference.Authn.Saml.UserInfoMapping.Roles, 7, true) +
+				helpers.PrintFmtStr(`rolesDelimiter: `, securityReference.Authn.Saml.UserInfoMapping.RolesDelimiter, 7, true)
 		} else {
 			str += `
 		    userAttributeMapping: {}`
@@ -138,35 +134,33 @@ func GetAuthnSecurity(securityReference *security.Security) string {
 
 	if nil != securityReference.Authn.Ldap {
 		str += `
-		  ldap:
-		    enabled: ` + strconv.FormatBool(securityReference.Authn.Ldap.Enabled) + `
-		    url: ` + securityReference.Authn.Ldap.Url + `
-		    userDnPattern: ` + securityReference.Authn.Ldap.UserDnPattern + `
-		    userSearchFilter: ` + securityReference.Authn.Ldap.UserSearchFilter + `
-		    managerDn: ` + securityReference.Authn.Ldap.ManagerDn + `
-		    managerPassword: ` + securityReference.Authn.Ldap.ManagerPassword + `
-		    groupSearchBase: ` + securityReference.Authn.Ldap.GroupSearchBase
+		  ldap:` +
+			helpers.PrintFmtBool(`enabled: `, securityReference.Authn.Ldap.Enabled, 6, true) +
+			helpers.PrintFmtStr(`url: `, securityReference.Authn.Ldap.Url, 6, true) +
+			helpers.PrintFmtStr(`userDnPattern: `, securityReference.Authn.Ldap.UserDnPattern, 6, true) +
+			helpers.PrintFmtStr(`userSearchFilter: `, securityReference.Authn.Ldap.UserSearchFilter, 6, true) +
+			helpers.PrintFmtStr(`managerDn: `, securityReference.Authn.Ldap.ManagerDn, 6, true) +
+			helpers.PrintFmtStr(`managerPassword: `, securityReference.Authn.Ldap.ManagerPassword, 6, true) +
+			helpers.PrintFmtStr(`groupSearchBase: `, securityReference.Authn.Ldap.GroupSearchBase, 6, true)
 	}
 
 	if nil != securityReference.Authn.X509 {
 		str += `
-		  x509:
-		    enabled: ` + strconv.FormatBool(securityReference.Authn.X509.Enabled) + `
-		    subjectPrincipalRegex: ` + securityReference.Authn.X509.SubjectPrincipalRegex + `
-		    roleOid: ` + securityReference.Authn.X509.RoleOid
+		  x509:` +
+			helpers.PrintFmtBool(`enabled: `, securityReference.Authn.X509.Enabled, 6, true) +
+			helpers.PrintFmtStr(`subjectPrincipalRegex: `, securityReference.Authn.X509.SubjectPrincipalRegex, 6, true) +
+			helpers.PrintFmtStr(`roleOid: `, securityReference.Authn.X509.RoleOid, 6, true)
 	}
 
 	if nil != securityReference.Authn.Iap {
 		str += `
-		  iap:
-		    enabled: ` + strconv.FormatBool(securityReference.Authn.Iap.Enabled) + `
-		    jwtHeader: ` + securityReference.Authn.Iap.JwtHeader + `
-		    issuerId: ` + securityReference.Authn.Iap.IssuerId + `
-		    audience: ` + securityReference.Authn.Iap.Audience + `
-		    iapVerifyKeyUrl: ` + securityReference.Authn.Iap.IapVerifyKeyUrl
+		  iap:` +
+			helpers.PrintFmtBool(`enabled: `, securityReference.Authn.Iap.Enabled, 6, true) +
+			helpers.PrintFmtStr(`jwtHeader: `, securityReference.Authn.Iap.JwtHeader, 6, true) +
+			helpers.PrintFmtStr(`issuerId: `, securityReference.Authn.Iap.IssuerId, 6, true) +
+			helpers.PrintFmtStr(`audience: `, securityReference.Authn.Iap.Audience, 6, true) +
+			helpers.PrintFmtStr(`iapVerifyKeyUrl: `, securityReference.Authn.Iap.IapVerifyKeyUrl, 6, true)
 	}
-
-	str = strings.Replace(str, "\t", "    ", -1)
 
 	return str
 }
@@ -180,28 +174,28 @@ func GetAuthzSecurity(securityReference *security.Security) string {
 
 	str = `
 		authz:
-		  groupMembership:
-		    service: ` + securityReference.Authz.GroupMembership.Service + `
-		    enable: ` + strconv.FormatBool(securityReference.Authz.GroupMembership.Enabled)
+		  groupMembership:` +
+		helpers.PrintFmtStr(`service: `, securityReference.Authz.GroupMembership.Service, 6, true) +
+		helpers.PrintFmtBool(`enabled: `, securityReference.Authz.GroupMembership.Enabled, 6, true)
 
 	if nil != securityReference.Authz.GroupMembership.Google {
 		str += `
-		    google:
-		      roleProviderType: ` + securityReference.Authz.GroupMembership.Google.RoleProviderType + `
-		      path: ` + securityReference.Authz.GroupMembership.Google.Path + `
-		      credentialPath: ` + securityReference.Authz.GroupMembership.Google.CredentialPath + `
-		      adminUsername: ` + securityReference.Authz.GroupMembership.Google.AdminUsername + `
-		      domain: ` + securityReference.Authz.GroupMembership.Google.Domain
+		    google:` +
+			helpers.PrintFmtStr(`roleProviderType: `, securityReference.Authz.GroupMembership.Google.RoleProviderType, 7, true) +
+			helpers.PrintFmtStr(`path: `, securityReference.Authz.GroupMembership.Google.Path, 7, true) +
+			helpers.PrintFmtStr(`credentialPath: `, securityReference.Authz.GroupMembership.Google.CredentialPath, 7, true) +
+			helpers.PrintFmtStr(`adminUsername: `, securityReference.Authz.GroupMembership.Google.AdminUsername, 7, true) +
+			helpers.PrintFmtStr(`domain: `, securityReference.Authz.GroupMembership.Google.Domain, 7, true)
 	}
 
 	if nil != securityReference.Authz.GroupMembership.Github {
 		str += `
-		    github:
-		      roleProviderType: ` + securityReference.Authz.GroupMembership.Github.RoleProviderType + `
-		      path: ` + securityReference.Authz.GroupMembership.Github.Path + `
-		      credentialPath: ` + securityReference.Authz.GroupMembership.Github.CredentialPath + `
-		      adminUsername: ` + securityReference.Authz.GroupMembership.Github.AdminUsername + `
-		      domain: ` + securityReference.Authz.GroupMembership.Github.Domain
+		    github:` +
+			helpers.PrintFmtStr(`roleProviderType: `, securityReference.Authz.GroupMembership.Github.RoleProviderType, 7, true) +
+			helpers.PrintFmtStr(`path: `, securityReference.Authz.GroupMembership.Github.Path, 7, true) +
+			helpers.PrintFmtStr(`credentialPath: `, securityReference.Authz.GroupMembership.Github.CredentialPath, 7, true) +
+			helpers.PrintFmtStr(`adminUsername: `, securityReference.Authz.GroupMembership.Github.AdminUsername, 7, true) +
+			helpers.PrintFmtStr(`domain: `, securityReference.Authz.GroupMembership.Github.Domain, 7, true)
 	}
 	// TODO Missing proto fields
 	//     github:
@@ -212,27 +206,25 @@ func GetAuthzSecurity(securityReference *security.Security) string {
 
 	if nil != securityReference.Authz.GroupMembership.File {
 		str += `
-		    file:
-		      roleProviderType: ` + securityReference.Authz.GroupMembership.File.RoleProviderType + `
-		      path: ` + securityReference.Authz.GroupMembership.File.Path + `
-		      credentialPath: ` + securityReference.Authz.GroupMembership.File.CredentialPath + `
-		      adminUsername: ` + securityReference.Authz.GroupMembership.File.AdminUsername + `
-		      domain: ` + securityReference.Authz.GroupMembership.File.Domain
+		    file:` +
+			helpers.PrintFmtStr(`roleProviderType: `, securityReference.Authz.GroupMembership.File.RoleProviderType, 7, true) +
+			helpers.PrintFmtStr(`path: `, securityReference.Authz.GroupMembership.File.Path, 7, true) +
+			helpers.PrintFmtStr(`credentialPath: `, securityReference.Authz.GroupMembership.File.CredentialPath, 7, true) +
+			helpers.PrintFmtStr(`adminUsername: `, securityReference.Authz.GroupMembership.File.AdminUsername, 7, true) +
+			helpers.PrintFmtStr(`domain: `, securityReference.Authz.GroupMembership.File.Domain, 7, true)
 	}
 
 	if nil != securityReference.Authz.GroupMembership.Ldap {
 		str += `
-		    ldap:
-		      roleProviderType: ` + securityReference.Authz.GroupMembership.Ldap.RoleProviderType + `
-		      path: ` + securityReference.Authz.GroupMembership.Ldap.Path + `
-		      credentialPath: ` + securityReference.Authz.GroupMembership.Ldap.CredentialPath + `
-		      adminUsername: ` + securityReference.Authz.GroupMembership.Ldap.AdminUsername + `
-		      domain: ` + securityReference.Authz.GroupMembership.Ldap.Domain
+		    ldap:` +
+			helpers.PrintFmtStr(`roleProviderType: `, securityReference.Authz.GroupMembership.Ldap.RoleProviderType, 7, true) +
+			helpers.PrintFmtStr(`path: `, securityReference.Authz.GroupMembership.Ldap.Path, 7, true) +
+			helpers.PrintFmtStr(`credentialPath: `, securityReference.Authz.GroupMembership.Ldap.CredentialPath, 7, true) +
+			helpers.PrintFmtStr(`adminUsername: `, securityReference.Authz.GroupMembership.Ldap.AdminUsername, 7, true) +
+			helpers.PrintFmtStr(`domain: `, securityReference.Authz.GroupMembership.Ldap.Domain, 7, true)
 	}
 
-	str += `
-	      enabled: ` + strconv.FormatBool(securityReference.Authz.Enabled)
+	str += helpers.PrintFmtBool(`enabled: `, securityReference.Authz.Enabled, 5, true)
 
-	str = strings.Replace(str, "\t", "    ", -1)
 	return str
 }
