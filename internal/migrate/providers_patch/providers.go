@@ -40,30 +40,18 @@ func GetProvidersData(KustomizeData structs.Kustomize) string {
   spinnakerConfig:
     config:
       providers:
-        appengine:
-          ` + prob.AppEngine + `
-        aws:
-          ` + prob.Aws + `
-        ecs:
-          ` + prob.Ecs + `
-        azure:
-          ` + prob.Azure + `
-        dcos:
-          ` + prob.Dcos + `
-        dockerRegistry:
-          ` + prob.DockerRegistry + `
-        google:
-          ` + prob.Google + `
-        huaweicloud:
-          ` + prob.Huaweicloud + `
-        kubernetes:
-          ` + prob.Kubernetes + `
-        tencentcloud:
-          ` + prob.Tencentcloud + `
-        oracle:
-          ` + prob.Oracle + `
-        cloudfoundry:
-          ` + prob.Cloudfoundry
+        appengine:` + prob.AppEngine + `
+        aws:` + prob.Aws + `
+        ecs:` + prob.Ecs + `
+        azure:` + prob.Azure + `
+        dcos:` + prob.Dcos + `
+        dockerRegistry:` + prob.DockerRegistry + `
+        google:` + prob.Google + `
+        huaweicloud:` + prob.Huaweicloud + `
+        kubernetes:` + prob.Kubernetes + `
+        tencentcloud:` + prob.Tencentcloud + `
+        oracle:` + prob.Oracle + `
+        cloudfoundry:` + prob.Cloudfoundry
 	}
 
 	return str

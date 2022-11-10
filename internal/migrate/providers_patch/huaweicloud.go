@@ -1,7 +1,6 @@
 package providers_patch
 
 import (
-	"strconv"
 	"strings"
 
 	"github.com/austinthao5/golang_proto_test/config/deploymentConfigurations/providers"
@@ -18,8 +17,8 @@ func (ProvidersData *Providers) SetHuaweicloud(providersRef *providers.Providers
 		ProvidersData.Enable = "huaweicloud"
 	}
 
-	str := `enabled: ` + strconv.FormatBool(providersRef.Huaweicloud.Enabled) + `
-	primaryAccount: ` + providersRef.Huaweicloud.PrimaryAccount +
+	str := helpers.PrintFmtBool(`enabled: `, providersRef.Huaweicloud.Enabled, 5, true) +
+		helpers.PrintFmtStr(`primaryAccount: `, providersRef.Huaweicloud.PrimaryAccount, 5, true) +
 		GetHuaweiCloudAccounts(providersRef.Huaweicloud.Accounts) +
 		GetHuaweiBakeryDefaultsAccounts(providersRef.Huaweicloud.BakeryDefaults)
 
@@ -36,18 +35,17 @@ func GetHuaweiCloudAccounts(accounts []*providers.HuaweiAccounts) string {
 		str += `
 		  accounts:`
 		for _, account := range accounts {
-			str += `
-		    - name: ` + account.Name + `
-		      environment: ` + account.Environment +
+			str += helpers.PrintFmtStr(`- name: `, account.Name, 6, true) +
+				helpers.PrintFmtStr(`environment: `, account.Environment, 7, true) +
 				getProvidersStringArrayAppend(account.RequiredGroupMembership, "requiredGroupMembership", "- ") +
-				strings.Replace(getPermissions(account.Permissions), "\t", "     ", -1) + `
-		      accountType: ` + account.AccountType + `
-		      authUrl: ` + account.AuthUrl + `
-		      username: ` + account.Username + `
-		      password: ` + account.Password + `
-		      projectName: ` + account.ProjectName + `
-		      domainName: ` + account.DomainName + `
-		      insecure: ` + strconv.FormatBool(account.Insecure) +
+				strings.Replace(getPermissions(account.Permissions), "\t", "     ", -1) +
+				helpers.PrintFmtStr(`accountType: `, account.AccountType, 7, true) +
+				helpers.PrintFmtStr(`authUrl: `, account.AuthUrl, 7, true) +
+				helpers.PrintFmtStr(`username: `, account.Username, 7, true) +
+				helpers.PrintFmtStr(`password: `, account.Password, 7, true) +
+				helpers.PrintFmtStr(`projectName: `, account.ProjectName, 7, true) +
+				helpers.PrintFmtStr(`domainName: `, account.DomainName, 7, true) +
+				helpers.PrintFmtBool(`insecure: `, account.Insecure, 7, true) +
 				getProvidersStringArrayAppend(account.Regions, "regions", "- ")
 		}
 	} else {
@@ -64,19 +62,19 @@ func GetHuaweiBakeryDefaultsAccounts(bakeryDefault *providers.HuaweiBakery) stri
 
 	if nil != bakeryDefault {
 		str += `
-		  bakeryDefaults:` + `
-		    templateFile: ` + bakeryDefault.TemplateFile +
-			GetHuaweiBaseImages(bakeryDefault.BaseImages) + `
-		    authUrl: ` + bakeryDefault.AuthUrl + `
-		    username: ` + bakeryDefault.Username + `
-		    password: ` + bakeryDefault.Password + `
-		    projectName: ` + bakeryDefault.ProjectName + `
-		    domainName: ` + bakeryDefault.DomainName + `
-		    insecure: ` + strconv.FormatBool(bakeryDefault.Insecure) + `
-		    vpcId: ` + bakeryDefault.VpcId + `
-		    subnetId: ` + bakeryDefault.SubnetId + `
-		    securityGroup: ` + bakeryDefault.SecurityGroup + `
-		    eipBandwidthSize: ` + helpers.IntToString(bakeryDefault.EipBandwidthSize)
+		  bakeryDefaults:` +
+			helpers.PrintFmtStr(`templateFile: `, bakeryDefault.TemplateFile, 6, true) +
+			GetHuaweiBaseImages(bakeryDefault.BaseImages) +
+			helpers.PrintFmtStr(`authUrl: `, bakeryDefault.AuthUrl, 6, true) +
+			helpers.PrintFmtStr(`username: `, bakeryDefault.Username, 6, true) +
+			helpers.PrintFmtStr(`password: `, bakeryDefault.Password, 6, true) +
+			helpers.PrintFmtStr(`projectName: `, bakeryDefault.ProjectName, 6, true) +
+			helpers.PrintFmtStr(`domainName: `, bakeryDefault.DomainName, 6, true) +
+			helpers.PrintFmtBool(`insecure: `, bakeryDefault.Insecure, 6, true) +
+			helpers.PrintFmtStr(`vpcId: `, bakeryDefault.VpcId, 6, true) +
+			helpers.PrintFmtStr(`subnetId: `, bakeryDefault.SubnetId, 6, true) +
+			helpers.PrintFmtStr(`securityGroup: `, bakeryDefault.SecurityGroup, 6, true) +
+			helpers.PrintFmtInt(`eipBandwidthSize: `, bakeryDefault.EipBandwidthSize, 6, true)
 	} else {
 		str += `
 		  bakeryDefaults: []`
@@ -95,22 +93,22 @@ func GetHuaweiBaseImages(baseImages []*providers.HuaweiBaseImages) string {
 		for _, baseImage := range baseImages {
 			if nil != baseImage.BaseImage {
 				str += `
-			  - baseImage:
-			    id: ` + baseImage.BaseImage.Id + `
-			    shortDescription: ` + baseImage.BaseImage.ShortDescription + `
-			    detailedDescription: ` + baseImage.BaseImage.DetailedDescription + `
-			    packageType: ` + baseImage.BaseImage.PackageType + `
-			    templateFile: ` + baseImage.BaseImage.TemplateFile
+			  - baseImage:` +
+					helpers.PrintFmtStr(`id: `, baseImage.BaseImage.Id, 8, true) +
+					helpers.PrintFmtStr(`shortDescription: `, baseImage.BaseImage.ShortDescription, 8, true) +
+					helpers.PrintFmtStr(`detailedDescription: `, baseImage.BaseImage.DetailedDescription, 8, true) +
+					helpers.PrintFmtStr(`packageType: `, baseImage.BaseImage.PackageType, 8, true) +
+					helpers.PrintFmtStr(`templateFile: `, baseImage.BaseImage.TemplateFile, 8, true)
 			}
 			for _, virtualSetting := range baseImage.VirtualizationSettings {
 				if nil != virtualSetting {
 					str += `
-			    virtualizationSettings:
-			      - region: ` + virtualSetting.Region + `
-			        instanceType: ` + virtualSetting.InstanceType + `
-			        sourceImageId: ` + virtualSetting.SourceImageId + `
-			        sshUserName: ` + virtualSetting.SshUserName + `
-			        eiptype: ` + virtualSetting.EipType
+			    virtualizationSettings:` +
+						helpers.PrintFmtStr(`- region: `, virtualSetting.Region, 9, true) +
+						helpers.PrintFmtStr(`instanceType: `, virtualSetting.InstanceType, 10, true) +
+						helpers.PrintFmtStr(`sourceImageId: `, virtualSetting.SourceImageId, 10, true) +
+						helpers.PrintFmtStr(`sshUserName: `, virtualSetting.SshUserName, 10, true) +
+						helpers.PrintFmtStr(`eiptype: `, virtualSetting.EipType, 10, true)
 				}
 			}
 		}
@@ -119,6 +117,5 @@ func GetHuaweiBaseImages(baseImages []*providers.HuaweiBaseImages) string {
 		    baseImages: []`
 	}
 
-	str = strings.Replace(str, "\t", "    ", -1)
 	return str
 }

@@ -1,10 +1,10 @@
 package providers_patch
 
 import (
-	"strconv"
 	"strings"
 
 	"github.com/austinthao5/golang_proto_test/config/deploymentConfigurations/providers"
+	"github.com/austinthao5/golang_proto_test/internal/helpers"
 )
 
 func (ProvidersData *Providers) SetDcos(providersRef *providers.Providers) error {
@@ -17,8 +17,8 @@ func (ProvidersData *Providers) SetDcos(providersRef *providers.Providers) error
 		ProvidersData.Enable = "dcos"
 	}
 
-	str := `enabled: ` + strconv.FormatBool(providersRef.Dcos.Enabled) + `
-	primaryAccount: ` + providersRef.Dcos.PrimaryAccount +
+	str := helpers.PrintFmtBool(`enabled: `, providersRef.Dcos.Enabled, 5, true) +
+		helpers.PrintFmtStr(`primaryAccount: `, providersRef.Dcos.PrimaryAccount, 5, true) +
 		GetDcosAccounts(providersRef.Dcos.Accounts) +
 		GetDcosMainClusters(providersRef.Dcos.Clusters)
 
@@ -35,9 +35,8 @@ func GetDcosAccounts(accounts []*providers.DcosAccounts) string {
 		str += `
 		  accounts:`
 		for _, account := range accounts {
-			str += `
-		    - name: ` + account.Name + `
-		      environment: ` + account.Environment +
+			str += helpers.PrintFmtStr(`- name: `, account.Name, 6, true) +
+				helpers.PrintFmtStr(`environment: `, account.Environment, 7, true) +
 				getProvidersStringArrayAppend(account.RequiredGroupMembership, "requiredGroupMembership", "- ") +
 				strings.Replace(getPermissions(account.Permissions), "\t", "     ", -1) +
 				getDcosDockerRegistries(account.DockerRegistries) +
@@ -79,11 +78,10 @@ func getDcosAccountsClusters(Clusters []*providers.DcosAccCluster) string {
 		str += `
 		      clusters:`
 		for _, Cluster := range Clusters {
-			str += `
-		        - name: ` + Cluster.Name + `
-		          uid: '` + Cluster.Uid + `'
-		          password: ` + Cluster.Password + `
-		          serviceKeyFile: ` + Cluster.ServiceKeyFile
+			str += helpers.PrintFmtStr(`- name: `, Cluster.Name, 8, true) +
+				helpers.PrintFmtStrApostrophe(`uid: `, Cluster.Uid, 9, true) +
+				helpers.PrintFmtStr(`password: `, Cluster.Password, 9, true) +
+				helpers.PrintFmtStr(`serviceKeyFile: `, Cluster.ServiceKeyFile, 9, true)
 		}
 	} else {
 		str += `
@@ -126,14 +124,13 @@ func GetDcosMainClusters(Clusters []*providers.DcosCluster) string {
 				clusterLbSss = Cluster.LoadBalancer.ServiceAccountSecret
 			}
 
-			str += `
-		  - name: ` + Cluster.Name + `
-		    dcosUrl: ` + Cluster.DcosUrl + `
-		    caCertFile: ` + Cluster.CaCertFile + `
-		    insecureSkipTlsVerify: ` + strconv.FormatBool(Cluster.InsecureSkipTlsVerify) + `
-		    loadBalancer:
-		      image: ` + clusterLbImage + `
-		      serviceAccountSecret: ` + clusterLbSss
+			str += helpers.PrintFmtStr(`- name: `, Cluster.Name, 5, true) +
+				helpers.PrintFmtStr(`dcosUrl: `, Cluster.DcosUrl, 6, true) +
+				helpers.PrintFmtStr(`caCertFile: `, Cluster.CaCertFile, 6, true) +
+				helpers.PrintFmtBool(`insecureSkipTlsVerify: `, Cluster.InsecureSkipTlsVerify, 6, true) + `
+		    loadBalancer:` +
+				helpers.PrintFmtStr(`image: `, clusterLbImage, 7, true) +
+				helpers.PrintFmtStr(`serviceAccountSecret: `, clusterLbSss, 7, true)
 		}
 	} else {
 		str += `

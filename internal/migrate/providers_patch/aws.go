@@ -30,21 +30,21 @@ func (ProvidersData *Providers) SetAwsData(providersRef *providers.Providers) er
 		ProvidersData.Enable = "aws"
 	}
 
-	str := `enabled: ` + strconv.FormatBool(providersRef.Aws.Enabled) + `
-	primaryAccount: ` + providersRef.Aws.PrimaryAccount + `                # Must be one of the configured AWS accounts` +
+	str := helpers.PrintFmtBool(`enabled: `, providersRef.Aws.Enabled, 5, true) +
+		helpers.PrintFmtStr(`primaryAccount: `, providersRef.Aws.PrimaryAccount, 5, true) +
 		GetAwsAccounts(providersRef) +
-		GetAwsBakeryDefault(providersRef.Aws.BakeryDefaults) + `
-	accessKeyId: '` + providersRef.Aws.AccessKeyId + `'      # Only needed if cluster worker nodes don't have IAM roles for talking to the target aws account
-	secretAccessKey: '` + providersRef.Aws.SecretAccessKey + `'  # Only needed if cluster worker nodes don't have IAM roles for talking to the target aws account
-	defaultKeyPairTemplate: '` + providersRef.Aws.DefaultKeyPairTemplate + `'` +
+		GetAwsBakeryDefault(providersRef.Aws.BakeryDefaults) +
+		helpers.PrintFmtStrApostrophe(`accessKeyId: `, providersRef.Aws.AccessKeyId, 5, true) +
+		helpers.PrintFmtStrApostrophe(`secretAccessKey: `, providersRef.Aws.SecretAccessKey, 5, true) +
+		helpers.PrintFmtStrApostrophe(`defaultKeyPairTemplate: `, providersRef.Aws.DefaultKeyPairTemplate, 5, true) +
 		strings.Replace(getAwsRegions(providersRef.Aws.DefaultRegions, "defaultRegions"), "\t", "    ", -1) + `
-	defaults:
-	  iamRole: ` + providersRef.Aws.Defaults.IamRole + `
+	defaults:` +
+		helpers.PrintFmtStr(`iamRole: `, providersRef.Aws.Defaults.IamRole, 6, true) + `
 	features:
-	  cloudFormation:
-	    enabled: ` + featuresCloudF + `                       # (Default: false). Enable cloudformation support on this AWS account.` + `
-	  lambda:
-	    enabled: ` + featuresLambda
+	  cloudFormation:` +
+		helpers.PrintFmtStr(`enabled: `, featuresCloudF, 7, true) + `
+	  lambda:` +
+		helpers.PrintFmtStr(`enabled: `, featuresLambda, 7, true)
 
 	str = strings.Replace(str, "\t", "          ", -1)
 
@@ -60,18 +60,17 @@ func GetAwsAccounts(provider *providers.Providers) string {
 		str += `
 		  accounts:`
 		for _, account := range provider.Aws.Accounts {
-			str += `
-		  - name: ` + account.Name + `
-		    environment: ` + account.Environment +
+			str += helpers.PrintFmtStr(`- name: `, account.Name, 5, true) +
+				helpers.PrintFmtStr(`environment: `, account.Environment, 6, true) +
 				strings.Replace(getProvidersStringArrayAppend(account.RequiredGroupMembership, "requiredGroupMembership", "- "), "\t", "   ", -1) +
-				getPermissions(account.Permissions) + `
-		    defaultKeyPair: ` + account.DefaultKeyPair + `
-		    edda : ` + account.Edda + `
-		    discovery: ` + account.Discovery + `
-		    accountId: '` + account.AccountId + `'` +
+				getPermissions(account.Permissions) +
+				helpers.PrintFmtStr(`defaultKeyPair: `, account.DefaultKeyPair, 6, true) +
+				helpers.PrintFmtStr(`edda: `, account.Edda, 6, true) +
+				helpers.PrintFmtStr(`discovery: `, account.Discovery, 6, true) +
+				helpers.PrintFmtStrApostrophe(`accountId: `, account.AccountId, 6, true) +
 				strings.Replace(getAwsRegions(account.Regions, "regions"), "\t", "     ", -1) +
-				strings.Replace(getAwsLifecycleHooks(account.LifecycleHooks), "\t", "     ", -1) + `
-		    assumeRole: ` + account.AssumeRole
+				strings.Replace(getAwsLifecycleHooks(account.LifecycleHooks), "\t", "     ", -1) +
+				helpers.PrintFmtStrApostrophe(`assumeRole: `, account.AssumeRole, 6, true)
 			//TODO Check if providerVersion Missing proto
 		}
 	} else {
@@ -108,12 +107,11 @@ func getAwsLifecycleHooks(lifeCycles []*providers.LifecycleHooks) string {
 		str += `
 		  lifecycleHooks:`
 		for _, lifeCycle := range lifeCycles {
-			str += `
-		    - defaultResult: ` + lifeCycle.DefaultResult + `
-		      heartbeatTimeout: ` + helpers.IntToString(lifeCycle.HeartbeatTimeout) + `
-		      lifecycleTransition: ` + lifeCycle.LifecycleTransition + `
-		      notificationTargetARN: ` + lifeCycle.NotificationTargetARN + `
-		      roleARN: ` + lifeCycle.RoleARN
+			str += helpers.PrintFmtStr(`- defaultResult: `, lifeCycle.DefaultResult, 7, true) +
+				helpers.PrintFmtInt(`heartbeatTimeout: `, lifeCycle.HeartbeatTimeout, 8, true) +
+				helpers.PrintFmtStr(`lifecycleTransition: `, lifeCycle.LifecycleTransition, 8, true) +
+				helpers.PrintFmtStr(`notificationTargetARN: `, lifeCycle.NotificationTargetARN, 8, true) +
+				helpers.PrintFmtStr(`roleARN: `, lifeCycle.RoleARN, 8, true)
 		}
 	} else {
 		str += `
@@ -128,15 +126,15 @@ func GetAwsBakeryDefault(bakeryDefaults *providers.AwsBakeryDefaults) string {
 
 	if nil != bakeryDefaults {
 		str += `
-		  bakeryDefaults:` + `
-		    templateFile: ` + bakeryDefaults.TemplateFile + `
-		    awsAccessKey: '` + bakeryDefaults.AwsAccessKey + `'
-		    awsSecretKey: ` + bakeryDefaults.AwsSecretKey +
-			GetAwsBaseImages(bakeryDefaults.BaseImages) + `
-		    awsAssociatePublicIpAddress: ` + strconv.FormatBool(bakeryDefaults.AwsAssociatePublicIpAddress) + `
-		    defaultVirtualizationType: ` + bakeryDefaults.DefaultVirtualizationType + `
-		    awsSubnetId: ` + bakeryDefaults.AwsSubnetId + `
-		    awsVpcId: ` + bakeryDefaults.AwsVpcId
+		  bakeryDefaults:` +
+			helpers.PrintFmtStr(`templateFile: `, bakeryDefaults.TemplateFile, 6, true) +
+			helpers.PrintFmtStrApostrophe(`awsAccessKey: `, bakeryDefaults.AwsAccessKey, 6, true) +
+			helpers.PrintFmtStr(`awsSecretKey: `, bakeryDefaults.AwsSecretKey, 6, true) +
+			GetAwsBaseImages(bakeryDefaults.BaseImages) +
+			helpers.PrintFmtBool(`awsAssociatePublicIpAddress: `, bakeryDefaults.AwsAssociatePublicIpAddress, 6, true) +
+			helpers.PrintFmtStr(`defaultVirtualizationType: `, bakeryDefaults.DefaultVirtualizationType, 6, true) +
+			helpers.PrintFmtStr(`awsSubnetId: `, bakeryDefaults.AwsSubnetId, 6, true) +
+			helpers.PrintFmtStr(`awsVpcId: `, bakeryDefaults.AwsVpcId, 6, true)
 	} else {
 		str += `
 		  bakeryDefaults: []`
@@ -156,25 +154,24 @@ func GetAwsBaseImages(baseImages []*providers.AWSBaseImages) string {
 			if nil != baseImageArray.BaseImage {
 				baseImage := baseImageArray.BaseImage
 				str += `
-		      - baseImage:
-		          id: ` + baseImage.Id + `
-		          shortDescription: ` + baseImage.ShortDescription + `
-		          detailedDescription: ` + baseImage.DetailedDescription + `
-		          packageType: ` + baseImage.PackageType + `
-		          templateFile: ` + baseImage.TemplateFile
+		      - baseImage:` +
+					helpers.PrintFmtStr(`id: `, baseImage.Id, 9, true) +
+					helpers.PrintFmtStr(`shortDescription: `, baseImage.ShortDescription, 9, true) +
+					helpers.PrintFmtStr(`detailedDescription: `, baseImage.DetailedDescription, 9, true) +
+					helpers.PrintFmtStr(`packageType: `, baseImage.PackageType, 9, true) +
+					helpers.PrintFmtStr(`templateFile: `, baseImage.TemplateFile, 9, true)
 			}
 			if nil != baseImageArray.VirtualizationSettings {
 				str += `
 		        virtualizationSettings:`
 				for _, virtualSettings := range baseImageArray.VirtualizationSettings {
-					str += `
-		          - region: ` + virtualSettings.Region + `
-		            virtualizationType: ` + virtualSettings.VirtualizationType + `
-		            instanceType: ` + virtualSettings.InstanceType + `
-		            sourceAmi: ` + virtualSettings.SourceAmi + `
-		            winRmUserName: ` + virtualSettings.WinRmUserName + `
-		            spotPrice: ` + virtualSettings.SpotPrice + `
-		            spotPriceAutoProduct: ` + virtualSettings.SpotPriceAutoProduct
+					str += helpers.PrintFmtStr(`- region: `, virtualSettings.Region, 9, true) +
+						helpers.PrintFmtStr(`virtualizationType: `, virtualSettings.VirtualizationType, 10, true) +
+						helpers.PrintFmtStr(`instanceType: `, virtualSettings.InstanceType, 10, true) +
+						helpers.PrintFmtStr(`sourceAmi: `, virtualSettings.SourceAmi, 10, true) +
+						helpers.PrintFmtStr(`winRmUserName: `, virtualSettings.WinRmUserName, 10, true) +
+						helpers.PrintFmtStr(`spotPrice: `, virtualSettings.SpotPrice, 10, true) +
+						helpers.PrintFmtStr(`spotPriceAutoProduct: `, virtualSettings.SpotPriceAutoProduct, 10, true)
 				}
 			} else {
 				str += `

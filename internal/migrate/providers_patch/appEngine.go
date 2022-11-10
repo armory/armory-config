@@ -18,11 +18,10 @@ func (ProvidersData *Providers) SetAppEngineData(providersRef *providers.Provide
 		ProvidersData.Enable = "appengine"
 	}
 
-	str := `enabled: ` + strconv.FormatBool(providersRef.Appengine.Enabled) + `
-	primaryAccount: ` + providersRef.Appengine.PrimaryAccount +
+	str := helpers.PrintFmtBool(`enabled: `, providersRef.Appengine.Enabled, 5, true) +
+		helpers.PrintFmtStr(`primaryAccount: `, providersRef.Appengine.PrimaryAccount, 5, true) +
 		GetAppEngineAccounts(providersRef)
 
-	str = strings.Replace(str, "\t", "          ", -1)
 	ProvidersData.AppEngine = str
 
 	return nil
@@ -35,28 +34,27 @@ func GetAppEngineAccounts(provider *providers.Providers) string {
 		str += `
 		  accounts:`
 		for _, account := range provider.Appengine.Accounts {
-			str += `
-		  - name: ` + account.Name + `
-		    environment              : ` + account.Environment +
-				strings.Replace(getProvidersStringArrayAppend(account.RequiredGroupMembership, "requiredGroupMembership", "- "), "\t", "   ", -1) + `
-		    providerVersion          : ` + account.ProviderVersion +
-				getPermissions(account.Permissions) + `
-		    project                  : ` + account.Project + `
-		    jsonPath                 : ` + account.JsonPath + `
-		    localRepositoryDirectory : ` + account.LocalRepositoryDirectory + `
-		    gitHttpsUsername         : ` + account.GitHttpsUsername + `
-		    gitHttpsPassword         : ` + account.GitHttpsPassword + `
-		    githubOAuthAccessToken   : ` + account.GithubOAuthAccessToken + `
-		    sshPrivateKeyFilePath    : ` + account.SshPrivateKeyFilePath + `
-		    sshPrivateKeyPassphrase  : ` + account.SshPrivateKeyPassphrase + `
-		    sshKnownHostsFilePath    : ` + account.SshKnownHostsFilePath + `
-		    sshTrustUnknownHosts     : ` + strconv.FormatBool(account.SshTrustUnknownHosts) + `
-		    gcloudReleaseTrack       : ` + account.GcloudReleaseTrack +
+			str += helpers.PrintFmtStr(`- name: `, account.Name, 5, true) +
+				helpers.PrintFmtStr(`environment: `, account.Environment, 6, true) +
+				strings.Replace(getProvidersStringArrayAppend(account.RequiredGroupMembership, "requiredGroupMembership", "- "), "\t", "   ", -1) +
+				helpers.PrintFmtStr(`providerVersion: `, account.ProviderVersion, 6, true) +
+				getPermissions(account.Permissions) +
+				helpers.PrintFmtStr(`project: `, account.Project, 6, true) +
+				helpers.PrintFmtStr(`jsonPath: `, account.JsonPath, 6, true) +
+				helpers.PrintFmtStr(`localRepositoryDirectory: `, account.LocalRepositoryDirectory, 6, true) +
+				helpers.PrintFmtStr(`gitHttpsUsername: `, account.GitHttpsUsername, 6, true) +
+				helpers.PrintFmtStr(`gitHttpsPassword: `, account.GitHttpsPassword, 6, true) +
+				helpers.PrintFmtStr(`githubOAuthAccessToken: `, account.GithubOAuthAccessToken, 6, true) +
+				helpers.PrintFmtStr(`sshPrivateKeyFilePath: `, account.SshPrivateKeyFilePath, 6, true) +
+				helpers.PrintFmtStr(`sshPrivateKeyPassphrase: `, account.SshPrivateKeyPassphrase, 6, true) +
+				helpers.PrintFmtStr(`sshKnownHostsFilePath: `, account.SshKnownHostsFilePath, 6, true) +
+				helpers.PrintFmtStr(`sshTrustUnknownHosts: `, strconv.FormatBool(account.SshTrustUnknownHosts), 6, true) +
+				helpers.PrintFmtStr(`gcloudReleaseTrack: `, account.GcloudReleaseTrack, 6, true) +
 				strings.Replace(getProvidersStringArrayAppend(account.Services, "services", "- "), "\t", "   ", -1) +
 				strings.Replace(getProvidersStringArrayAppend(account.Versions, "versions", "- "), "\t", "   ", -1) +
 				strings.Replace(getProvidersStringArrayAppend(account.OmitServices, "omitServices", "- "), "\t", "   ", -1) +
-				strings.Replace(getProvidersStringArrayAppend(account.OmitVersions, "omitVersions", "- "), "\t", "   ", -1) + `
-		    cachingIntervalSeconds   : ` + helpers.IntToString(account.CachingIntervalSeconds)
+				strings.Replace(getProvidersStringArrayAppend(account.OmitVersions, "omitVersions", "- "), "\t", "   ", -1) +
+				helpers.PrintFmtInt(`cachingIntervalSeconds: `, account.CachingIntervalSeconds, 6, true)
 		}
 	} else {
 		str += `

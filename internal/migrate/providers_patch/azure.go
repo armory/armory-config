@@ -1,10 +1,10 @@
 package providers_patch
 
 import (
-	"strconv"
 	"strings"
 
 	"github.com/austinthao5/golang_proto_test/config/deploymentConfigurations/providers"
+	"github.com/austinthao5/golang_proto_test/internal/helpers"
 )
 
 func (ProvidersData *Providers) SetAzure(providersRef *providers.Providers) error {
@@ -17,8 +17,8 @@ func (ProvidersData *Providers) SetAzure(providersRef *providers.Providers) erro
 		ProvidersData.Enable = "azure"
 	}
 
-	str := `enabled: ` + strconv.FormatBool(providersRef.Azure.Enabled) + `
-	primaryAccount: ` + providersRef.Azure.PrimaryAccount +
+	str := helpers.PrintFmtBool(`enabled: `, providersRef.Azure.Enabled, 5, true) +
+		helpers.PrintFmtStr(`primaryAccount: `, providersRef.Azure.PrimaryAccount, 5, true) +
 		GetAzureAccounts(providersRef.Azure.Accounts) +
 		GetAzureBakeryDefaults(providersRef.Azure.BakeryDefaults)
 
@@ -35,22 +35,21 @@ func GetAzureAccounts(accounts []*providers.AzureAcc) string {
 		str += `
 		  accounts:`
 		for _, account := range accounts {
-			str += `
-		    - name: ` + account.Name + `
-		      environment: ` + account.Environment +
+			str += helpers.PrintFmtStr(`- name: `, account.Name, 6, true) +
+				helpers.PrintFmtStr(`environment: `, account.Environment, 7, true) +
 				getProvidersStringArrayAppend(account.RequiredGroupMembership, "requiredGroupMembership", "- ") +
-				strings.Replace(getPermissions(account.Permissions), "\t", "     ", -1) + `
-		      clientId: ` + account.ClientId + `
-		      appKey: '` + account.AppKey + `'
-		      tenantId: '` + account.TenantId + `'
-		      subscriptionId: '` + account.SubscriptionId + `'
-		      objectId: '` + account.ObjectId + `'
-		      defaultResourceGroup: ` + account.DefaultResourceGroup + `
-		      defaultKeyVault: ` + account.DefaultKeyVault + `
-		      packerResourceGroup: ` + account.PackerResourceGroup + `
-		      packerStorageAccount: ` + account.PackerStorageAccount +
-				getProvidersStringArrayAppend(account.Regions, "regions", "- ") + `
-		      useSshPublicKey: '` + account.UseSshPublicKey + `'`
+				strings.Replace(getPermissions(account.Permissions), "\t", "     ", -1) +
+				helpers.PrintFmtStr(`clientId: `, account.ClientId, 7, true) +
+				helpers.PrintFmtStrApostrophe(`appKey: `, account.AppKey, 7, true) +
+				helpers.PrintFmtStrApostrophe(`tenantId: `, account.TenantId, 7, true) +
+				helpers.PrintFmtStrApostrophe(`subscriptionId: `, account.SubscriptionId, 7, true) +
+				helpers.PrintFmtStrApostrophe(`objectId: `, account.ObjectId, 7, true) +
+				helpers.PrintFmtStr(`defaultResourceGroup: `, account.DefaultResourceGroup, 7, true) +
+				helpers.PrintFmtStr(`defaultKeyVault: `, account.DefaultKeyVault, 7, true) +
+				helpers.PrintFmtStr(`packerResourceGroup: `, account.PackerResourceGroup, 7, true) +
+				helpers.PrintFmtStr(`packerStorageAccount: `, account.PackerStorageAccount, 7, true) +
+				getProvidersStringArrayAppend(account.Regions, "regions", "- ") +
+				helpers.PrintFmtStrApostrophe(`useSshPublicKey: `, account.UseSshPublicKey, 7, true)
 		}
 	} else {
 		str += `
@@ -66,8 +65,8 @@ func GetAzureBakeryDefaults(bakeryDefaults *providers.AzureBakeryDefaults) strin
 
 	if nil != bakeryDefaults {
 		str += `
-		  bakeryDefaults:` + `
-		    templateFile: ` + bakeryDefaults.TemplateFile +
+		  bakeryDefaults:` +
+			helpers.PrintFmtStr(`templateFile: `, bakeryDefaults.TemplateFile, 6, true) +
 			GetAzureBaseImages(bakeryDefaults.BaseImages)
 	} else {
 		str += `
@@ -87,16 +86,16 @@ func GetAzureBaseImages(baseImages []*providers.AzureBaseImages) string {
 		for _, baseImage := range baseImages {
 			if nil != baseImage.BaseImage {
 				str += `
-			  - baseImage:
-			    id: ` + baseImage.BaseImage.Id + `
-			    shortDescription: ` + baseImage.BaseImage.ShortDescription + `
-			    detailedDescription: ` + baseImage.BaseImage.DetailedDescription + `
-			    packageType: ` + baseImage.BaseImage.PackageType + `
-			    templateFile: ` + baseImage.BaseImage.TemplateFile + `
-			    publisher: ` + baseImage.BaseImage.Publisher + `
-			    offer: ` + baseImage.BaseImage.Offer + `
-			    sku: '` + baseImage.BaseImage.Sku + `'
-			    version: '` + baseImage.BaseImage.Version + `'`
+			  - baseImage:` +
+					helpers.PrintFmtStr(`id: `, baseImage.BaseImage.Id, 8, true) +
+					helpers.PrintFmtStr(`shortDescription: `, baseImage.BaseImage.ShortDescription, 8, true) +
+					helpers.PrintFmtStr(`detailedDescription: `, baseImage.BaseImage.DetailedDescription, 8, true) +
+					helpers.PrintFmtStr(`packageType: `, baseImage.BaseImage.PackageType, 8, true) +
+					helpers.PrintFmtStr(`templateFile: `, baseImage.BaseImage.TemplateFile, 8, true) +
+					helpers.PrintFmtStr(`publisher: `, baseImage.BaseImage.Publisher, 8, true) +
+					helpers.PrintFmtStr(`offer: `, baseImage.BaseImage.Offer, 8, true) +
+					helpers.PrintFmtStrApostrophe(`sku: `, baseImage.BaseImage.Sku, 8, true) +
+					helpers.PrintFmtStr(`version: `, baseImage.BaseImage.Version, 8, true)
 			}
 		}
 	} else {

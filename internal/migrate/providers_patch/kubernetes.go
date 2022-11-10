@@ -1,7 +1,6 @@
 package providers_patch
 
 import (
-	"strconv"
 	"strings"
 
 	"github.com/austinthao5/golang_proto_test/config/deploymentConfigurations/providers"
@@ -18,11 +17,10 @@ func (ProvidersData *Providers) SetKubernetes(providersRef *providers.Providers)
 		ProvidersData.Enable = "kubernetes"
 	}
 
-	str := `enabled: ` + strconv.FormatBool(providersRef.Kubernetes.Enabled) + `
-	primaryAccount: ` + providersRef.Kubernetes.PrimaryAccount +
+	str := helpers.PrintFmtBool(`enabled: `, providersRef.Kubernetes.Enabled, 5, true) +
+		helpers.PrintFmtStr(`primaryAccount: `, providersRef.Kubernetes.PrimaryAccount, 5, true) +
 		GetKubernetesAccounts(providersRef.Kubernetes.Accounts)
 
-	str = strings.Replace(str, "\t", "          ", -1)
 	ProvidersData.Kubernetes = str
 
 	return nil
@@ -43,28 +41,27 @@ func GetKubernetesAccounts(accounts []*providers.KubernetesAcc) string {
 				ResourceEndpointKindOmitExpressions = account.RawResourcesEndpointConfig.OmitKindExpressions
 			}
 
-			str += `
-		    - name: ` + account.Name +
+			str += helpers.PrintFmtStr(`- name: `, account.Name, 6, true) +
 				getProvidersStringArrayAppend(account.RequiredGroupMembership, "requiredGroupMembership", "- ") +
 				strings.Replace(getPermissions(account.Permissions), "\t", "     ", -1) +
-				getDockerRegistries(account.DockerRegistries) + `
-		      context: ` + account.Context + `
-		      providerVersion: ` + account.ProviderVersion + `
-		      configureImagePullSecrets: ` + strconv.FormatBool(account.ConfigureImagePullSecrets) + `
-		      serviceAccount: ` + strconv.FormatBool(account.ServiceAccount) + `
-		      cacheThreads: ` + helpers.IntToString(account.CacheThreads) +
-				getProvidersStringArrayAppend(account.Namespaces, "namespaces", "- ") + `
-		      kubeconfigFile: ` + account.KubeconfigFile +
+				getDockerRegistries(account.DockerRegistries) +
+				helpers.PrintFmtStr(`context: `, account.Context, 7, true) +
+				helpers.PrintFmtStr(`providerVersion: `, account.ProviderVersion, 7, true) +
+				helpers.PrintFmtBool(`configureImagePullSecrets: `, account.ConfigureImagePullSecrets, 7, true) +
+				helpers.PrintFmtBool(`serviceAccount: `, account.ServiceAccount, 7, true) +
+				helpers.PrintFmtInt(`cacheThreads: `, account.CacheThreads, 7, true) +
+				getProvidersStringArrayAppend(account.Namespaces, "namespaces", "- ") +
+				helpers.PrintFmtStr(`kubeconfigFile: `, account.KubeconfigFile, 7, true) +
 				getProvidersStringArrayAppend(account.OmitNamespaces, "omitNamespaces", "- ") +
 				getProvidersStringArrayAppend(account.Kinds, "kinds", "- ") +
 				getProvidersStringArrayAppend(account.OmitKinds, "omitKinds", "- ") +
 				getProvidersStringArrayAppend(account.CustomResources, "customResources", "- ") +
 				getProvidersStringArrayAppend(account.CachingPolicies, "cachingPolicies", "- ") +
-				getProvidersStringArrayAppend(account.OauthScopes, "oauthScopes", "- ") + `
-		      onlySpinnakerManaged: ` + strconv.FormatBool(account.OnlySpinnakerManaged) + `
-		      environment: ` + account.Environment + `
-		      checkPermissionsOnStartup: ` + strconv.FormatBool(account.CheckPermissionsOnStartup) + `
-		      liveManifestCalls: ` + strconv.FormatBool(account.LiveManifestCalls) + `
+				getProvidersStringArrayAppend(account.OauthScopes, "oauthScopes", "- ") +
+				helpers.PrintFmtBool(`onlySpinnakerManaged: `, account.OnlySpinnakerManaged, 7, true) +
+				helpers.PrintFmtStr(`environment: `, account.Environment, 7, true) +
+				helpers.PrintFmtBool(`checkPermissionsOnStartup: `, account.CheckPermissionsOnStartup, 7, true) +
+				helpers.PrintFmtBool(`liveManifestCalls: `, account.LiveManifestCalls, 7, true) + `
 		      rawResourcesEndpointConfig:` +
 				strings.Replace(getProvidersStringArray(ResourceEndpointKindExpressions, "kindExpressions"), "\t", "     ", -1) +
 				strings.Replace(getProvidersStringArray(ResourceEndpointKindOmitExpressions, "omitKindExpressions"), "\t", "     ", -1)
@@ -85,8 +82,7 @@ func getDockerRegistries(registries []*providers.KubeDockerRegistries) string {
 		str += `
 		      dockerRegistries:`
 		for _, account := range registries {
-			str += `
-		        - accountName: ` + account.AccountName +
+			str += helpers.PrintFmtStr(`- accountName: `, account.AccountName, 8, true) +
 				strings.Replace(getProvidersStringArrayAppend(account.Namespaces, "Namespaces", "- "), "\t", "      ", -1)
 		}
 	} else {

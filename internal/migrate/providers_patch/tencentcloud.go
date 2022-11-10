@@ -1,10 +1,10 @@
 package providers_patch
 
 import (
-	"strconv"
 	"strings"
 
 	"github.com/austinthao5/golang_proto_test/config/deploymentConfigurations/providers"
+	"github.com/austinthao5/golang_proto_test/internal/helpers"
 )
 
 func (ProvidersData *Providers) SetTencentcloud(providersRef *providers.Providers) error {
@@ -17,8 +17,8 @@ func (ProvidersData *Providers) SetTencentcloud(providersRef *providers.Provider
 		ProvidersData.Enable = "tencentcloud"
 	}
 
-	str := `enabled: ` + strconv.FormatBool(providersRef.Tencentcloud.Enabled) + `
-	primaryAccount: ` + providersRef.Tencentcloud.PrimaryAccount +
+	str := helpers.PrintFmtBool(`enabled: `, providersRef.Tencentcloud.Enabled, 5, true) +
+		helpers.PrintFmtStr(`primaryAccount: `, providersRef.Tencentcloud.PrimaryAccount, 5, true) +
 		GetTencentcloudAccounts(providersRef.Tencentcloud.Accounts) +
 		GetTencentBakeryDefaultsAccounts(providersRef.Tencentcloud.BakeryDefaults)
 
@@ -35,13 +35,12 @@ func GetTencentcloudAccounts(accounts []*providers.TencentAccounts) string {
 		str += `
 		  accounts:`
 		for _, account := range accounts {
-			str += `
-		    - name: ` + account.Name + `
-		      environment: ` + account.Environment +
+			str += helpers.PrintFmtStr(`- name: `, account.Name, 6, true) +
+				helpers.PrintFmtStr(`environment: `, account.Environment, 7, true) +
 				getProvidersStringArrayAppend(account.RequiredGroupMembership, "requiredGroupMembership", "- ") +
-				strings.Replace(getPermissions(account.Permissions), "\t", "     ", -1) + `
-		      secretId: ` + account.SecretId + `
-		      secretKey: ` + account.SecretKey +
+				strings.Replace(getPermissions(account.Permissions), "\t", "     ", -1) +
+				helpers.PrintFmtStr(`secretId: `, account.SecretId, 7, true) +
+				helpers.PrintFmtStr(`secretKey: `, account.SecretKey, 7, true) +
 				getProvidersStringArrayAppend(account.Regions, "regions", "- ")
 		}
 	} else {
@@ -58,11 +57,11 @@ func GetTencentBakeryDefaultsAccounts(bakeryDefault *providers.TencentBakery) st
 
 	if nil != bakeryDefault {
 		str += `
-		  bakeryDefaults:` + `
-		    templateFile: ` + bakeryDefault.TemplateFile +
-			GetTencentBaseImages(bakeryDefault.BaseImages) + `
-		    secretId: ` + bakeryDefault.SecretId + `
-		    secretKey: ` + bakeryDefault.SecretKey
+		  bakeryDefaults:` +
+			helpers.PrintFmtStr(`templateFile: `, bakeryDefault.TemplateFile, 6, true) +
+			GetTencentBaseImages(bakeryDefault.BaseImages) +
+			helpers.PrintFmtStr(`secretId: `, bakeryDefault.SecretId, 6, true) +
+			helpers.PrintFmtStr(`secretKey: `, bakeryDefault.SecretKey, 6, true)
 	} else {
 		str += `
 		  bakeryDefaults: []`
@@ -81,22 +80,22 @@ func GetTencentBaseImages(baseImages []*providers.TencentBaseImages) string {
 		for _, baseImage := range baseImages {
 			if nil != baseImage.BaseImage {
 				str += `
-			  - baseImage:
-			    id: ` + baseImage.BaseImage.Id + `
-			    shortDescription: ` + baseImage.BaseImage.ShortDescription + `
-			    detailedDescription: ` + baseImage.BaseImage.DetailedDescription + `
-			    packageType: ` + baseImage.BaseImage.PackageType + `
-			    templateFile: ` + baseImage.BaseImage.TemplateFile
+			  - baseImage:` +
+					helpers.PrintFmtStr(`id: `, baseImage.BaseImage.Id, 8, true) +
+					helpers.PrintFmtStr(`shortDescription: `, baseImage.BaseImage.ShortDescription, 8, true) +
+					helpers.PrintFmtStr(`detailedDescription: `, baseImage.BaseImage.DetailedDescription, 8, true) +
+					helpers.PrintFmtStr(`packageType: `, baseImage.BaseImage.PackageType, 8, true) +
+					helpers.PrintFmtStr(`templateFile: `, baseImage.BaseImage.TemplateFile, 8, true)
 			}
 			for _, virtualSetting := range baseImage.VirtualizationSettings {
 				if nil != virtualSetting {
 					str += `
-			    virtualizationSettings:
-			      - region: ` + virtualSetting.Region + `
-			        zone: ` + virtualSetting.Zone + `
-			        instanceType: ` + virtualSetting.InstanceType + `
-			        sourceImageId: ` + virtualSetting.SourceImageId + `
-			        sshUserName: ` + virtualSetting.SshUserName
+			    virtualizationSettings:` +
+						helpers.PrintFmtStr(`- region: `, virtualSetting.Region, 9, true) +
+						helpers.PrintFmtStr(`zone: `, virtualSetting.Zone, 10, true) +
+						helpers.PrintFmtStr(`instanceType: `, virtualSetting.InstanceType, 10, true) +
+						helpers.PrintFmtStr(`sourceImageId: `, virtualSetting.SourceImageId, 10, true) +
+						helpers.PrintFmtStr(`sshUserName: `, virtualSetting.SshUserName, 10, true)
 				}
 			}
 		}
