@@ -330,19 +330,12 @@ func GetDeploymentEnvInitContainers(initReference *deploymentEnv.InitContainers)
 			getServiceInitContainers(initReference.SpinEcho, "spin-echo")
 	}
 	str = strings.Replace(str, "\t", "    ", -1)
+
+	if "" == str {
+		str = "--|||EMPTY|||--"
+	}
+
 	return str
-
-	// getServiceInitContainers(initReference.Orca, "orca") +
-	// getServiceInitContainers(initReference.Rosco, "rosco") +
-	// getServiceInitContainers(initReference.Gate, "gate") +
-	// getServiceInitContainers(initReference.Deck, "deck") +
-	// getServiceInitContainers(initReference.Igor, "igor") +
-	// getServiceInitContainers(initReference.SpinOrca, "spin-orca") +
-	// getServiceInitContainers(initReference.SpinKayenta, "spin-kayenta") +
-	// getServiceInitContainers(initReference.SpinIgor, "spin-igor") +
-	// getServiceInitContainers(initReference.SpinEcho, "spin-echo") +
-	// getServiceInitContainers(initReference.SpinClouddriverRw, "spin-clouddriver-rw")
-
 }
 
 // func IsInitContainerEmpty(initReference *deploymentEnv.InitContainers) string {
