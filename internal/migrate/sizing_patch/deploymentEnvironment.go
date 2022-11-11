@@ -32,7 +32,7 @@ func GetDeploymentEnvironment(KustomizeData structs.Kustomize) string {
 			getDeploymentEnvConsul(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].DeploymentEnvironment.Consul) +
 			getDeploymentEnvVault(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].DeploymentEnvironment.Vault) +
 			GetDeploymentEnvCustomSizing(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].DeploymentEnvironment.CustomSizing) +
-			// GetDeploymentEnvSidecar(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].DeploymentEnvironment.Sidecar) + //TODO Missing PROTO
+			GetDeploymentEnvSidecars(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].DeploymentEnvironment.Sidecars) +
 			// GetDeploymentEnvInitContainers(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].DeploymentEnvironment.InitContainers) +
 			GetDeploymentEnvHostAliases(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].DeploymentEnvironment.HostAliases) +
 			GetDeploymentEnvTolerations(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].DeploymentEnvironment.Tolerations) +
@@ -189,6 +189,95 @@ func getSizing(sizingReference *deploymentEnv.Sizing, name string) string {
 	return str
 }
 
+func GetDeploymentEnvSidecars(sidecarsRef *deploymentEnv.Sidecars) string {
+	str := ""
+
+	if nil != sidecarsRef {
+		str = `
+		sidecars:` +
+			getSidecarService(sidecarsRef.SpinKayenta, "spin-kayenta") +
+			getSidecarService(sidecarsRef.Clouddriver, "clouddriver") +
+			getSidecarService(sidecarsRef.Echo, "echo") +
+			getSidecarService(sidecarsRef.Fiat, "fiat") +
+			getSidecarService(sidecarsRef.SpinIgor, "spin-igor") +
+			getSidecarService(sidecarsRef.SpinGate, "spin-gate") +
+			getSidecarService(sidecarsRef.SpinOrca, "spin-orca") //+
+		// getSidecarService(sidecarsRef.SpinEcho, "spin-echo") +
+		// getSidecarService(sidecarsRef.SpinClouddriver, "spin-clouddriver") +
+		// getSidecarService(sidecarsRef.SpinFront50, "spin-front50") +
+		// getSidecarService(sidecarsRef.SpinRosco, "spin-rosco") +
+		// getSidecarService(sidecarsRef.SpinDeck, "spin-deck") +
+		// getSidecarService(sidecarsRef.SpinFiat, "spin-fiat")
+
+	} else {
+		str = `
+		sidecars: {}`
+	}
+	str = strings.Replace(str, "\t", "    ", -1)
+
+	return str
+}
+
+func getSidecarService(sidecarServicesRef []*deploymentEnv.SideCarService, name string) string {
+	str := ""
+
+	if nil != sidecarServicesRef {
+		str += `
+		  ` + name + `:`
+		for _, sidecarService := range sidecarServicesRef {
+			str += helpers.PrintFmtStr(`- name: `, sidecarService.Name, 5, true) +
+				helpers.PrintFmtStr(`dockerImage: `, sidecarService.DockerImage, 6, true) +
+				getDeploymentEnvMap(sidecarService.Env, "env") +
+				strings.Replace(getDeploymentEnvArray(sidecarService.Args, "args"), "   ", " ", -1) +
+				strings.Replace(getDeploymentEnvArray(sidecarService.Command, "command"), "   ", " ", -1) +
+				getSidecarConfigMapVolume(sidecarService.ConfigMapVolumeMounts) +
+				strings.Replace(getDeploymentEnvArray(sidecarService.SecretVolumeMounts, "secretVolumeMounts"), "   ", " ", -1) +
+				helpers.PrintFmtStr(`mountPath: `, sidecarService.MountPath, 6, true) +
+				getSecurityContext(sidecarService.SecurityContext)
+		}
+	} else {
+		str = `
+		  ` + name + `: {}`
+	}
+
+	return str
+}
+
+func getSidecarConfigMapVolume(configMapRef []*deploymentEnv.ConfigMapVolumeMounts) string {
+	str := ""
+
+	if nil != configMapRef {
+		str = `
+			configMapVolumeMounts:`
+		for _, configMap := range configMapRef {
+			str += helpers.PrintFmtStr(`- configMapName: `, configMap.ConfigMapName, 6, true) +
+				helpers.PrintFmtStr(`mountPath: `, configMap.MountPath, 7, true)
+		}
+	} else {
+		str = `
+			configMapVolumeMounts: {}`
+	}
+	str = strings.Replace(str, "\t", "    ", -1)
+
+	return str
+}
+
+func getSecurityContext(securityContexRtef *deploymentEnv.SecurityContext) string {
+	str := ""
+
+	if nil != securityContexRtef {
+		str = `
+			securityContext:` +
+			helpers.PrintFmtBool(`privileged: `, securityContexRtef.Privileged, 7, true)
+	} else {
+		str = `
+			securityContext: {}`
+	}
+	str = strings.Replace(str, "\t", "    ", -1)
+
+	return str
+}
+
 func GetDeploymentEnvInitContainers(initReference *deploymentEnv.InitContainers) string {
 	str := ""
 
@@ -241,19 +330,12 @@ func GetDeploymentEnvInitContainers(initReference *deploymentEnv.InitContainers)
 			getServiceInitContainers(initReference.SpinEcho, "spin-echo")
 	}
 	str = strings.Replace(str, "\t", "    ", -1)
+
+	if "" == str {
+		str = "--|||EMPTY|||--"
+	}
+
 	return str
-
-	// getServiceInitContainers(initReference.Orca, "orca") +
-	// getServiceInitContainers(initReference.Rosco, "rosco") +
-	// getServiceInitContainers(initReference.Gate, "gate") +
-	// getServiceInitContainers(initReference.Deck, "deck") +
-	// getServiceInitContainers(initReference.Igor, "igor") +
-	// getServiceInitContainers(initReference.SpinOrca, "spin-orca") +
-	// getServiceInitContainers(initReference.SpinKayenta, "spin-kayenta") +
-	// getServiceInitContainers(initReference.SpinIgor, "spin-igor") +
-	// getServiceInitContainers(initReference.SpinEcho, "spin-echo") +
-	// getServiceInitContainers(initReference.SpinClouddriverRw, "spin-clouddriver-rw")
-
 }
 
 // func IsInitContainerEmpty(initReference *deploymentEnv.InitContainers) string {
@@ -297,10 +379,10 @@ func getServiceInitContainers(servicesRef []*deploymentEnv.Service, name string)
 				  initContainers:`
 		for _, services := range servicesRef {
 			str +=
-				helpers.PrintFmtStr(`	- name: `, services.Name, 7, true) +
-					helpers.PrintFmtStr(`  image: `, services.Image, 8, true) +
-					getDeploymentEnArray(services.Args, "args") +
-					getVolumeMounts(services.VolumeMounts)
+				helpers.PrintFmtStr(`- name: `, services.Name, 9, true) +
+					helpers.PrintFmtStr(`image: `, services.Image, 10, true) +
+					strings.Replace(getDeploymentEnvArray(services.Args, "args"), "\t", "      ", -1) +
+					strings.Replace(getVolumeMounts(services.VolumeMounts), "\t", "      ", -1)
 		}
 	} else {
 		str = ``
@@ -325,7 +407,7 @@ func getServiceInitContainers(servicesRef []*deploymentEnv.Service, name string)
 // 				initContainers:` +
 // 				helpers.PrintFmtStr(`- name: `, services.Name, 7, true) +
 // 				helpers.PrintFmtStr(`image: `, services.Image, 8, true) +
-// 				getDeploymentEnArray(services.Args, "args") +
+// 				getDeploymentEnvArray(services.Args, "args") +
 // 				getVolumeMounts(services.VolumeMounts)
 // 		}
 // 	} else {
@@ -371,7 +453,7 @@ func getHostAliasService(hostAliasesRef []*deploymentEnv.HostAliasService, name 
 			str = `
 		  ` + name + `:` +
 				helpers.PrintFmtStr(`- ip: `, hostAlias.Ip, 5, true) +
-				strings.Replace(getDeploymentEnArray(hostAlias.Hostnames, "hostnames"), "   ", " ", -1)
+				strings.Replace(getDeploymentEnvArray(hostAlias.Hostnames, "hostnames"), "   ", " ", -1)
 		}
 	} else {
 		str = `
@@ -583,7 +665,7 @@ func getLabelSelector(parSidesRef []*deploymentEnv.PAARDSIDE) string {
 					if nil != matchExpression {
 						str += helpers.PrintFmtStr(`- key: `, matchExpression.Key, 11, true) +
 							helpers.PrintFmtStr(`operator: `, matchExpression.Operator, 12, true) +
-							strings.Replace(getDeploymentEnArray(matchExpression.Values, "values"), "\t", "        ", -1)
+							strings.Replace(getDeploymentEnvArray(matchExpression.Values, "values"), "\t", "        ", -1)
 					}
 				}
 			}
@@ -609,7 +691,7 @@ func getNodeSelectorTerms(NodeSelectorTermsRef []*deploymentEnv.NodeSelectorTerm
 		        - matchExpressions:` +
 					helpers.PrintFmtStr(`- key: `, matchExpression.Key, 10, true) +
 					helpers.PrintFmtStr(`operator: `, matchExpression.Operator, 11, true) +
-					strings.Replace(getDeploymentEnArray(matchExpression.Values, "values"), "\t", "      ", -1)
+					strings.Replace(getDeploymentEnvArray(matchExpression.Values, "values"), "\t", "      ", -1)
 			}
 		}
 	} else {
@@ -629,7 +711,7 @@ func GetDeploymentEnvContainers(containersRef []*deploymentEnv.Containers) strin
 		for _, container := range containersRef {
 			str += helpers.PrintFmtStr(`- name: `, container.Name, 5, true) +
 				helpers.PrintFmtStr(`image: `, container.Image, 6, true) +
-				strings.Replace(getDeploymentEnArray(container.Command, "command"), "\t", "  ", -1)
+				strings.Replace(getDeploymentEnvArray(container.Command, "command"), "\t", "  ", -1)
 
 			if nil != container.Env {
 				str += `
@@ -694,7 +776,7 @@ func GetDeploymentEnvVolumes(volumesRef []*deploymentEnv.Volumes) string {
 	return str
 }
 
-func getDeploymentEnArray(stringArray []string, fieldName string) string {
+func getDeploymentEnvArray(stringArray []string, fieldName string) string {
 	str := ""
 
 	if nil != stringArray {
@@ -708,6 +790,29 @@ func getDeploymentEnArray(stringArray []string, fieldName string) string {
 	} else {
 		str += `
 		        ` + fieldName + `: []`
+	}
+
+	return str
+}
+
+func getDeploymentEnvMap(stringMap map[string]string, fieldName string) string {
+	str := ""
+	str2 := ""
+
+	if nil != stringMap {
+
+		for key, value := range stringMap {
+			str2 += helpers.PrintFmtStr(key+": ", value, 7, true)
+		}
+	}
+
+	if "" != str2 {
+		str += `
+		    ` + fieldName + `:` +
+			str2
+	} else {
+		str += `
+		    ` + fieldName + `: {}`
 	}
 
 	return str

@@ -123,9 +123,11 @@ func GetCurrentDeploymentPosition(KustomizeData structs.Kustomize) int {
 func CreateSpinnakerService(KustomizeData structs.Kustomize) error {
 	SpinnakerServiceStr := GetSpinnakerServicePatch(KustomizeData)
 
-	err := fileio.WriteConfigsTmp(KustomizeData.Output_dir+"/SpinnakerService.yml", SpinnakerServiceStr)
-	if err != nil {
-		return err
+	if "" != SpinnakerServiceStr {
+		err := fileio.WriteConfigsTmp(KustomizeData.Output_dir+"/SpinnakerService.yml", SpinnakerServiceStr)
+		if err != nil {
+			return err
+		}
 	}
 	return nil
 }
@@ -133,9 +135,11 @@ func CreateSpinnakerService(KustomizeData structs.Kustomize) error {
 func CreateConfigPatch(KustomizeData structs.Kustomize) error {
 	ConfigPatchStr := GetConfigPatch(KustomizeData)
 
-	err := fileio.WriteConfigsTmp(KustomizeData.Output_dir+"/config-patch.yml", ConfigPatchStr)
-	if err != nil {
-		return err
+	if "" != ConfigPatchStr {
+		err := fileio.WriteConfigsTmp(KustomizeData.Output_dir+"/config-patch.yml", ConfigPatchStr)
+		if err != nil {
+			return err
+		}
 	}
 	return nil
 }
@@ -143,9 +147,11 @@ func CreateConfigPatch(KustomizeData structs.Kustomize) error {
 func CreateProfilesPatch(KustomizeData structs.Kustomize) error {
 	ProfilesPatchStr := GetProfilesPatch(KustomizeData)
 
-	err := fileio.WriteConfigsTmp(KustomizeData.Output_dir+"/profiles-patch.yml", ProfilesPatchStr)
-	if err != nil {
-		return err
+	if "" != ProfilesPatchStr {
+		err := fileio.WriteConfigsTmp(KustomizeData.Output_dir+"/profiles-patch.yml", ProfilesPatchStr)
+		if err != nil {
+			return err
+		}
 	}
 	return nil
 }
@@ -153,9 +159,11 @@ func CreateProfilesPatch(KustomizeData structs.Kustomize) error {
 func CreateFilesPatch(KustomizeData structs.Kustomize) error {
 	FilesPatchStr := GetFilesPatch(KustomizeData)
 
-	err := fileio.WriteConfigsTmp(KustomizeData.Output_dir+"/files-patch.yml", FilesPatchStr)
-	if err != nil {
-		return err
+	if "" != FilesPatchStr {
+		err := fileio.WriteConfigsTmp(KustomizeData.Output_dir+"/files-patch.yml", FilesPatchStr)
+		if err != nil {
+			return err
+		}
 	}
 	return nil
 }
@@ -163,9 +171,11 @@ func CreateFilesPatch(KustomizeData structs.Kustomize) error {
 func CreateServiceSettingsPatch(KustomizeData structs.Kustomize) error {
 	ServiceSettingsPatchStr := GetServiceSettingsPatch(KustomizeData)
 
-	err := fileio.WriteConfigsTmp(KustomizeData.Output_dir+"/service-settings-patch.yml", ServiceSettingsPatchStr)
-	if err != nil {
-		return err
+	if "" != ServiceSettingsPatchStr {
+		err := fileio.WriteConfigsTmp(KustomizeData.Output_dir+"/service-settings-patch.yml", ServiceSettingsPatchStr)
+		if err != nil {
+			return err
+		}
 	}
 	return nil
 }
@@ -173,9 +183,11 @@ func CreateServiceSettingsPatch(KustomizeData structs.Kustomize) error {
 func CreateConfigProviders(KustomizeData structs.Kustomize) error {
 	ConfigProvidersStr := GetConfigProvidersPatch(KustomizeData)
 
-	err := fileio.WriteConfigsTmp(KustomizeData.Output_dir+"/config-providers-patch.yml", ConfigProvidersStr)
-	if err != nil {
-		return err
+	if "" != ConfigProvidersStr {
+		err := fileio.WriteConfigsTmp(KustomizeData.Output_dir+"/config-providers-patch.yml", ConfigProvidersStr)
+		if err != nil {
+			return err
+		}
 	}
 	return nil
 }
@@ -183,9 +195,11 @@ func CreateConfigProviders(KustomizeData structs.Kustomize) error {
 func CreatePatchSizing(KustomizeData structs.Kustomize) error {
 	PatchSizingStr := GetPatchSizing(KustomizeData)
 
-	err := fileio.WriteConfigsTmp(KustomizeData.Output_dir+"/patch-sizing.yml", PatchSizingStr)
-	if err != nil {
-		return err
+	if "" != PatchSizingStr {
+		err := fileio.WriteConfigsTmp(KustomizeData.Output_dir+"/patch-sizing.yml", PatchSizingStr)
+		if err != nil {
+			return err
+		}
 	}
 	return nil
 }
@@ -193,9 +207,11 @@ func CreatePatchSizing(KustomizeData structs.Kustomize) error {
 func CreateArmoryPatch(KustomizeData structs.Kustomize) error {
 	ArmoryPatchStr := GetArmoryPatch(KustomizeData)
 
-	err := fileio.WriteConfigsTmp(KustomizeData.Output_dir+"/armory-patch.yml", ArmoryPatchStr)
-	if err != nil {
-		return err
+	if "" != ArmoryPatchStr {
+		err := fileio.WriteConfigsTmp(KustomizeData.Output_dir+"/armory-patch.yml", ArmoryPatchStr)
+		if err != nil {
+			return err
+		}
 	}
 	return nil
 }
@@ -347,9 +363,15 @@ func GetArmoryPatch(KustomizeData structs.Kustomize) string {
 
 func GetPatchMerges(KustomizeData structs.Kustomize) string {
 	str := KustomizeData.Header + `
+  spinnakerConfig:
+    profiles: {}
   kustomize:` +
 		sizing_patch.GetDeploymentEnvInitContainers(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].DeploymentEnvironment.InitContainers) + `
 `
+
+	if strings.Contains(str, "--|||EMPTY|||--") {
+		str = ""
+	}
 
 	return str
 }
@@ -357,9 +379,11 @@ func GetPatchMerges(KustomizeData structs.Kustomize) string {
 func CreatePatchMerges(KustomizeData structs.Kustomize) error {
 	PatchMergesStr := GetPatchMerges(KustomizeData)
 
-	err := fileio.WriteConfigsTmp(KustomizeData.Output_dir+"/patch-merges.yml", PatchMergesStr)
-	if err != nil {
-		return err
+	if "" != PatchMergesStr {
+		err := fileio.WriteConfigsTmp(KustomizeData.Output_dir+"/patch-merges.yml", PatchMergesStr)
+		if err != nil {
+			return err
+		}
 	}
 	return nil
 }
