@@ -17,6 +17,13 @@ func IsDeploymentEnvironmentEmpty(KustomizeData structs.Kustomize) bool {
 	return true
 }
 
+// func IsInitContainerEmpty(KustomizeData structs.Kustomize) bool {
+// 	if nil != KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].DeploymentEnvironment.InitContainers {
+// 		return false
+// 	}
+// 	return true
+// }
+
 func GetDeploymentEnvironment(KustomizeData structs.Kustomize) string {
 	str := ""
 
@@ -186,24 +193,95 @@ func GetDeploymentEnvInitContainers(initReference *deploymentEnv.InitContainers)
 	str := ""
 
 	if nil != initReference.Front50 {
-		str = `` +
-			getServiceInitContainers(initReference.Front50, "front50") +
-			getServiceInitContainers(initReference.Clouddriver, "clouddriver") +
-			getServiceInitContainers(initReference.Orca, "orca") +
-			getServiceInitContainers(initReference.Rosco, "rosco") +
-			getServiceInitContainers(initReference.Gate, "gate") +
-			getServiceInitContainers(initReference.Deck, "deck") +
-			getServiceInitContainers(initReference.Igor, "igor") +
-			getServiceInitContainers(initReference.SpinOrca, "spin-orca") +
-			getServiceInitContainers(initReference.SpinKayenta, "spin-kayenta") +
-			getServiceInitContainers(initReference.SpinIgor, "spin-igor") +
-			getServiceInitContainers(initReference.SpinEcho, "spin-echo") +
-			getServiceInitContainers(initReference.SpinClouddriverRw, "spin-clouddriver-rw")
-
-		str = strings.Replace(str, "\t", "    ", -1)
+		str += `` +
+			getServiceInitContainers(initReference.Front50, "front50")
 	}
+	if nil != initReference.Clouddriver {
+		str += `` +
+			getServiceInitContainers(initReference.Clouddriver, "clouddriver")
+	}
+	if nil != initReference.Deck {
+		str += `` +
+			getServiceInitContainers(initReference.Deck, "deck")
+	}
+	if nil != initReference.Gate {
+		str += `` +
+			getServiceInitContainers(initReference.Gate, "gate")
+	}
+	if nil != initReference.Igor {
+		str += `` +
+			getServiceInitContainers(initReference.Igor, "igor")
+	}
+	if nil != initReference.Orca {
+		str += `` +
+			getServiceInitContainers(initReference.Orca, "orca")
+	}
+	if nil != initReference.Deck {
+		str += `` +
+			getServiceInitContainers(initReference.Rosco, "rosco")
+	}
+	if nil != initReference.SpinClouddriverRw {
+		str += `` +
+			getServiceInitContainers(initReference.SpinClouddriverRw, "spin-clouddriver-rw")
+	}
+	if nil != initReference.SpinOrca {
+		str += `` +
+			getServiceInitContainers(initReference.SpinOrca, "spin-orca")
+	}
+	if nil != initReference.SpinKayenta {
+		str += `` +
+			getServiceInitContainers(initReference.SpinKayenta, "spin-kayenta")
+	}
+	if nil != initReference.SpinIgor {
+		str += `` +
+			getServiceInitContainers(initReference.SpinIgor, "spin-igor")
+	}
+	if nil != initReference.SpinEcho {
+		str += `` +
+			getServiceInitContainers(initReference.SpinEcho, "spin-echo")
+	}
+	str = strings.Replace(str, "\t", "    ", -1)
 	return str
+
+	// getServiceInitContainers(initReference.Orca, "orca") +
+	// getServiceInitContainers(initReference.Rosco, "rosco") +
+	// getServiceInitContainers(initReference.Gate, "gate") +
+	// getServiceInitContainers(initReference.Deck, "deck") +
+	// getServiceInitContainers(initReference.Igor, "igor") +
+	// getServiceInitContainers(initReference.SpinOrca, "spin-orca") +
+	// getServiceInitContainers(initReference.SpinKayenta, "spin-kayenta") +
+	// getServiceInitContainers(initReference.SpinIgor, "spin-igor") +
+	// getServiceInitContainers(initReference.SpinEcho, "spin-echo") +
+	// getServiceInitContainers(initReference.SpinClouddriverRw, "spin-clouddriver-rw")
+
 }
+
+// func IsInitContainerEmpty(initReference *deploymentEnv.InitContainers) string {
+// 	str := ""
+
+// 	if nil != initReference.Front50 {
+// 		checkInitContainerEmpty(initReference.Front50, "front50")
+// 		checkInitContainerEmpty(initReference.Clouddriver, "clouddriver")
+// 		checkInitContainerEmpty(initReference.Orca, "orca")
+// 		checkInitContainerEmpty(initReference.Rosco, "rosco")
+// 		checkInitContainerEmpty(initReference.Gate, "gate")
+// 		checkInitContainerEmpty(initReference.Deck, "deck")
+// 		checkInitContainerEmpty(initReference.Igor, "igor")
+// 		checkInitContainerEmpty(initReference.SpinOrca, "spin-orca")
+// 		checkInitContainerEmpty(initReference.SpinKayenta, "spin-kayenta")
+// 		checkInitContainerEmpty(initReference.SpinIgor, "spin-igor")
+// 		checkInitContainerEmpty(initReference.SpinEcho, "spin-echo")
+// 		checkInitContainerEmpty(initReference.SpinClouddriverRw, "spin-clouddriver-rw")
+
+// 		str = strings.Replace(str, "\t", "    ", -1)
+// 	}
+// 	return str
+// }
+
+// func checkInitContainerEmpty(servicesRef []*deploymentEnv.Service, name string) bool {
+
+// 	return true
+// }
 
 func getServiceInitContainers(servicesRef []*deploymentEnv.Service, name string) string {
 	str := ""
