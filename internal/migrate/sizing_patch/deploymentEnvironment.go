@@ -26,7 +26,7 @@ func GetDeploymentEnvironment(KustomizeData structs.Kustomize) string {
 			getDeploymentEnvVault(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].DeploymentEnvironment.Vault) +
 			GetDeploymentEnvCustomSizing(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].DeploymentEnvironment.CustomSizing) +
 			// GetDeploymentEnvSidecar(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].DeploymentEnvironment.Sidecar) + //TODO Missing PROTO
-			GetDeploymentEnvInitContainers(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].DeploymentEnvironment.InitContainers) +
+			// GetDeploymentEnvInitContainers(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].DeploymentEnvironment.InitContainers) +
 			GetDeploymentEnvHostAliases(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].DeploymentEnvironment.HostAliases) +
 			GetDeploymentEnvTolerations(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].DeploymentEnvironment.Tolerations) +
 			GetDeploymentEnvNodeSelectors(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].DeploymentEnvironment.NodeSelectors) +
@@ -185,9 +185,8 @@ func getSizing(sizingReference *deploymentEnv.Sizing, name string) string {
 func GetDeploymentEnvInitContainers(initReference *deploymentEnv.InitContainers) string {
 	str := ""
 
-	if nil != initReference {
-		str = `
-	    initContainers:` +
+	if nil != initReference.Front50 {
+		str = `` +
 			getServiceInitContainers(initReference.Front50, "front50") +
 			getServiceInitContainers(initReference.Clouddriver, "clouddriver") +
 			getServiceInitContainers(initReference.Orca, "orca") +
@@ -208,23 +207,56 @@ func GetDeploymentEnvInitContainers(initReference *deploymentEnv.InitContainers)
 
 func getServiceInitContainers(servicesRef []*deploymentEnv.Service, name string) string {
 	str := ""
-
 	if nil != servicesRef {
+		str = `
+	` + name + `:
+	  deployment:
+		patchesStrategicMerge:
+		  - |
+			spec:
+			  template:
+				spec:
+				  initContainers:`
 		for _, services := range servicesRef {
-			str = `
-		    ` + name + `:` +
-				helpers.PrintFmtStr(`- name: `, services.Name, 7, true) +
-				helpers.PrintFmtStr(`image: `, services.Image, 8, true) +
-				getDeploymentEnArray(services.Args, "args") +
-				getVolumeMounts(services.VolumeMounts)
+			str +=
+				helpers.PrintFmtStr(`	- name: `, services.Name, 7, true) +
+					helpers.PrintFmtStr(`  image: `, services.Image, 8, true) +
+					getDeploymentEnArray(services.Args, "args") +
+					getVolumeMounts(services.VolumeMounts)
 		}
 	} else {
-		str = `
-		    ` + name + `: {}`
+		str = ``
 	}
 
 	return str
 }
+
+// func getServiceInitContainers(servicesRef []*deploymentEnv.Service, name string) string {
+// 	str := ""
+
+// 	if nil != servicesRef {
+// 		for _, services := range servicesRef {
+// 			str = `
+// 			` + name + `:
+// 			deployment:
+// 			patchesStrategicMerge:
+// 				- |
+// 		spec:
+// 			template:
+// 			spec:
+// 				initContainers:` +
+// 				helpers.PrintFmtStr(`- name: `, services.Name, 7, true) +
+// 				helpers.PrintFmtStr(`image: `, services.Image, 8, true) +
+// 				getDeploymentEnArray(services.Args, "args") +
+// 				getVolumeMounts(services.VolumeMounts)
+// 		}
+// 	} else {
+// 		str = `
+// 		    ` + name + `: {}`
+// 	}
+
+// 	return str
+// }
 
 func GetDeploymentEnvHostAliases(hostAliasesRef *deploymentEnv.HostAliases) string {
 	str := ""
@@ -313,7 +345,7 @@ func GetDeploymentEnvGitConfig(gitConfigRef *deploymentEnv.GitConfig) string {
 	if nil != gitConfigRef {
 		str = `
 		gitConfig:` +
-			helpers.PrintFmtStr(`UpstreamUser: `, gitConfigRef.UpstreamUser, 5, true) +
+			helpers.PrintFmtStr(`upstreamUser: `, gitConfigRef.UpstreamUser, 5, true) +
 			helpers.PrintFmtStr(`originUser: `, gitConfigRef.OriginUser, 5, true)
 	} else {
 		str = `
