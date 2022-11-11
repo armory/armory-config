@@ -3,10 +3,6 @@ package proto.spinnaker;
 
 option go_package = "config/deploymentConfigurations/spinnaker";
 
-// import "proto/deploymentConfigurations/persistentStorage/S3.proto";
-// import "proto/deploymentConfigurations/persistentStorage/Azs.proto";
-// import "proto/deploymentConfigurations/persistentStorage/Oracle.proto";
-// import "proto/deploymentConfigurations/persistentStorage/Gcs.proto";
 // Configuration for the clouddriver microservice.
 message Spinnaker {
 
@@ -15,46 +11,34 @@ message Spinnaker {
 
 message Extensibility {
 
-    // map<string, Plugins> plugins = 1;
-    Test plugins = 1;
-    Repositories repositories = 2;
+    map<string, Plugins> plugins = 1;
+    map<string, Repositories> repositories = 2;
 
 }
 
 message Plugins {
-    // string name = 1;
-    string id = 2;
-    bool enabled = 3;
-    string version = 4;
-    Config config = 5;
-    repeated Extensions extensions = 6;
+    string id = 1;
+    bool enabled = 2;
+    string version = 3;
+    map<string, string> config = 4;
+    map<string, Extensions> extensions = 5;
 
 }
 
 message Extensions {
-    string name = 1;
-    string id = 2;
-    bool enabled = 3;
-    Config config = 4;
-}
-
-message Config {
-    // Unable to set due to an unlimited amount of possible config options.
+    string id = 1;
+    bool enabled = 2;
+    map<string, string> config = 3;
 }
 
 
 message Repositories {
-    string name = 1;
-    string id = 2;
-    string url = 3;
+    string id = 1;
+    string url = 2;
 }
 
-message Test {
-  map<string, Plugins> plugins = 1;
-}
 
 /*
-
 Example Config
 
   spinnaker:
@@ -78,4 +62,43 @@ Example Config
         REPOSITORY:
           id: REPOSITORY
           url: http://localhost:9090
+
+
+
+
+"spinnaker": {
+  "extensibility": {
+    "plugins": {
+      "Pulumi.PreConfiguredJobPlugin": {
+        "id": null,
+        "enabled": true,
+        "uiResourceLocation": null,
+        "version": "0.0.1",
+        "extensions": {
+          "pulumi.PreConfiguredJobStage": {
+            "id": null,
+            "enabled": true,
+            "config": {
+              "account": "test123",
+              "credentials": "test",
+              "namespace": "test",
+              "sshConfigPath": "test",
+              "logJobProperties": true
+            }
+          }
+        }
+      }
+    },
+    "repositories": {
+      "plugin-repo": {
+        "id": null,
+        "url": "https://rpei-test.s3-us-west-2.amazonaws.com/plugins.json"
+      }
+    }
+  }
+}
+
+
+
+
 */
