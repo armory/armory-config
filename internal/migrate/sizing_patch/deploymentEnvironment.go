@@ -386,10 +386,10 @@ func getServiceInitContainers(servicesRef []*deploymentEnv.Service, name string)
 				  initContainers:`
 		for _, services := range servicesRef {
 			str +=
-				helpers.PrintFmtStr(`	- name: `, services.Name, 7, true) +
-					helpers.PrintFmtStr(`  image: `, services.Image, 8, true) +
-					getDeploymentEnvArray(services.Args, "args") +
-					getVolumeMounts(services.VolumeMounts)
+				helpers.PrintFmtStr(`- name: `, services.Name, 9, true) +
+					helpers.PrintFmtStr(`image: `, services.Image, 10, true) +
+					strings.Replace(getDeploymentEnvArray(services.Args, "args"), "\t", "      ", -1) +
+					strings.Replace(getVolumeMounts(services.VolumeMounts), "\t", "      ", -1)
 		}
 	} else {
 		str = ``

@@ -347,6 +347,8 @@ func GetArmoryPatch(KustomizeData structs.Kustomize) string {
 
 func GetPatchMerges(KustomizeData structs.Kustomize) string {
 	str := KustomizeData.Header + `
+  spinnakerConfig:
+    profiles: {}
   kustomize:` +
 		sizing_patch.GetDeploymentEnvInitContainers(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].DeploymentEnvironment.InitContainers) + `
 `
