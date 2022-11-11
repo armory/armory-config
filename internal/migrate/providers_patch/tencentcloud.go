@@ -9,21 +9,22 @@ import (
 
 func (ProvidersData *Providers) SetTencentcloud(providersRef *providers.Providers) error {
 
-	// if nil != providersRef.Tencentcloud {
-	// 	return fmt.Errorf("Tencent value is null")
-	// }
+	if nil != providersRef.Tencentcloud {
+		if providersRef.Tencentcloud.Enabled {
+			ProvidersData.Enable = "tencentcloud"
+		}
 
-	if providersRef.Tencentcloud.Enabled {
-		ProvidersData.Enable = "tencentcloud"
+		str := helpers.PrintFmtBool(`enabled: `, providersRef.Tencentcloud.Enabled, 5, true) +
+			helpers.PrintFmtStr(`primaryAccount: `, providersRef.Tencentcloud.PrimaryAccount, 5, true) +
+			GetTencentcloudAccounts(providersRef.Tencentcloud.Accounts) +
+			GetTencentBakeryDefaultsAccounts(providersRef.Tencentcloud.BakeryDefaults)
+
+		str = strings.Replace(str, "\t", "          ", -1)
+		ProvidersData.Tencentcloud = str
+	} else {
+		ProvidersData.Tencentcloud = " {}"
+		// 	return fmt.Errorf("Tencentcloud value is null")
 	}
-
-	str := helpers.PrintFmtBool(`enabled: `, providersRef.Tencentcloud.Enabled, 5, true) +
-		helpers.PrintFmtStr(`primaryAccount: `, providersRef.Tencentcloud.PrimaryAccount, 5, true) +
-		GetTencentcloudAccounts(providersRef.Tencentcloud.Accounts) +
-		GetTencentBakeryDefaultsAccounts(providersRef.Tencentcloud.BakeryDefaults)
-
-	str = strings.Replace(str, "\t", "          ", -1)
-	ProvidersData.Tencentcloud = str
 
 	return nil
 }

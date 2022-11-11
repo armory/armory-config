@@ -7,6 +7,7 @@ import (
 
 	"github.com/austinthao5/golang_proto_test/config/deploymentConfigurations"
 	"github.com/austinthao5/golang_proto_test/internal/fileio"
+	"github.com/austinthao5/golang_proto_test/internal/migrate/structs"
 	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/proto"
 	"sigs.k8s.io/yaml"
@@ -54,13 +55,8 @@ func ParseHalConfig(halPath string) (*deploymentConfigurations.HalFile, error) {
 		return nil, err
 	}
 
-	//Convert spin- to spin_ because go doesn't allow variables to be have - and the proto files cannot parse the customSizing data
-	reg := regexp.MustCompile(`(\n)      spin-(.*)`)
-	data = []byte(reg.ReplaceAllString(string(data), `$1      spin_$2`))
-
-	//Convert github-status to githubStatus, same as above
-	reg = regexp.MustCompile(`(\n)    github-status:`)
-	data = []byte(reg.ReplaceAllString(string(data), `$1    githubStatus:`))
+	//We transform the data to have the correct name or format
+	data = []byte(converter(string(data)))
 
 	// Debug
 	// fmt.Println("===RAW hal data START===\n" + string(data) + "\n===RAW hal data END===")
@@ -74,4 +70,45 @@ func ParseHalConfig(halPath string) (*deploymentConfigurations.HalFile, error) {
 	// fmt.Println("%#V", hal)
 
 	return hal, nil
+}
+
+// This function converts specific fields to the correct format for parsing
+func converter(str string) string {
+	//Convert spin- to spin_ because go doesn't allow variables to be have - and the proto files cannot parse the customSizing data
+	reg := regexp.MustCompile(`(\n)      spin-(.*)`)
+	str = reg.ReplaceAllString(str, `$1      spin_$2`)
+
+	//Convert github-status to githubStatus, same as above
+	reg = regexp.MustCompile(`(\n)    github-status:`)
+	str = reg.ReplaceAllString(str, `$1    githubStatus:`)
+
+	//Add any missing fields
+	str = updateMissingConfig(str)
+
+	return str
+}
+
+// This function checks if there is any missing field and adds it to avoid Unmarshal error
+func updateMissingConfig(str string) string {
+
+	fields := []structs.Fields{{
+		Field_name:   "huaweicloud",
+		Field_type:   structs.F_object,
+		Field_parent: "providers",
+	}, {
+		Field_name:   "dcos",
+		Field_type:   structs.F_object,
+		Field_parent: "providers",
+	}, {
+		Field_name:   "tencentCloud",
+		Field_type:   structs.F_object,
+		Field_parent: "providers",
+	}}
+
+	for _, field := range fields {
+		reg := regexp.MustCompile("(\n.*)(" + field.Field_parent + ":)\n")
+		str = reg.ReplaceAllString(str, `$1$2$1  `+field.Field_name+": "+structs.GetFieldTypeToString(field.Field_type)+"\n")
+	}
+
+	return str
 }

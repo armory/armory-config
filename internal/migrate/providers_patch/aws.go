@@ -10,45 +10,46 @@ import (
 
 func (ProvidersData *Providers) SetAwsData(providersRef *providers.Providers) error {
 
-	// if nil != providersRef.Aws {
-	// 	return fmt.Errorf("Aws value is null")
-	// }
-
-	//To avoid null pointers
-	featuresCloudF := ""
-	featuresLambda := ""
-	if nil != providersRef.Aws.Features {
-		if nil != providersRef.Aws.Features.Cloudformation {
-			featuresCloudF = strconv.FormatBool(providersRef.Aws.Features.Cloudformation.Enabled)
+	if nil != providersRef.Aws {
+		//To avoid null pointers
+		featuresCloudF := ""
+		featuresLambda := ""
+		if nil != providersRef.Aws.Features {
+			if nil != providersRef.Aws.Features.Cloudformation {
+				featuresCloudF = strconv.FormatBool(providersRef.Aws.Features.Cloudformation.Enabled)
+			}
+			if nil != providersRef.Aws.Features.Lambda {
+				featuresLambda = strconv.FormatBool(providersRef.Aws.Features.Lambda.Enabled)
+			}
 		}
-		if nil != providersRef.Aws.Features.Lambda {
-			featuresLambda = strconv.FormatBool(providersRef.Aws.Features.Lambda.Enabled)
+
+		if providersRef.Aws.Enabled {
+			ProvidersData.Enable = "aws"
 		}
-	}
 
-	if providersRef.Aws.Enabled {
-		ProvidersData.Enable = "aws"
-	}
-
-	str := helpers.PrintFmtBool(`enabled: `, providersRef.Aws.Enabled, 5, true) +
-		helpers.PrintFmtStr(`primaryAccount: `, providersRef.Aws.PrimaryAccount, 5, true) +
-		GetAwsAccounts(providersRef) +
-		GetAwsBakeryDefault(providersRef.Aws.BakeryDefaults) +
-		helpers.PrintFmtStrApostrophe(`accessKeyId: `, providersRef.Aws.AccessKeyId, 5, true) +
-		helpers.PrintFmtStrApostrophe(`secretAccessKey: `, providersRef.Aws.SecretAccessKey, 5, true) +
-		helpers.PrintFmtStrApostrophe(`defaultKeyPairTemplate: `, providersRef.Aws.DefaultKeyPairTemplate, 5, true) +
-		strings.Replace(getAwsRegions(providersRef.Aws.DefaultRegions, "defaultRegions"), "\t", "    ", -1) + `
+		str := helpers.PrintFmtBool(`enabled: `, providersRef.Aws.Enabled, 5, true) +
+			helpers.PrintFmtStr(`primaryAccount: `, providersRef.Aws.PrimaryAccount, 5, true) +
+			GetAwsAccounts(providersRef) +
+			GetAwsBakeryDefault(providersRef.Aws.BakeryDefaults) +
+			helpers.PrintFmtStrApostrophe(`accessKeyId: `, providersRef.Aws.AccessKeyId, 5, true) +
+			helpers.PrintFmtStrApostrophe(`secretAccessKey: `, providersRef.Aws.SecretAccessKey, 5, true) +
+			helpers.PrintFmtStrApostrophe(`defaultKeyPairTemplate: `, providersRef.Aws.DefaultKeyPairTemplate, 5, true) +
+			strings.Replace(getAwsRegions(providersRef.Aws.DefaultRegions, "defaultRegions"), "\t", "    ", -1) + `
 	defaults:` +
-		helpers.PrintFmtStr(`iamRole: `, providersRef.Aws.Defaults.IamRole, 6, true) + `
+			helpers.PrintFmtStr(`iamRole: `, providersRef.Aws.Defaults.IamRole, 6, true) + `
 	features:
 	  cloudFormation:` +
-		helpers.PrintFmtStr(`enabled: `, featuresCloudF, 7, true) + `
+			helpers.PrintFmtStr(`enabled: `, featuresCloudF, 7, true) + `
 	  lambda:` +
-		helpers.PrintFmtStr(`enabled: `, featuresLambda, 7, true)
+			helpers.PrintFmtStr(`enabled: `, featuresLambda, 7, true)
 
-	str = strings.Replace(str, "\t", "          ", -1)
+		str = strings.Replace(str, "\t", "          ", -1)
 
-	ProvidersData.Aws = str
+		ProvidersData.Aws = str
+	} else {
+		ProvidersData.Aws = " {}"
+		// 	return fmt.Errorf("Aws value is null")
+	}
 
 	return nil
 }

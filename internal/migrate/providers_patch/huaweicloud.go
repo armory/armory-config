@@ -9,21 +9,22 @@ import (
 
 func (ProvidersData *Providers) SetHuaweicloud(providersRef *providers.Providers) error {
 
-	// if nil != providersRef.Huaweicloud {
-	// 	return fmt.Errorf("Huaweicloud value is null")
-	// }
+	if nil != providersRef.Huaweicloud {
+		if providersRef.Huaweicloud.Enabled {
+			ProvidersData.Enable = "huaweicloud"
+		}
 
-	if providersRef.Huaweicloud.Enabled {
-		ProvidersData.Enable = "huaweicloud"
+		str := helpers.PrintFmtBool(`enabled: `, providersRef.Huaweicloud.Enabled, 5, true) +
+			helpers.PrintFmtStr(`primaryAccount: `, providersRef.Huaweicloud.PrimaryAccount, 5, true) +
+			GetHuaweiCloudAccounts(providersRef.Huaweicloud.Accounts) +
+			GetHuaweiBakeryDefaultsAccounts(providersRef.Huaweicloud.BakeryDefaults)
+
+		str = strings.Replace(str, "\t", "          ", -1)
+		ProvidersData.Huaweicloud = str
+	} else {
+		ProvidersData.Huaweicloud = " {}"
+		// 	return fmt.Errorf("Huaweicloud value is null")
 	}
-
-	str := helpers.PrintFmtBool(`enabled: `, providersRef.Huaweicloud.Enabled, 5, true) +
-		helpers.PrintFmtStr(`primaryAccount: `, providersRef.Huaweicloud.PrimaryAccount, 5, true) +
-		GetHuaweiCloudAccounts(providersRef.Huaweicloud.Accounts) +
-		GetHuaweiBakeryDefaultsAccounts(providersRef.Huaweicloud.BakeryDefaults)
-
-	str = strings.Replace(str, "\t", "          ", -1)
-	ProvidersData.Huaweicloud = str
 
 	return nil
 }

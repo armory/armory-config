@@ -9,19 +9,20 @@ import (
 
 func (ProvidersData *Providers) SetKubernetes(providersRef *providers.Providers) error {
 
-	// if nil != providersRef.Kubernetes {
-	// 	return fmt.Errorf("Kubernetes value is null")
-	// }
+	if nil != providersRef.Kubernetes {
+		if providersRef.Kubernetes.Enabled {
+			ProvidersData.Enable = "kubernetes"
+		}
 
-	if providersRef.Kubernetes.Enabled {
-		ProvidersData.Enable = "kubernetes"
+		str := helpers.PrintFmtBool(`enabled: `, providersRef.Kubernetes.Enabled, 5, true) +
+			helpers.PrintFmtStr(`primaryAccount: `, providersRef.Kubernetes.PrimaryAccount, 5, true) +
+			GetKubernetesAccounts(providersRef.Kubernetes.Accounts)
+
+		ProvidersData.Kubernetes = str
+	} else {
+		ProvidersData.Kubernetes = " {}"
+		// 	return fmt.Errorf("Kubernetes value is null")
 	}
-
-	str := helpers.PrintFmtBool(`enabled: `, providersRef.Kubernetes.Enabled, 5, true) +
-		helpers.PrintFmtStr(`primaryAccount: `, providersRef.Kubernetes.PrimaryAccount, 5, true) +
-		GetKubernetesAccounts(providersRef.Kubernetes.Accounts)
-
-	ProvidersData.Kubernetes = str
 
 	return nil
 }

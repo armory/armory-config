@@ -9,21 +9,22 @@ import (
 
 func (ProvidersData *Providers) SetAzure(providersRef *providers.Providers) error {
 
-	// if nil != providersRef.Azure {
-	// 	return fmt.Errorf("Azure value is null")
-	// }
+	if nil != providersRef.Azure {
+		if providersRef.Azure.Enabled {
+			ProvidersData.Enable = "azure"
+		}
 
-	if providersRef.Azure.Enabled {
-		ProvidersData.Enable = "azure"
+		str := helpers.PrintFmtBool(`enabled: `, providersRef.Azure.Enabled, 5, true) +
+			helpers.PrintFmtStr(`primaryAccount: `, providersRef.Azure.PrimaryAccount, 5, true) +
+			GetAzureAccounts(providersRef.Azure.Accounts) +
+			GetAzureBakeryDefaults(providersRef.Azure.BakeryDefaults)
+
+		str = strings.Replace(str, "\t", "          ", -1)
+		ProvidersData.Azure = str
+	} else {
+		ProvidersData.Azure = " {}"
+		// 	return fmt.Errorf("Azure value is null")
 	}
-
-	str := helpers.PrintFmtBool(`enabled: `, providersRef.Azure.Enabled, 5, true) +
-		helpers.PrintFmtStr(`primaryAccount: `, providersRef.Azure.PrimaryAccount, 5, true) +
-		GetAzureAccounts(providersRef.Azure.Accounts) +
-		GetAzureBakeryDefaults(providersRef.Azure.BakeryDefaults)
-
-	str = strings.Replace(str, "\t", "          ", -1)
-	ProvidersData.Azure = str
 
 	return nil
 }

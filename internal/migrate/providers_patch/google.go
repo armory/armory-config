@@ -9,21 +9,22 @@ import (
 
 func (ProvidersData *Providers) SetGoogle(providersRef *providers.Providers) error {
 
-	// if nil != providersRef.Google {
-	// 	return fmt.Errorf("Google value is null")
-	// }
+	if nil != providersRef.Google {
+		if providersRef.Google.Enabled {
+			ProvidersData.Enable = "google"
+		}
 
-	if providersRef.Google.Enabled {
-		ProvidersData.Enable = "google"
+		str := helpers.PrintFmtBool(`enabled: `, providersRef.Google.Enabled, 5, true) +
+			helpers.PrintFmtStr(`primaryAccount: `, providersRef.Google.PrimaryAccount, 5, true) +
+			GetGoogleAccounts(providersRef.Google.Accounts) +
+			GetGoogleBakeryDefaultsAccounts(providersRef.Google.BakeryDefaults)
+
+		str = strings.Replace(str, "\t", "          ", -1)
+		ProvidersData.Google = str
+	} else {
+		ProvidersData.Google = " {}"
+		// 	return fmt.Errorf("Google value is null")
 	}
-
-	str := helpers.PrintFmtBool(`enabled: `, providersRef.Google.Enabled, 5, true) +
-		helpers.PrintFmtStr(`primaryAccount: `, providersRef.Google.PrimaryAccount, 5, true) +
-		GetGoogleAccounts(providersRef.Google.Accounts) +
-		GetGoogleBakeryDefaultsAccounts(providersRef.Google.BakeryDefaults)
-
-	str = strings.Replace(str, "\t", "          ", -1)
-	ProvidersData.Google = str
 
 	return nil
 }
