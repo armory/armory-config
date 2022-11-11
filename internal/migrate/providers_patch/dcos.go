@@ -9,21 +9,22 @@ import (
 
 func (ProvidersData *Providers) SetDcos(providersRef *providers.Providers) error {
 
-	// if nil != providersRef.Dcos {
-	// 	return fmt.Errorf("Dcos value is null")
-	// }
+	if nil != providersRef.Dcos {
+		if providersRef.Dcos.Enabled {
+			ProvidersData.Enable = "dcos"
+		}
 
-	if providersRef.Dcos.Enabled {
-		ProvidersData.Enable = "dcos"
+		str := helpers.PrintFmtBool(`enabled: `, providersRef.Dcos.Enabled, 5, true) +
+			helpers.PrintFmtStr(`primaryAccount: `, providersRef.Dcos.PrimaryAccount, 5, true) +
+			GetDcosAccounts(providersRef.Dcos.Accounts) +
+			GetDcosMainClusters(providersRef.Dcos.Clusters)
+
+		str = strings.Replace(str, "\t", "          ", -1)
+		ProvidersData.Dcos = str
+	} else {
+		ProvidersData.Dcos = " {}"
+		// 	return fmt.Errorf("Dcos value is null")
 	}
-
-	str := helpers.PrintFmtBool(`enabled: `, providersRef.Dcos.Enabled, 5, true) +
-		helpers.PrintFmtStr(`primaryAccount: `, providersRef.Dcos.PrimaryAccount, 5, true) +
-		GetDcosAccounts(providersRef.Dcos.Accounts) +
-		GetDcosMainClusters(providersRef.Dcos.Clusters)
-
-	str = strings.Replace(str, "\t", "          ", -1)
-	ProvidersData.Dcos = str
 
 	return nil
 }

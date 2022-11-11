@@ -9,20 +9,21 @@ import (
 
 func (ProvidersData *Providers) SetCloudfoundry(providersRef *providers.Providers) error {
 
-	// if nil != providersRef.Cloudfoundry {
-	// 	return fmt.Errorf("Cloudfoundry value is null")
-	// }
+	if nil != providersRef.Cloudfoundry {
+		if providersRef.Cloudfoundry.Enabled {
+			ProvidersData.Enable = "cloudfoundry"
+		}
 
-	if providersRef.Cloudfoundry.Enabled {
-		ProvidersData.Enable = "cloudfoundry"
+		str := helpers.PrintFmtBool(`enabled: `, providersRef.Oracle.Enabled, 5, true) +
+			helpers.PrintFmtStr(`primaryAccount: `, providersRef.Oracle.PrimaryAccount, 5, true) +
+			GetCloudfoundryAccounts(providersRef.Cloudfoundry.Accounts)
+
+		str = strings.Replace(str, "\t", "          ", -1)
+		ProvidersData.Cloudfoundry = str
+	} else {
+		ProvidersData.Cloudfoundry = " {}"
+		// 	return fmt.Errorf("Cloudfoundry value is null")
 	}
-
-	str := helpers.PrintFmtBool(`enabled: `, providersRef.Oracle.Enabled, 5, true) +
-		helpers.PrintFmtStr(`primaryAccount: `, providersRef.Oracle.PrimaryAccount, 5, true) +
-		GetCloudfoundryAccounts(providersRef.Cloudfoundry.Accounts)
-
-	str = strings.Replace(str, "\t", "          ", -1)
-	ProvidersData.Cloudfoundry = str
 
 	return nil
 }

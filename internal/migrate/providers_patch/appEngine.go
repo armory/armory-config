@@ -10,19 +10,20 @@ import (
 
 func (ProvidersData *Providers) SetAppEngineData(providersRef *providers.Providers) error {
 
-	// if nil != providersRef.Appengine {
-	// 	return fmt.Errorf("Appengine value is null")
-	// }
+	if nil != providersRef.Appengine {
+		if providersRef.Appengine.Enabled {
+			ProvidersData.Enable = "appengine"
+		}
 
-	if providersRef.Appengine.Enabled {
-		ProvidersData.Enable = "appengine"
+		str := helpers.PrintFmtBool(`enabled: `, providersRef.Appengine.Enabled, 5, true) +
+			helpers.PrintFmtStr(`primaryAccount: `, providersRef.Appengine.PrimaryAccount, 5, true) +
+			GetAppEngineAccounts(providersRef)
+
+		ProvidersData.AppEngine = str
+	} else {
+		ProvidersData.AppEngine = " {}"
+		// 	return fmt.Errorf("Appengine value is null")
 	}
-
-	str := helpers.PrintFmtBool(`enabled: `, providersRef.Appengine.Enabled, 5, true) +
-		helpers.PrintFmtStr(`primaryAccount: `, providersRef.Appengine.PrimaryAccount, 5, true) +
-		GetAppEngineAccounts(providersRef)
-
-	ProvidersData.AppEngine = str
 
 	return nil
 }

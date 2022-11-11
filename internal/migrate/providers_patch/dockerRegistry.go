@@ -9,21 +9,21 @@ import (
 
 func (ProvidersData *Providers) SetDockerRegistry(providersRef *providers.Providers) error {
 
-	// if nil != providersRef.DockerRegistry {
-	// 	return fmt.Errorf("DockerRegistry value is null")
-	// }
+	if nil != providersRef.DockerRegistry {
+		if providersRef.DockerRegistry.Enabled {
+			ProvidersData.Enable = "dockerRegistry"
+		}
 
-	if providersRef.DockerRegistry.Enabled {
-		ProvidersData.Enable = "dockerRegistry"
+		str := helpers.PrintFmtBool(`enabled: `, providersRef.DockerRegistry.Enabled, 5, true) +
+			helpers.PrintFmtStr(`primaryAccount: `, providersRef.DockerRegistry.PrimaryAccount, 5, true) +
+			GetDockerRegistryAccounts(providersRef.DockerRegistry.Accounts)
+
+		str = strings.Replace(str, "\t", "          ", -1)
+		ProvidersData.DockerRegistry = str
+	} else {
+		ProvidersData.DockerRegistry = " {}"
+		// 	return fmt.Errorf("DockerRegistry value is null")
 	}
-
-	str := helpers.PrintFmtBool(`enabled: `, providersRef.DockerRegistry.Enabled, 5, true) +
-		helpers.PrintFmtStr(`primaryAccount: `, providersRef.DockerRegistry.PrimaryAccount, 5, true) +
-		GetDockerRegistryAccounts(providersRef.DockerRegistry.Accounts)
-
-	str = strings.Replace(str, "\t", "          ", -1)
-	ProvidersData.DockerRegistry = str
-
 	return nil
 }
 

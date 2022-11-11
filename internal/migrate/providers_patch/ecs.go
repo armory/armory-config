@@ -9,19 +9,20 @@ import (
 
 func (ProvidersData *Providers) SetEcs(providersRef *providers.Providers) error {
 
-	// if nil != providersRef.Ecs {
-	// 	return fmt.Errorf("Ecs value is null")
-	// }
+	if nil != providersRef.Ecs {
+		if providersRef.Ecs.Enabled {
+			ProvidersData.Enable = "ecs"
+		}
+		str := helpers.PrintFmtBool(`enabled: `, providersRef.Ecs.Enabled, 5, true) +
+			helpers.PrintFmtStr(`primaryAccount: `, providersRef.Ecs.PrimaryAccount, 5, true) +
+			GetEcsAccounts(providersRef.Ecs.Accounts)
 
-	if providersRef.Ecs.Enabled {
-		ProvidersData.Enable = "ecs"
+		str = strings.Replace(str, "\t", "          ", -1)
+		ProvidersData.Ecs = str
+	} else {
+		ProvidersData.Ecs = " {}"
+		// 	return fmt.Errorf("Ecs value is null")
 	}
-	str := helpers.PrintFmtBool(`enabled: `, providersRef.Ecs.Enabled, 5, true) +
-		helpers.PrintFmtStr(`primaryAccount: `, providersRef.Ecs.PrimaryAccount, 5, true) +
-		GetEcsAccounts(providersRef.Ecs.Accounts)
-
-	str = strings.Replace(str, "\t", "          ", -1)
-	ProvidersData.Ecs = str
 
 	return nil
 }

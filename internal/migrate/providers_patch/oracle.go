@@ -9,21 +9,22 @@ import (
 
 func (ProvidersData *Providers) SetOracle(providersRef *providers.Providers) error {
 
-	// if nil != providersRef.Oracle {
-	// 	return fmt.Errorf("Oracle value is null")
-	// }
+	if nil != providersRef.Oracle {
+		if providersRef.Oracle.Enabled {
+			ProvidersData.Enable = "oracle"
+		}
 
-	if providersRef.Oracle.Enabled {
-		ProvidersData.Enable = "oracle"
+		str := helpers.PrintFmtBool(`enabled: `, providersRef.Oracle.Enabled, 5, true) +
+			helpers.PrintFmtStr(`primaryAccount: `, providersRef.Oracle.PrimaryAccount, 5, true) +
+			GetOracleAccounts(providersRef.Oracle.Accounts) +
+			GetOracleBakeryDefaultsAccounts(providersRef.Oracle.BakeryDefaults)
+
+		str = strings.Replace(str, "\t", "          ", -1)
+		ProvidersData.Oracle = str
+	} else {
+		ProvidersData.Oracle = " {}"
+		// 	return fmt.Errorf("Oracle value is null")
 	}
-
-	str := helpers.PrintFmtBool(`enabled: `, providersRef.Oracle.Enabled, 5, true) +
-		helpers.PrintFmtStr(`primaryAccount: `, providersRef.Oracle.PrimaryAccount, 5, true) +
-		GetOracleAccounts(providersRef.Oracle.Accounts) +
-		GetOracleBakeryDefaultsAccounts(providersRef.Oracle.BakeryDefaults)
-
-	str = strings.Replace(str, "\t", "          ", -1)
-	ProvidersData.Oracle = str
 
 	return nil
 }
