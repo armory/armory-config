@@ -102,9 +102,6 @@ message ClouddriverHA {
 
 message EchoHA {
     bool enabled = 1;
-    string image = 2;
-    repeated string args = 3;
-    repeated VolumeMounts volumeMounts = 4;
 
 
 }
