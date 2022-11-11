@@ -58,6 +58,10 @@ func ParseHalConfig(halPath string) (*deploymentConfigurations.HalFile, error) {
 	reg := regexp.MustCompile(`(\n)      spin-(.*)`)
 	data = []byte(reg.ReplaceAllString(string(data), `$1      spin_$2`))
 
+	//Convert github-status to githubStatus, same as above
+	reg = regexp.MustCompile(`(\n)    github-status:`)
+	data = []byte(reg.ReplaceAllString(string(data), `$1    githubStatus:`))
+
 	// Debug
 	// fmt.Println("===RAW hal data START===\n" + string(data) + "\n===RAW hal data END===")
 
