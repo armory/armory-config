@@ -20,41 +20,14 @@ import (
 func CreateKustomization(KustomizeData *structs.Kustomize) error {
 	// KustomizeData := structs.Kustomize{}
 
-	str := `apiVersion: kustomize.config.k8s.io/v1beta1
-	kind: Kustomization
-
-	namespace: spinnaker` + /*KustomizeData.Halyard.DeploymentConfiguration[KustomizeData.CurrentDeploymentPos].deploymentEnvironment.Location +*/ `
-
-	resources:
-	- SpinnakerService.yml
-
-	# Apply the patches top down order
-	patchesStrategicMerge:
-	- config-patch.yml              #Contains Spinnaker configuration (contents of a deployment)
-	- profiles-patch.yml            #Contains the YAML of each service's profile
-	- files-patch.yml               #Contains any other raw string files not handle in spinnakerConfig
-	- service-settings-patch.yml    #Contains the config for each service's service-setting
-	- config-providers-patch.yml    #Contains the providers configuration
-`
-
-	if "ARMORY" == KustomizeData.Spin_flavor {
-		str += `	- armory-patch.yml              #Contains Specific Armory config
-`
-	}
-
-	if !sizing_patch.IsDeploymentEnvironmentEmpty(*KustomizeData) {
-		str += `	- patch-sizing.yml              #Contains Halyard DeploymentEnvironment
-`
-	}
-
-	str = strings.Replace(str, "\t", "", -1)
+	SetHeaders(KustomizeData)
+	str := GetKustomization(KustomizeData)
 
 	err := fileio.WriteConfigsTmp(KustomizeData.Output_dir+"/kustomization.yml", str)
 	if err != nil {
 		return err
 	}
 
-	SetHeaders(KustomizeData)
 	KustomizeData.CurrentDeploymentPos = GetCurrentDeploymentPosition(*KustomizeData)
 
 	//This should never ocurre because of the validation validateCurrentDeploymentExists
@@ -70,7 +43,6 @@ func CreateKustomization(KustomizeData *structs.Kustomize) error {
 		CreateFilesPatch,
 		CreateServiceSettingsPatch,
 		CreateConfigProviders,
-		CreatePatchMerges,
 	}
 
 	if "ARMORY" == KustomizeData.Spin_flavor {
@@ -90,6 +62,50 @@ func CreateKustomization(KustomizeData *structs.Kustomize) error {
 	}
 
 	return nil
+}
+
+func GetKustomization(KustomizeData *structs.Kustomize) string {
+	str := ""
+
+	if nil != KustomizeData {
+		str = `apiVersion: kustomize.config.k8s.io/v1beta1
+	kind: Kustomization
+
+	namespace: spinnaker` + /*KustomizeData.Halyard.DeploymentConfiguration[KustomizeData.CurrentDeploymentPos].deploymentEnvironment.Location +*/ `
+
+	resources:
+	- SpinnakerService.yml
+
+	# Apply the patches top down order
+	patchesStrategicMerge:
+	- config-patch.yml              #Contains Spinnaker configuration (contents of a deployment)
+	- profiles-patch.yml            #Contains the YAML of each service's profile
+	- files-patch.yml               #Contains any other raw string files not handle in spinnakerConfig
+	- service-settings-patch.yml    #Contains the config for each service's service-setting
+	- config-providers-patch.yml    #Contains the providers configuration
+`
+
+		if "ARMORY" == KustomizeData.Spin_flavor {
+			str += `	- armory-patch.yml              #Contains Specific Armory config
+`
+		}
+
+		if !sizing_patch.IsDeploymentEnvironmentEmpty(*KustomizeData) {
+			str += `	- patch-sizing.yml              #Contains Halyard DeploymentEnvironment
+`
+		}
+
+		//TODO Missing catch of the error
+		_, mergesFileNotEmpty := CreatePatchMerges(*KustomizeData)
+		if mergesFileNotEmpty {
+			str += `	- patch-merges.yml              #Contains Halyard initContainers and sidecars
+`
+		}
+
+		str = strings.Replace(str, "\t", "", -1)
+	}
+
+	return str
 }
 
 func SetHeaders(KustomizeData *structs.Kustomize) {
@@ -376,14 +392,17 @@ func GetPatchMerges(KustomizeData structs.Kustomize) string {
 	return str
 }
 
-func CreatePatchMerges(KustomizeData structs.Kustomize) error {
+// Returns true when patch-merges is Not Empty
+func CreatePatchMerges(KustomizeData structs.Kustomize) (error, bool) {
+	isNotEmpty := false
 	PatchMergesStr := GetPatchMerges(KustomizeData)
 
 	if "" != PatchMergesStr {
 		err := fileio.WriteConfigsTmp(KustomizeData.Output_dir+"/patch-merges.yml", PatchMergesStr)
 		if err != nil {
-			return err
+			return err, isNotEmpty
 		}
+		isNotEmpty = true
 	}
-	return nil
+	return nil, isNotEmpty
 }
