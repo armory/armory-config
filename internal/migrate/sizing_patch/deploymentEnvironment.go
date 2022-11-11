@@ -491,10 +491,7 @@ func getEchoHa(echoHaRef *deploymentEnv.EchoHA) string {
 	if nil != echoHaRef {
 		str = `
 		  echo:` +
-			helpers.PrintFmtBool(`enabled: `, echoHaRef.Enabled, 6, true) +
-			helpers.PrintFmtStr(`image: `, echoHaRef.Image, 6, true) +
-			strings.Replace(getDeploymentEnArray(echoHaRef.Args, "args"), "  ", " ", -1) +
-			strings.Replace(getVolumeMounts(echoHaRef.VolumeMounts), "  ", " ", -1)
+			helpers.PrintFmtBool(`enabled: `, echoHaRef.Enabled, 6, true)
 	} else {
 		str = `
 		  echo: {}`
