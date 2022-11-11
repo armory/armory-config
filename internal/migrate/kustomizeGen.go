@@ -70,6 +70,7 @@ func CreateKustomization(KustomizeData *structs.Kustomize) error {
 		CreateFilesPatch,
 		CreateServiceSettingsPatch,
 		CreateConfigProviders,
+		CreatePatchMerges,
 	}
 
 	if "ARMORY" == KustomizeData.Spin_flavor {
@@ -342,4 +343,23 @@ func GetArmoryPatch(KustomizeData structs.Kustomize) string {
 `
 
 	return str
+}
+
+func GetPatchMerges(KustomizeData structs.Kustomize) string {
+	str := KustomizeData.Header + `
+  kustomize:` +
+		sizing_patch.GetDeploymentEnvInitContainers(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].DeploymentEnvironment.InitContainers) + `
+`
+
+	return str
+}
+
+func CreatePatchMerges(KustomizeData structs.Kustomize) error {
+	PatchMergesStr := GetPatchMerges(KustomizeData)
+
+	err := fileio.WriteConfigsTmp(KustomizeData.Output_dir+"/patch-merges.yml", PatchMergesStr)
+	if err != nil {
+		return err
+	}
+	return nil
 }
