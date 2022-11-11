@@ -4,7 +4,6 @@ package parser
 import (
 	"fmt"
 	"regexp"
-	"strings"
 
 	"github.com/austinthao5/golang_proto_test/config/deploymentConfigurations"
 	"github.com/austinthao5/golang_proto_test/internal/fileio"
@@ -100,13 +99,15 @@ func updateMissingConfig(str string) string {
 		Field_name:   "dcos",
 		Field_type:   structs.F_object,
 		Field_parent: "providers",
+	}, {
+		Field_name:   "tencentCloud",
+		Field_type:   structs.F_object,
+		Field_parent: "providers",
 	}}
 
 	for _, field := range fields {
-		if !strings.Contains(str, field.Field_name) {
-			reg := regexp.MustCompile("(\n.*)(" + field.Field_parent + ":)\n")
-			str = reg.ReplaceAllString(str, `$1$2$1  `+field.Field_name+": "+structs.GetFieldTypeToString(field.Field_type)+"\n")
-		}
+		reg := regexp.MustCompile("(\n.*)(" + field.Field_parent + ":)\n")
+		str = reg.ReplaceAllString(str, `$1$2$1  `+field.Field_name+": "+structs.GetFieldTypeToString(field.Field_type)+"\n")
 	}
 
 	return str
