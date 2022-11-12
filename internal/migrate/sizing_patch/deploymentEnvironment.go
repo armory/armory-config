@@ -40,9 +40,9 @@ func GetDeploymentEnvironment(KustomizeData structs.Kustomize) string {
 			GetDeploymentEnvGitConfig(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].DeploymentEnvironment.GitConfig) +
 			GetDeploymentEnvLivenessProbeConfig(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].DeploymentEnvironment.LivenessProbeConfig) +
 			GetDeploymentEnvHaServices(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].DeploymentEnvironment.HaServices) +
-			GetDeploymentEnvAffinity(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].DeploymentEnvironment.Affinity) +
-			GetDeploymentEnvContainers(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].DeploymentEnvironment.Containers) +
-			GetDeploymentEnvVolumes(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].DeploymentEnvironment.Volumes)
+			GetDeploymentEnvAffinity(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].DeploymentEnvironment.Affinity)
+		// GetDeploymentEnvContainers(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].DeploymentEnvironment.Containers)
+		// GetDeploymentEnvVolumes(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].DeploymentEnvironment.Volumes)
 	}
 
 	return str
@@ -161,13 +161,17 @@ func getServiceSizing(serviceSizingReference *deploymentEnv.ServiceSizing, name 
 
 	if nil != serviceSizingReference {
 		str = `
-		  ` + name + `:` +
-			helpers.PrintFmtInt(`replicas: `, serviceSizingReference.Replicas, 6, true) +
+		  ` + name + `:`
+		if serviceSizingReference.Replicas > 0 {
+			str += helpers.PrintFmtInt(`replicas: `, serviceSizingReference.Replicas, 6, true)
+		}
+		str +=
 			getSizing(serviceSizingReference.Limits, "limits") +
-			getSizing(serviceSizingReference.Requests, "requests")
+				getSizing(serviceSizingReference.Requests, "requests")
 	} else {
-		str = `
-		  ` + name + `: {}`
+		// str = `
+		//   ` + name + `: {}`
+		str = ``
 	}
 
 	return str
@@ -179,11 +183,12 @@ func getSizing(sizingReference *deploymentEnv.Sizing, name string) string {
 	if nil != sizingReference {
 		str = `
 		    ` + name + `:` +
-			helpers.PrintFmtInt(`cpu: `, sizingReference.Cpu, 7, true) +
+			helpers.PrintFmtStr(`cpu: `, sizingReference.Cpu, 7, true) +
 			helpers.PrintFmtStr(`memory: `, sizingReference.Memory, 7, true)
 	} else {
-		str = `
-		    ` + name + `: {}`
+		// str = `
+		//     ` + name + `: {}`
+		str = ``
 	}
 
 	return str

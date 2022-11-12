@@ -68,5 +68,5 @@ message ServiceSizing {
 
 message Sizing {
     string memory = 1;
-    int32 cpu = 2;
+    string cpu = 2;
 }

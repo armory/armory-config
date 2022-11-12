@@ -78,10 +78,21 @@ func converter(str string) string {
 	reg := regexp.MustCompile(`(\n)      spin-(.*)`)
 	str = reg.ReplaceAllString(str, `$1      spin_$2`)
 
+	// Convert monitoring-daemon -> monitoring_daemon
+	reg = regexp.MustCompile(`(\n)      monitoring-(.*)`)
+	str = reg.ReplaceAllString(str, `$1      monitoring_$2`)
+
+	// Convert clouddriverHA configs i.e. spin-clouddriver-ro -> spin_clouddriver_ro
+	reg = regexp.MustCompile(`(spin_clouddriver-)(.*)`)
+	str = reg.ReplaceAllString(str, `spin_clouddriver_$2`)
+
 	//Convert github-status to githubStatus, same as above
 	reg = regexp.MustCompile(`(\n)    github-status:`)
 	str = reg.ReplaceAllString(str, `$1    githubStatus:`)
 
+	// Convert customSizing CPU integers to string
+	reg = regexp.MustCompile(`(cpu: )([0-9].*)`)
+	str = reg.ReplaceAllString(str, `$1"$2"`)
 	//Add any missing fields
 	str = updateMissingConfig(str)
 
