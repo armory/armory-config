@@ -41,10 +41,19 @@ func GetCanaryServiceIntegrations(canary *canary.Canary) string {
 		for _, serviceInteg := range canary.ServiceIntegrations {
 			str += helpers.PrintFmtStr(`- name: `, serviceInteg.Name, 5, true) +
 				helpers.PrintFmtBool(`enabled: `, serviceInteg.Enabled, 6, true) +
-				helpers.PrintFmtBool(`gcsEnabled: `, serviceInteg.GcsEnabled, 6, true) +
 				getCanaryAccounts(serviceInteg.Accounts) +
-				helpers.PrintFmtBool(`stackdriverEnabled: `, serviceInteg.StackdriverEnabled, 6, true) +
-				helpers.PrintFmtBool(`s3Enabled: `, serviceInteg.S3Enabled, 6, true)
+				helpers.PrintFmtBool(`stackdriverEnabled: `, serviceInteg.StackdriverEnabled, 6, true)
+
+			if serviceInteg.Name == `aws` {
+				str += helpers.PrintFmtBool(`s3Enabled: `, serviceInteg.S3Enabled, 6, true)
+
+			}
+			if serviceInteg.Name == `google` {
+				helpers.PrintFmtBool(`gcsEnabled: `, serviceInteg.GcsEnabled, 6, true)
+
+			}
+			// helpers.PrintFmtBool(`s3Enabled: `, serviceInteg.S3Enabled, 6, true) +
+			// helpers.PrintFmtBool(`gcsEnabled: `, serviceInteg.GcsEnabled, 6, true)
 		}
 	} else {
 		str += `
