@@ -785,7 +785,7 @@ func getDeploymentEnvArray(stringArray []string, fieldName string) string {
 		for _, stringValue := range stringArray {
 
 			str += `
-		          - ` + checkGetMultiline(stringValue, 10)
+		          - ` + checkGetMultiline(stringValue, 12)
 		}
 	} else {
 		str += `

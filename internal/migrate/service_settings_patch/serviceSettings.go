@@ -12,6 +12,10 @@ func GetServiceSettings(KustomizeData structs.Kustomize) string {
 
 	if nil != KustomizeData.ServiceSettingsConfigFiles {
 		str = GetClouddriverServiceSettings(KustomizeData) +
+			GetClouddriverRoServiceSettings(KustomizeData) +
+			GetClouddriverRoDeckServiceSettings(KustomizeData) +
+			GetClouddriverRwServiceSettings(KustomizeData) +
+			GetClouddriverCachingServiceSettings(KustomizeData) +
 			GetDeckServiceSettings(KustomizeData) +
 			GetEchoServiceSettings(KustomizeData) +
 			GetFiatServiceSettings(KustomizeData) +
@@ -21,8 +25,69 @@ func GetServiceSettings(KustomizeData structs.Kustomize) string {
 			GetKayentaServiceSettings(KustomizeData) +
 			GetOrcaServiceSettings(KustomizeData) +
 			GetRoscoServiceSettings(KustomizeData)
+
 	}
 	return str
+}
+
+func GetClouddriverCachingServiceSettings(KustomizeData structs.Kustomize) string {
+	str := ``
+	// # === Clouddriver Read Write Config ===
+	// 		clouddriver-rw: {} # is the contents of ~/.hal/default/service-settings/clouddriver.yml`
+
+	if value, isMapContainsKey := KustomizeData.ServiceSettingsConfigFiles["clouddriver-caching.yml"]; isMapContainsKey {
+		str = `
+# === Clouddriver Read Write Config ===
+		clouddriver-caching:
+			` + value
+	}
+
+	return ProfilesFormatStr(str)
+}
+
+func GetClouddriverRoDeckServiceSettings(KustomizeData structs.Kustomize) string {
+	str := ``
+	// # === Clouddriver Read Write Config ===
+	// 		clouddriver-rw: {} # is the contents of ~/.hal/default/service-settings/clouddriver.yml`
+
+	if value, isMapContainsKey := KustomizeData.ServiceSettingsConfigFiles["clouddriver-ro-deck.yml"]; isMapContainsKey {
+		str = `
+# === Clouddriver Read Write Config ===
+		clouddriver-ro-deck:
+			` + value
+	}
+
+	return ProfilesFormatStr(str)
+}
+
+func GetClouddriverRwServiceSettings(KustomizeData structs.Kustomize) string {
+	str := ``
+	// # === Clouddriver Read Write Config ===
+	// 		clouddriver-rw: {} # is the contents of ~/.hal/default/service-settings/clouddriver.yml`
+
+	if value, isMapContainsKey := KustomizeData.ServiceSettingsConfigFiles["clouddriver-rw.yml"]; isMapContainsKey {
+		str = `
+# === Clouddriver Read Write Config ===
+		clouddriver-rw:
+			` + value
+	}
+
+	return ProfilesFormatStr(str)
+}
+
+func GetClouddriverRoServiceSettings(KustomizeData structs.Kustomize) string {
+	str := ``
+	// # === Clouddriver Read Only Config ===
+	// 		clouddriver-ro: {} # is the contents of ~/.hal/default/service-settings/clouddriver.yml`
+
+	if value, isMapContainsKey := KustomizeData.ServiceSettingsConfigFiles["clouddriver-ro.yml"]; isMapContainsKey {
+		str = `
+# === Clouddriver Read Only Config ===
+		clouddriver-ro:
+			` + value
+	}
+
+	return ProfilesFormatStr(str)
 }
 
 func GetClouddriverServiceSettings(KustomizeData structs.Kustomize) string {
