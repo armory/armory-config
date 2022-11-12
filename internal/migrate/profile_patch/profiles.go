@@ -20,12 +20,28 @@ func GetProfiles(KustomizeData structs.Kustomize) string {
 			GetIgorProfile(KustomizeData) +
 			GetKayentaProfile(KustomizeData) +
 			GetOrcaProfile(KustomizeData) +
-			GetRoscoProfile(KustomizeData)
+			GetRoscoProfile(KustomizeData) +
+			GetSpinnakerProfile(KustomizeData)
 		//TODO dinghy-local.yml
 		//TODO spinnaker-local.yml
 	}
 
 	return str
+}
+
+func GetSpinnakerProfile(KustomizeData structs.Kustomize) string {
+	str := `
+# === Spinnaker Config ===
+		spinnaker: {} # is the contents of ~/.hal/default/profiles/clouddriver.yml`
+
+	if value, isMapContainsKey := KustomizeData.ProfilesConfigFiles["spinnaker-local.yml"]; isMapContainsKey {
+		str = `
+# === Spinnaker Config ===
+		spinnaker:
+			` + value
+	}
+
+	return ProfilesFormatStr(str)
 }
 
 func GetClouddriverProfile(KustomizeData structs.Kustomize) string {
