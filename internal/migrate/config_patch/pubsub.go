@@ -1,6 +1,8 @@
 package config_patch
 
 import (
+	"strings"
+
 	"github.com/austinthao5/golang_proto_test/config/deploymentConfigurations/pubsub"
 	"github.com/austinthao5/golang_proto_test/internal/helpers"
 	"github.com/austinthao5/golang_proto_test/internal/migrate/structs"
@@ -39,8 +41,15 @@ func GetGoogleSubscriptions(google *pubsub.Google) string {
 			str += helpers.PrintFmtStr(`- name: `, account.Name, 5, true) +
 				helpers.PrintFmtStr(`project: `, account.Project, 6, true) +
 				helpers.PrintFmtStr(`subscriptionName: `, account.SubscriptionName, 6, true) +
-				helpers.PrintFmtStr(`jsonPath: `, account.JsonPath, 6, true) +
-				helpers.PrintFmtStr(`templatePath: `, account.TemplatePath, 6, true) +
+				helpers.PrintFmtStr(`jsonPath: `, account.JsonPath, 6, true)
+			// Add a check if the first character of the credentialsPath string is a '/' remove it.
+			s := ``
+			if account.TemplatePath[0:1] == `/` {
+				s = strings.Replace(account.TemplatePath, `/`, ``, 1)
+			} else {
+				s = account.TemplatePath
+			}
+			str += helpers.PrintFmtStr(`templatePath: `, s, 6, true) +
 				helpers.PrintFmtInt(`ackDeadlineSeconds: `, account.AckDeadlineSeconds, 6, true) +
 				helpers.PrintFmtStr(`messageFormat: `, account.MessageFormat, 6, true)
 		}

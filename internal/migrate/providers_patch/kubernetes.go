@@ -51,8 +51,16 @@ func GetKubernetesAccounts(accounts []*providers.KubernetesAcc) string {
 				helpers.PrintFmtBool(`configureImagePullSecrets: `, account.ConfigureImagePullSecrets, 7, true) +
 				helpers.PrintFmtBool(`serviceAccount: `, account.ServiceAccount, 7, true) +
 				helpers.PrintFmtInt(`cacheThreads: `, account.CacheThreads, 7, true) +
-				getProvidersStringArrayAppend(account.Namespaces, "namespaces", "- ") +
-				helpers.PrintFmtStr(`kubeconfigFile: `, account.KubeconfigFile, 7, true) +
+				getProvidersStringArrayAppend(account.Namespaces, "namespaces", "- ")
+				// Add a check if the first character of the kubeconfig string is a '/' remove it.
+			s := ``
+			if account.KubeconfigFile[0:1] == `/` {
+				s = strings.Replace(account.KubeconfigFile, `/`, ``, 1)
+			} else {
+				s = account.KubeconfigFile
+			}
+
+			str += helpers.PrintFmtStr(`kubeconfigFile: `, s, 7, true) +
 				getProvidersStringArrayAppend(account.OmitNamespaces, "omitNamespaces", "- ") +
 				getProvidersStringArrayAppend(account.Kinds, "kinds", "- ") +
 				getProvidersStringArrayAppend(account.OmitKinds, "omitKinds", "- ") +
