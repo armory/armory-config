@@ -1,7 +1,7 @@
 package files_patch
 
 import (
-	"log"
+	"fmt"
 	"regexp"
 	"strings"
 
@@ -79,7 +79,7 @@ func isFileBlacklisted(fileName string) bool {
 // Function that edit the read file to have the correct spacing
 func filesFormatContent(str string) string {
 	reg := regexp.MustCompile(`(\n)`)
-	str = reg.ReplaceAllString(str, `$1          `)
+	str = reg.ReplaceAllString(str, `$1        `)
 
 	return str
 }
@@ -96,6 +96,7 @@ func filesFormatFix(str string) string {
 
 func WriteConfigFiles(KustomizeData structs.Kustomize) string {
 
+	// Check for KubeconfigFile Strings and append them to the files-patch.yml file.
 	str := ``
 	account := KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Providers.Kubernetes.Accounts
 	filename := ``
@@ -103,32 +104,46 @@ func WriteConfigFiles(KustomizeData structs.Kustomize) string {
 
 	var fileList []string
 	for i := range account {
+		// Don't look for a file if a secret is passed here. Instead, just ignore it.
 		if !strings.Contains(account[i].KubeconfigFile, `encrypted:`) && !strings.Contains(account[i].KubeconfigFile, `encryptedFile:`) {
 
 			fileAlreadyAdded := false
 			test_file, err := fileio.ReadFile(account[i].KubeconfigFile)
 
 			if err != nil {
-				log.Fatal(err)
-			}
-			s = string(test_file)
-			filename = strings.Replace(account[i].KubeconfigFile, `/`, `__`, -1)
-			for k := range fileList {
-				if filename == fileList[k] {
-					fileAlreadyAdded = true
+				fmt.Println(err)
+			} else {
+				s = string(test_file)
+				// Check if First Character of the string is a /. If so, we remove it.
+				if account[i].KubeconfigFile[0:1] == `/` {
+					filename = strings.Replace(account[i].KubeconfigFile, `/`, ``, 1)
+				} else {
+					filename = account[i].KubeconfigFile
+				}
+				// Replace / with __ so that the path gets mounted onto Halyard properly
+				filename = strings.Replace(filename, `/`, `__`, -1)
+
+				// Check for duplicate files. If duplicate files are referenced, don't add them again.
+				for k := range fileList {
+					if filename == fileList[k] {
+						fileAlreadyAdded = true
+					}
+
 				}
 
-			}
-			if !fileAlreadyAdded {
-				str += `
+				// If the file isn't a duplicate file, add it to the files-patch.yml file.
+				if !fileAlreadyAdded {
+					str += `
 			` + filename + `: |
 			` + filesFormatContent(s)
-				fileList = append(fileList, filename)
-				// fmt.Println(filename)
+					fileList = append(fileList, filename)
+					// fmt.Println(filename)
+				}
 			}
 		}
 	}
 
+	// Check for KubeconfigFile Strings and append them to the files-patch.yml file.
 	pubsub := KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Pubsub.Google.Subscriptions
 	for i := range pubsub {
 		if !strings.Contains(pubsub[i].TemplatePath, `encrypted:`) && !strings.Contains(pubsub[i].TemplatePath, `encryptedFile:`) {
@@ -137,22 +152,29 @@ func WriteConfigFiles(KustomizeData structs.Kustomize) string {
 			test_file, err := fileio.ReadFile(pubsub[i].TemplatePath)
 
 			if err != nil {
-				log.Fatal(err)
-			}
-			s = string(test_file)
-			filename = strings.Replace(pubsub[i].TemplatePath, `/`, `__`, -1)
-			for k := range fileList {
-				if filename == fileList[k] {
-					fileAlreadyAdded = true
+				fmt.Println(err)
+			} else {
+				s = string(test_file)
+				// Check if First Character of the string is a /. If so, we remove it.
+				if pubsub[i].TemplatePath[0:1] == `/` {
+					filename = strings.Replace(pubsub[i].TemplatePath, `/`, ``, 1)
+				} else {
+					filename = pubsub[i].TemplatePath
 				}
+				filename = strings.Replace(filename, `/`, `__`, -1)
+				for k := range fileList {
+					if filename == fileList[k] {
+						fileAlreadyAdded = true
+					}
 
-			}
-			if !fileAlreadyAdded {
-				str += `
+				}
+				if !fileAlreadyAdded {
+					str += `
 			` + filename + `: |
 			` + filesFormatContent(s)
-				fileList = append(fileList, filename)
-				// fmt.Println(filename)
+					fileList = append(fileList, filename)
+					// fmt.Println(filename)
+				}
 			}
 		}
 	}
@@ -163,17 +185,22 @@ func WriteConfigFiles(KustomizeData structs.Kustomize) string {
 		test_file, err := fileio.ReadFile(credentialPath)
 
 		if err != nil {
-			log.Fatal(err)
-		}
-		s = string(test_file)
-
-		filename = strings.Replace(credentialPath, `/`, `__`, -1)
-		str += `
+			fmt.Println(err)
+		} else {
+			s = string(test_file)
+			// Check if First Character of the string is a /. If so, we remove it.
+			if credentialPath[0:1] == `/` {
+				filename = strings.Replace(credentialPath, `/`, ``, 1)
+			} else {
+				filename = credentialPath
+			}
+			filename = strings.Replace(filename, `/`, `__`, -1)
+			str += `
 			` + filename + `: |
 			` + filesFormatContent(s)
+		}
+
+		str = filesFormatFix(str)
 	}
-
-	str = filesFormatFix(str)
-
 	return str
 }
