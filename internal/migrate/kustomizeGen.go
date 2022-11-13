@@ -333,6 +333,7 @@ func GetFilesPatch(KustomizeData structs.Kustomize) string {
 
 	if s != `` {
 		str += s
+
 	} else {
 		str += ` {}`
 	}

@@ -7,6 +7,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// Flag variables
 var (
 	halconfig_dir                 string
 	output_dir                    string
@@ -21,9 +22,9 @@ var (
 
 var rootCmd = &cobra.Command{
 	Use:   "armory-config",
-	Short: "migrate - a simple CLI to transform and inspect strings",
-	Long: `Halyard to Operator migrator.
-migrate some stuff brah`,
+	Short: "Convert - a simple CLI that converts Halyard configuration to Operator Kustomize format",
+	Long: `armory-config takes in the entire hal directory and organizes/restructures the files into
+kustomize format. The output should be a fully buildable and deployable set of kustomize files`,
 	Run: func(cmd *cobra.Command, args []string) {
 
 		fmt.Printf("Specify your Halyard Directory with the -h flag and the output directory with the -o flag\nFor example:\n$CMD -h ~/.hal -o test/operator/config")
