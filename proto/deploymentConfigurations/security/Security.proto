@@ -67,7 +67,6 @@ message GroupMembership {
     RoleType github = 3;
     RoleType file = 4;
     RoleType ldap = 5;
-    bool enabled = 6;
 
 }
 

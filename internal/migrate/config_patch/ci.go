@@ -239,7 +239,7 @@ func GetCodebuildCiAccounts(codebuild *ci.Codebuild) string {
 func getCiPermissions(permissionsRef *permissions.Permissions) string {
 	str := ""
 
-	if nil != permissionsRef {
+	if nil != permissionsRef.READ {
 		str += `
 		      permissions:
 		        READ:`
@@ -247,6 +247,7 @@ func getCiPermissions(permissionsRef *permissions.Permissions) string {
 			str += `
 		          - ` + permissionRead
 		}
+	} else if nil != permissionsRef.WRITE {
 		str += `
 		        WRITE:`
 		for _, permissionWrite := range permissionsRef.WRITE {

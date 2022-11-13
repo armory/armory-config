@@ -1,9 +1,11 @@
 package files_patch
 
 import (
+	"log"
 	"regexp"
 	"strings"
 
+	"github.com/austinthao5/golang_proto_test/internal/fileio"
 	"github.com/austinthao5/golang_proto_test/internal/migrate/structs"
 )
 
@@ -13,7 +15,6 @@ func GetFiles(KustomizeData structs.Kustomize) string {
 	if nil != KustomizeData.ProfilesConfigFiles {
 		str = GetFilesData(KustomizeData)
 	}
-
 	return str
 }
 
@@ -32,6 +33,7 @@ func GetFilesData(KustomizeData structs.Kustomize) string {
 	}
 
 	str = filesFormatFix(str)
+	str = strings.TrimSuffix(str, `          `)
 	return str
 }
 
@@ -39,12 +41,11 @@ func GetFilesData(KustomizeData structs.Kustomize) string {
 func transformKey(str string) string {
 	str = strings.Replace(str, "/", "_", -1)
 
-	if '_' != str[0] {
+	if str[0] != '_' {
 		str = "_" + str
 	}
 
 	str = "profile" + str
-
 	return str
 }
 
@@ -89,6 +90,46 @@ func filesFormatFix(str string) string {
 
 	reg := regexp.MustCompile(`(: \|\n)`)
 	str = reg.ReplaceAllString(str, `$1  `)
+
+	return str
+}
+
+func WriteConfigFiles(KustomizeData structs.Kustomize) string {
+
+	str := ``
+	account := KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Providers.Kubernetes.Accounts
+	filename := ``
+	s := ``
+
+	var fileList []string
+	for i := range account {
+		if !strings.Contains(account[i].KubeconfigFile, `encrypted:`) && !strings.Contains(account[i].KubeconfigFile, `encryptedFile:`) {
+
+			fileAlreadyAdded := false
+			test_file, err := fileio.ReadFile(account[i].KubeconfigFile)
+
+			if err != nil {
+				log.Fatal(err)
+			}
+			s = string(test_file)
+			filename = strings.Replace(account[i].KubeconfigFile, `/`, `__`, -1)
+			for k := range fileList {
+				if filename == fileList[k] {
+					fileAlreadyAdded = true
+				}
+
+			}
+			if !fileAlreadyAdded {
+				str += `
+			` + filename + `: |
+			` + filesFormatContent(s)
+				fileList = append(fileList, filename)
+				// fmt.Println(filename)
+			}
+		}
+	}
+
+	str = filesFormatFix(str)
 
 	return str
 }

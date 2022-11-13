@@ -27,7 +27,7 @@ var convertCmd = &cobra.Command{
 
 		if len(halconfig_dir) > 0 && len(output_dir) > 0 {
 
-			migrator(halconfig_dir, output_dir, override_deployment_dir, spin_flavor, skip_validations)
+			migrator(halconfig_dir, output_dir, override_deployment_dir, spin_flavor, skip_validations, writefiles)
 
 		}
 	},
@@ -41,10 +41,11 @@ func init() {
 	convertCmd.Flags().StringVar(&override_deployment_dir, "override_deployment", "", "Select the deployment name being used by Halyard. This is the subdirectory in the ./hal folder where the profiles and service-settings live, by default the code uses the one in currentDeployment in the config")
 	convertCmd.Flags().StringVar(&spin_flavor, "spin_flavor", "ARMORY", "Select Spinnaker Operator flavor to use (ARMORY, OSS)")
 	convertCmd.Flags().StringVar(&skip_validations, "skip_validations", "N", "Toggle Validations of using Y, by default N (N,Y)")
+	convertCmd.Flags().BoolVar(&writefiles, "writefiles", false, "Searches for any required files, for example kubeconfig files, and adds them to the files-patch.yml output file (default false)")
 }
 
 // Read contents of halconfig and setup profiles patches for each service.
-func migrator(halconfig_dir string, output_dir string, override_deployment_dir string, spin_flavor string, skip_validations string) {
+func migrator(halconfig_dir string, output_dir string, override_deployment_dir string, spin_flavor string, skip_validations string, writefiles bool) {
 
 	// Halconfig stuff
 	halconfig_file, err := fileio.FindFileInDir(halconfig_dir, "config")
@@ -111,19 +112,18 @@ func migrator(halconfig_dir string, output_dir string, override_deployment_dir s
 			os.Exit(1)
 		}
 	}
-
 	// Create output files
-	output_config(&KustomizeData)
+	output_config(&KustomizeData, writefiles)
 }
 
-func output_config(KustomizeData *structs.Kustomize) {
+func output_config(KustomizeData *structs.Kustomize, writefiles bool) {
 
 	err := fileio.EnsureDirectory(output_dir)
 	if err != nil {
 		log.Println(err)
 	}
 
-	err = migrate.CreateKustomization(KustomizeData)
+	err = migrate.CreateKustomization(KustomizeData, writefiles)
 	if err != nil {
 		log.Fatal(err)
 	}

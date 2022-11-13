@@ -169,9 +169,8 @@ func getServiceSizing(serviceSizingReference *deploymentEnv.ServiceSizing, name 
 			getSizing(serviceSizingReference.Limits, "limits") +
 				getSizing(serviceSizingReference.Requests, "requests")
 	} else {
-		// str = `
-		//   ` + name + `: {}`
-		str = ``
+		str = `
+		  ` + name + `: {}`
 	}
 
 	return str
@@ -242,7 +241,7 @@ func getSidecarService(sidecarServicesRef []*deploymentEnv.SideCarService, name 
 		}
 	} else {
 		str = `
-		  ` + name + `: {}`
+		  ` + name + `: []`
 	}
 
 	return str
@@ -462,7 +461,7 @@ func getHostAliasService(hostAliasesRef []*deploymentEnv.HostAliasService, name 
 		}
 	} else {
 		str = `
-		  ` + name + `: {}`
+		  ` + name + `: []`
 	}
 
 	return str

@@ -13,6 +13,8 @@ func GetStats(KustomizeData structs.Kustomize) string {
 
 	if nil != KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Stats {
 		str = GetStatsConfig(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Stats)
+	} else {
+		str += ` {}`
 	}
 	return str
 }
