@@ -129,6 +129,50 @@ func WriteConfigFiles(KustomizeData structs.Kustomize) string {
 		}
 	}
 
+	pubsub := KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Pubsub.Google.Subscriptions
+	for i := range pubsub {
+		if !strings.Contains(pubsub[i].TemplatePath, `encrypted:`) && !strings.Contains(pubsub[i].TemplatePath, `encryptedFile:`) {
+
+			fileAlreadyAdded := false
+			test_file, err := fileio.ReadFile(pubsub[i].TemplatePath)
+
+			if err != nil {
+				log.Fatal(err)
+			}
+			s = string(test_file)
+			filename = strings.Replace(pubsub[i].TemplatePath, `/`, `__`, -1)
+			for k := range fileList {
+				if filename == fileList[k] {
+					fileAlreadyAdded = true
+				}
+
+			}
+			if !fileAlreadyAdded {
+				str += `
+			` + filename + `: |
+			` + filesFormatContent(s)
+				fileList = append(fileList, filename)
+				// fmt.Println(filename)
+			}
+		}
+	}
+
+	credentialPath := KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Security.Authz.GroupMembership.Google.CredentialPath
+
+	if credentialPath != `` && !strings.Contains(credentialPath, `encrypted:`) && !strings.Contains(credentialPath, `encryptedFile:`) {
+		test_file, err := fileio.ReadFile(credentialPath)
+
+		if err != nil {
+			log.Fatal(err)
+		}
+		s = string(test_file)
+
+		filename = strings.Replace(credentialPath, `/`, `__`, -1)
+		str += `
+		` + filename + `: |
+		` + filesFormatContent(s)
+	}
+
 	str = filesFormatFix(str)
 
 	return str
