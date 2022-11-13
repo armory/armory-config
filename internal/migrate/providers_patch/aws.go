@@ -15,8 +15,8 @@ func (ProvidersData *Providers) SetAwsData(providersRef *providers.Providers) er
 		featuresCloudF := ""
 		featuresLambda := ""
 		if nil != providersRef.Aws.Features {
-			if nil != providersRef.Aws.Features.Cloudformation {
-				featuresCloudF = strconv.FormatBool(providersRef.Aws.Features.Cloudformation.Enabled)
+			if nil != providersRef.Aws.Features.CloudFormation {
+				featuresCloudF = strconv.FormatBool(providersRef.Aws.Features.CloudFormation.Enabled)
 			}
 			if nil != providersRef.Aws.Features.Lambda {
 				featuresLambda = strconv.FormatBool(providersRef.Aws.Features.Lambda.Enabled)
@@ -36,12 +36,30 @@ func (ProvidersData *Providers) SetAwsData(providersRef *providers.Providers) er
 			helpers.PrintFmtStrApostrophe(`defaultKeyPairTemplate: `, providersRef.Aws.DefaultKeyPairTemplate, 5, true) +
 			strings.Replace(getAwsRegions(providersRef.Aws.DefaultRegions, "defaultRegions"), "\t", "    ", -1) + `
 	defaults:` +
-			helpers.PrintFmtStr(`iamRole: `, providersRef.Aws.Defaults.IamRole, 6, true) + `
-	features:
-	  cloudFormation:` +
-			helpers.PrintFmtStr(`enabled: `, featuresCloudF, 7, true) + `
-	  lambda:` +
-			helpers.PrintFmtStr(`enabled: `, featuresLambda, 7, true)
+			helpers.PrintFmtStr(`iamRole: `, providersRef.Aws.Defaults.IamRole, 6, true)
+
+		if featuresLambda == `true` || featuresCloudF == `true` {
+
+			str += `
+	features:`
+
+			if featuresLambda == `true` {
+				str += `
+  	lambda:` +
+					helpers.PrintFmtStr(`enabled: `, featuresLambda, 7, true)
+			}
+			if featuresCloudF == `true` {
+				str += `
+  	cloudFormation:` +
+					helpers.PrintFmtStr(`enabled: `, featuresCloudF, 7, true)
+			}
+
+		}
+		// features:
+		//   cloudFormation:` +
+		// 		helpers.PrintFmtStr(`enabled: `, featuresCloudF, 7, true) + `
+		//   lambda:` +
+		// 		helpers.PrintFmtStr(`enabled: `, featuresLambda, 7, true)
 
 		str = strings.Replace(str, "\t", "          ", -1)
 

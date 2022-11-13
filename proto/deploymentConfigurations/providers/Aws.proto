@@ -68,7 +68,7 @@ message AwsDefaults {
 }
 
 message AwsFeatures {
-    Cloudformation cloudformation = 1;
+    Cloudformation cloudFormation = 1;
     Lambda lambda = 2;
 }
 
