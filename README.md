@@ -1,6 +1,6 @@
 # Halyard to Spinnaker Operator migration tool
 
-This tool is to migrate you current Halyard-generated halconfig to the spinnaker operator kustomize files format
+This tool is used to migrate your current Halyard-generated halconfig to the spinnaker operator kustomize files format. This works best with a currently working halconfig file. If you are having issues running this properly, please ensure that you are able to deploy your halconfig with Halyard prior to running this CLI. This CLI does not validate that your Halconfig will deploy. Only that you have the correct format structure.
 
 ### Usage
 
