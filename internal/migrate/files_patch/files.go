@@ -169,8 +169,8 @@ func WriteConfigFiles(KustomizeData structs.Kustomize) string {
 
 		filename = strings.Replace(credentialPath, `/`, `__`, -1)
 		str += `
-		` + filename + `: |
-		` + filesFormatContent(s)
+			` + filename + `: |
+			` + filesFormatContent(s)
 	}
 
 	str = filesFormatFix(str)
