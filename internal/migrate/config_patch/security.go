@@ -186,10 +186,12 @@ func GetAuthzSecurity(securityReference *security.Security) string {
 			helpers.PrintFmtStr(`path: `, securityReference.Authz.GroupMembership.Google.Path, 7, true)
 		// Add a check if the first character of the credentialsPath string is a '/' remove it.
 		s := ``
-		if securityReference.Authz.GroupMembership.Google.CredentialPath[0:1] == `/` {
-			s = strings.Replace(securityReference.Authz.GroupMembership.Google.CredentialPath, `/`, ``, 1)
-		} else {
-			s = securityReference.Authz.GroupMembership.Google.CredentialPath
+		if securityReference.Authz.GroupMembership.Google.CredentialPath != `` {
+			if securityReference.Authz.GroupMembership.Google.CredentialPath[0:1] == `/` {
+				s = strings.Replace(securityReference.Authz.GroupMembership.Google.CredentialPath, `/`, ``, 1)
+			} else {
+				s = securityReference.Authz.GroupMembership.Google.CredentialPath
+			}
 		}
 
 		str += helpers.PrintFmtStr(`credentialPath: `, s, 7, true) +

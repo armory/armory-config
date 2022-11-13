@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/austinthao5/golang_proto_test/internal/fileio"
+	"github.com/austinthao5/golang_proto_test/internal/helpers"
 	"github.com/austinthao5/golang_proto_test/internal/migrate/structs"
 )
 
@@ -20,7 +21,6 @@ func GetFiles(KustomizeData structs.Kustomize) string {
 
 func GetFilesData(KustomizeData structs.Kustomize) string {
 	str := ""
-
 	for key, value := range KustomizeData.ProfilesConfigFiles {
 
 		if !isFileBlacklisted(key) {
@@ -133,9 +133,7 @@ func WriteConfigFiles(KustomizeData structs.Kustomize) string {
 
 				// If the file isn't a duplicate file, add it to the files-patch.yml file.
 				if !fileAlreadyAdded {
-					str += `
-			` + filename + `: |
-			` + filesFormatContent(s)
+					str += helpers.PrintFmtStr(filename, `: |`, 3, true) + ` ` + helpers.PrintFmtStr(``, filesFormatContent(s), 4, true)
 					fileList = append(fileList, filename)
 					// fmt.Println(filename)
 				}
@@ -169,9 +167,7 @@ func WriteConfigFiles(KustomizeData structs.Kustomize) string {
 
 				}
 				if !fileAlreadyAdded {
-					str += `
-			` + filename + `: |
-			` + filesFormatContent(s)
+					str += helpers.PrintFmtStr(filename, `: |`, 3, true) + ` ` + helpers.PrintFmtStr(``, filesFormatContent(s), 4, true)
 					fileList = append(fileList, filename)
 					// fmt.Println(filename)
 				}
@@ -195,9 +191,7 @@ func WriteConfigFiles(KustomizeData structs.Kustomize) string {
 				filename = credentialPath
 			}
 			filename = strings.Replace(filename, `/`, `__`, -1)
-			str += `
-			` + filename + `: |
-			` + filesFormatContent(s)
+			str += helpers.PrintFmtStr(filename, `: |`, 3, true) + ` ` + helpers.PrintFmtStr(``, filesFormatContent(s), 4, true)
 		}
 
 		str = filesFormatFix(str)
