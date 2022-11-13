@@ -11,6 +11,8 @@ func GetTelemetry(KustomizeData structs.Kustomize) string {
 
 	if nil != KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Telemetry {
 		str = GetTelemetryConfig(KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Telemetry)
+	} else {
+		str += ` {}`
 	}
 	return str
 }

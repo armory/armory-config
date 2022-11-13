@@ -36,13 +36,13 @@ func GetGoogleSubscriptions(google *pubsub.Google) string {
 		str += `
 		  subscriptions:`
 		for _, account := range google.Subscriptions {
-			str += helpers.PrintFmtStr(`- name: `, account.Name, 6, true) +
-				helpers.PrintFmtStr(`project: `, account.Project, 7, true) +
-				helpers.PrintFmtStr(`subscriptionName: `, account.SubscriptionName, 7, true) +
-				helpers.PrintFmtStr(`jsonPath: `, account.JsonPath, 7, true) +
-				helpers.PrintFmtStr(`templatePath: `, account.TemplatePath, 7, true) +
-				helpers.PrintFmtInt(`ackDeadlineSeconds: `, account.AckDeadlineSeconds, 7, true) +
-				helpers.PrintFmtStr(`messageFormat: `, account.MessageFormat, 7, true)
+			str += helpers.PrintFmtStr(`- name: `, account.Name, 5, true) +
+				helpers.PrintFmtStr(`project: `, account.Project, 6, true) +
+				helpers.PrintFmtStr(`subscriptionName: `, account.SubscriptionName, 6, true) +
+				helpers.PrintFmtStr(`jsonPath: `, account.JsonPath, 6, true) +
+				helpers.PrintFmtStr(`templatePath: `, account.TemplatePath, 6, true) +
+				helpers.PrintFmtInt(`ackDeadlineSeconds: `, account.AckDeadlineSeconds, 6, true) +
+				helpers.PrintFmtStr(`messageFormat: `, account.MessageFormat, 6, true)
 		}
 	} else {
 		str += `

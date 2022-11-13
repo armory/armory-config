@@ -49,7 +49,7 @@ func GetDockerRegistryAccounts(accounts []*providers.DockerRegistryAcc) string {
 				helpers.PrintFmtBool(`insecureRegistry: `, account.InsecureRegistry, 6, true) +
 				helpers.PrintFmtStr(`environment: `, account.Environment, 6, true) +
 				helpers.PrintFmtStr(`password: `, account.Password, 6, true) +
-				helpers.PrintFmtStr(`passwordCommand: `, account.PasswordCommand, 6, true) +
+				helpers.PrintFmtStr(`passwordCommand: "`, account.PasswordCommand+`"`, 6, true) +
 				strings.Replace(getProvidersStringArrayAppend(account.Repositories, "repositories", "- "), "\t", "   ", -1) +
 				helpers.PrintFmtStr(`passwordFile: `, account.PasswordFile, 6, true)
 		}

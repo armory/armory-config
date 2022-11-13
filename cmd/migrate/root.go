@@ -14,6 +14,7 @@ var (
 	spin_flavor                   string
 	halconfig                     string
 	skip_validations              string
+	writefiles                    bool
 	profiles_config_files         map[string]string
 	service_settings_config_files map[string]string
 )

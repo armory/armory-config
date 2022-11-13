@@ -31,12 +31,11 @@ func GetProvidersData(KustomizeData structs.Kustomize) string {
 	if nil != KustomizeData.Halyard.DeploymentConfigurations[KustomizeData.CurrentDeploymentPos].Providers {
 		prob := Providers{}
 		prob.SetProvidersData(KustomizeData)
-
+		// validation:
+		// providers:
+		//   ` + prob.Enable + `:
+		//     enabled: true
 		str = `
-  validation:
-    providers:
-      ` + prob.Enable + `:
-        enabled: true
   spinnakerConfig:
     config:
       providers:

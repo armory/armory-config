@@ -17,9 +17,12 @@ import (
 )
 
 // KustomizeData.Halyard.DeploymentConfiguration[KustomizeData.CurrentDeploymentPos].Providers.AppEngine.Enable
-func CreateKustomization(KustomizeData *structs.Kustomize) error {
+var writeConfigFiles bool
+
+func CreateKustomization(KustomizeData *structs.Kustomize, writefiles bool) error {
 	// KustomizeData := structs.Kustomize{}
 
+	writeConfigFiles = writefiles
 	SetHeaders(KustomizeData)
 	str := GetKustomization(KustomizeData)
 
@@ -324,9 +327,18 @@ func GetFilesPatch(KustomizeData structs.Kustomize) string {
     #  - Use the | YAML symbol to indicate a block-style multiline string
     #  - We currently only support string files
     #  - NOTE: Kubernetes has a manifest size limitation of 1MB
-    files:` +
-		files_patch.GetFiles(KustomizeData) + `
-`
+    files:`
+
+	s := files_patch.GetFiles(KustomizeData)
+
+	if s != `` {
+		str += s
+	} else {
+		str += ` {}`
+	}
+	if writeConfigFiles {
+		str += files_patch.WriteConfigFiles(KustomizeData)
+	}
 
 	return str
 }

@@ -26,14 +26,14 @@ func GetSpinnakerExtensibility(spinnakerReference *spinnaker.Spinnaker) string {
 		str += `
 		extensibility:`
 
-		if nil != spinnakerReference.Extensibility.Plugins {
+		if len(spinnakerReference.Extensibility.Plugins) != 0 {
 			str += GetSpinnakerExtensibilityPlugins(spinnakerReference.Extensibility)
 		} else {
 			str += `
 		  plugins: {}`
 		}
 
-		if nil != spinnakerReference.Extensibility.Repositories /*&& "" != spinnakerReference.Extensibility.Repositories.Name*/ {
+		if len(spinnakerReference.Extensibility.Repositories) != 0 /*&& "" != spinnakerReference.Extensibility.Repositories.Name*/ {
 
 			i := 0
 			str += `
@@ -55,6 +55,8 @@ func GetSpinnakerExtensibility(spinnakerReference *spinnaker.Spinnaker) string {
 			str += `
 		  repositories: {}`
 		}
+	} else {
+
 	}
 
 	return str

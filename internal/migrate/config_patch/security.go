@@ -83,11 +83,11 @@ func GetAuthnSecurity(securityReference *security.Security) string {
 
 		if nil != securityReference.Authn.Oauth2.Resource && "" != securityReference.Authn.Oauth2.Resource.UserInfoUri {
 			str += `
-		    resource:` +
+			resource:` +
 				helpers.PrintFmtStr(`userInfoUri: `, securityReference.Authn.Oauth2.Resource.UserInfoUri, 7, true)
 		} else {
 			str += `
-			    resource: {}`
+			resource: {}`
 		}
 
 		if nil != securityReference.Authn.Oauth2.UserInfoMapping && "" != securityReference.Authn.Oauth2.UserInfoMapping.Email {
@@ -175,8 +175,7 @@ func GetAuthzSecurity(securityReference *security.Security) string {
 	str = `
 		authz:
 		  groupMembership:` +
-		helpers.PrintFmtStr(`service: `, securityReference.Authz.GroupMembership.Service, 6, true) +
-		helpers.PrintFmtBool(`enabled: `, securityReference.Authz.GroupMembership.Enabled, 6, true)
+		helpers.PrintFmtStr(`service: `, securityReference.Authz.GroupMembership.Service, 6, true)
 
 	if nil != securityReference.Authz.GroupMembership.Google {
 		str += `
