@@ -1,7 +1,7 @@
 package files_patch
 
 import (
-	"log"
+	"fmt"
 	"regexp"
 	"strings"
 
@@ -109,22 +109,23 @@ func WriteConfigFiles(KustomizeData structs.Kustomize) string {
 			test_file, err := fileio.ReadFile(account[i].KubeconfigFile)
 
 			if err != nil {
-				log.Fatal(err)
-			}
-			s = string(test_file)
-			filename = strings.Replace(account[i].KubeconfigFile, `/`, `__`, -1)
-			for k := range fileList {
-				if filename == fileList[k] {
-					fileAlreadyAdded = true
-				}
+				fmt.Println(err)
+			} else {
+				s = string(test_file)
+				filename = strings.Replace(account[i].KubeconfigFile, `/`, `__`, -1)
+				for k := range fileList {
+					if filename == fileList[k] {
+						fileAlreadyAdded = true
+					}
 
-			}
-			if !fileAlreadyAdded {
-				str += `
+				}
+				if !fileAlreadyAdded {
+					str += `
 			` + filename + `: |
 			` + filesFormatContent(s)
-				fileList = append(fileList, filename)
-				// fmt.Println(filename)
+					fileList = append(fileList, filename)
+					// fmt.Println(filename)
+				}
 			}
 		}
 	}
@@ -137,22 +138,23 @@ func WriteConfigFiles(KustomizeData structs.Kustomize) string {
 			test_file, err := fileio.ReadFile(pubsub[i].TemplatePath)
 
 			if err != nil {
-				log.Fatal(err)
-			}
-			s = string(test_file)
-			filename = strings.Replace(pubsub[i].TemplatePath, `/`, `__`, -1)
-			for k := range fileList {
-				if filename == fileList[k] {
-					fileAlreadyAdded = true
-				}
+				fmt.Println(err)
+			} else {
+				s = string(test_file)
+				filename = strings.Replace(pubsub[i].TemplatePath, `/`, `__`, -1)
+				for k := range fileList {
+					if filename == fileList[k] {
+						fileAlreadyAdded = true
+					}
 
-			}
-			if !fileAlreadyAdded {
-				str += `
+				}
+				if !fileAlreadyAdded {
+					str += `
 			` + filename + `: |
 			` + filesFormatContent(s)
-				fileList = append(fileList, filename)
-				// fmt.Println(filename)
+					fileList = append(fileList, filename)
+					// fmt.Println(filename)
+				}
 			}
 		}
 	}
@@ -163,17 +165,17 @@ func WriteConfigFiles(KustomizeData structs.Kustomize) string {
 		test_file, err := fileio.ReadFile(credentialPath)
 
 		if err != nil {
-			log.Fatal(err)
-		}
-		s = string(test_file)
+			fmt.Println(err)
+		} else {
+			s = string(test_file)
 
-		filename = strings.Replace(credentialPath, `/`, `__`, -1)
-		str += `
+			filename = strings.Replace(credentialPath, `/`, `__`, -1)
+			str += `
 			` + filename + `: |
 			` + filesFormatContent(s)
+		}
+
+		str = filesFormatFix(str)
 	}
-
-	str = filesFormatFix(str)
-
 	return str
 }
