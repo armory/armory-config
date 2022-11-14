@@ -39,10 +39,10 @@ func GetFilesData(KustomizeData structs.Kustomize) string {
 
 // This function adds profile to the start of the string and changes / to _
 func transformKey(str string) string {
-	str = strings.Replace(str, "/", "_", -1)
+	str = strings.Replace(str, "/", "__", -1)
 
 	if str[0] != '_' {
-		str = "_" + str
+		str = "__" + str
 	}
 
 	str = "profile" + str
