@@ -16,7 +16,7 @@ Linux (If you're running Halyard on a Docker container, use this option)
 $ bash -c 'curl -L https://github.com/austinthao5/golang_proto_test/releases/latest/download/binary.tgz | tar -xz'
 ```
 
-To use the CLI once it's done, run
+To use the CLI once it's downloaded, run
 ```
 $ cd binary/macOS
 ```
@@ -34,12 +34,18 @@ $ ./armory-config convert --help
 
 ### Usage
 
-- `go run main.go convert --halconfig </path/to/halconfig> --output </path/to/output/directory>`
-- `go run main.go --help`
-- `go run main.go convert --help`
+**Required**
+- `--halconfig`: Provide the entire Hal directory where your halconfig lives. 
+- `--output`: Provide the output directory where your Kustomize files will be generated
+
+**Optional**
+- `--spin_flavor`: Specify whether you want to convert the Halconfig to an OSS or Armory distribution
+- `--override_deployment`: Override the currentDeployment field in Halyard if you have multiple Spinnaker configurations in the same config file.
+- `--skip_validations`: Whether or not to skip validating the halconfig files.
+- `--writefiles`: Whether or not the CLI will copy all local files referenced in the halconfig and output them into the `files-patch.yml` file.
 
 ### Example usage
-`go run main.go convert --halconfig ~/.hal --output ./test_output`
+`armory-config convert --halconfig ~/.hal --output ./test_output`
 
 ### Generate Proto Files
 `protoc -I=$SRC_DIR --go_out=$DST_DIR $SRC_DIR/proto/deploymentConfigurations/providers/AppEngine.proto`
