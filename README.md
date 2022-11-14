@@ -60,10 +60,10 @@ This will output the Kustomize files to a local directory. It's a one way conver
 The default namespace that Kustomize expects you to deploy this to is the `spinnaker` namespace. If you want to change this, edit the `Kustomization.yml` file that gets outputted. On `line 4` there is a namespace field that can be changed to a different namespace.
 
 **Required Flags**
-- `--halconfig`: Provide the entire Hal directory where your halconfig lives. (default: `~/.hal`)
-- `--output`: Provide the output directory where your Kustomize files will be generated (default: `~./operatorConfig`)
+- `--halconfig`: Provide the entire Hal directory where your halconfig lives.
 
 **Optional Flags**
+- `--output`: Provide the output directory where your Kustomize files will be generated (default: `~./operatorConfig`)
 - `--spin_flavor`: Specify whether you want to convert the Halconfig to an OSS or Armory distribution (default: `ARMORY`)
 - `--override_deployment`: Override the currentDeployment field in Halyard if you have multiple Spinnaker configurations in the same config file. (default: `default`)
 - `--skip_validations`: Whether or not to skip validating the halconfig files. (default: `N`)
