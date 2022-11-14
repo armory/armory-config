@@ -48,7 +48,11 @@ https://docs.armory.io/armory-enterprise/installation/armory-operator
 
 
 Once Operator has been installed, you can apply your new Kustomize files to Kubernetes using the following command
-`kubectl apply -k ./output_directory -n spinnaker`
+
+
+```
+kubectl apply -k ./output_directory -n spinnaker
+```
 
 ### Usage
 This will output the Kustomize files to a local directory. It's a one way conversion from Halyard -> Operator meaning that you cannot provide a set of Spinnaker Kustomize files and convert them to halconfig.
