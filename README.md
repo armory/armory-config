@@ -41,9 +41,11 @@ $ ./armory-config convert --help
 Once the configuration has been converted to a Spinnaker Kustomize format, install the Operator
 
 OSS:
+
 https://github.com/armory/spinnaker-operator
 
 Armory:
+
 https://docs.armory.io/armory-enterprise/installation/armory-operator
 
 
