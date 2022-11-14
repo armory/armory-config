@@ -2,6 +2,13 @@
 
 This tool is used to migrate your current Halyard-generated halconfig to the spinnaker operator kustomize files format. This works best with a currently working halconfig file. If you are having issues running this properly, please ensure that you are able to deploy your halconfig with Halyard prior to running this CLI. This CLI does not validate that your Halconfig will deploy. Only that you have the correct format structure.
 
+### Installation
+To install this tool, download it to either your local machine or your Docker container where Halyard is installed.
+
+````
+$ bash -c 'curl -L https://github.com/austinthao5/golang_proto_test/releases/latest/download/binary.tgz | tar -xz'
+```
+
 ### Usage
 
 - `go run main.go convert --halconfig </path/to/halconfig> --output </path/to/output/directory>`
@@ -19,5 +26,5 @@ This tool is used to migrate your current Halyard-generated halconfig to the spi
 - [Spinnaker Operator Repo](https://github.com/armory/spinnaker-operator)
 - [K8s Operator pattern](https://kubernetes.io/docs/concepts/extend-kubernetes/operator/)
 - [Armory support help](https://support.armory.io/support)
-- [Manual migration](https://github.com/armory/spinnaker-operator/blob/master/doc/migrate.md)
-- [Manual migration 2](https://docs.armory.io/armory-enterprise/installation/armory-operator/hal-op-migration/)
+- [Manual migration for OSS](https://github.com/armory/spinnaker-operator/blob/master/doc/migrate.md)
+- [Manual migration for Armory](https://docs.armory.io/armory-enterprise/installation/armory-operator/hal-op-migration/)
