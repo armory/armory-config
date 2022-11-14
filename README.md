@@ -20,17 +20,18 @@ Linux (If you're running Halyard on a Docker container, use this option)
 $ bash -c 'curl -L https://github.com/austinthao5/golang_proto_test/releases/latest/download/binary.tgz | tar -xz'
 ```
 <br />
-<br />
 To use the CLI once it's downloaded, run
+
+
 ```
 $ cd binary/macOS
 ```
-
 OR
-
 ```
 $ cd binary/linux
 ```
+<br />
+
 
 Then run the CLI like this
 ```
