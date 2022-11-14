@@ -13,6 +13,8 @@ MacOS
 $ bash -c 'curl -L https://github.com/austinthao5/golang_proto_test/releases/latest/download/binary.tgz | tar -xz'
 ```
 
+
+
 Linux (If you're running Halyard on a Docker container, use this option)
 ```
 $ bash -c 'curl -L https://github.com/austinthao5/golang_proto_test/releases/latest/download/binary.tgz | tar -xz'
@@ -35,6 +37,7 @@ $ ./armory-config convert --help
 ```
 
 Once the configuration has been converted to a Spinnaker Kustomize format, install the Operator
+
 OSS:
 https://github.com/armory/spinnaker-operator
 
@@ -64,6 +67,7 @@ The default namespace that Kustomize expects you to deploy this to is the `spinn
 `armory-config convert --halconfig ~/.hal --output ./test_output`
 
 **Validation**
+
 To validate whether or not the outputted Kustomize files will render properly, you can run this command
 `kustomize build ./output_directory`
 
