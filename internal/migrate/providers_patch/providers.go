@@ -126,13 +126,16 @@ func getProvidersStringArrayAppend(stringArray []string, fieldName string, value
 func getPermissions(permissionsRef *permissions.Permissions) string {
 	str := ""
 
-	if nil != permissionsRef.READ {
+	if nil != permissionsRef {
 		str += `
-		    permissions:
-		      READ:`
-		for _, permissionRead := range permissionsRef.READ {
+		    permissions:`
+		if nil != permissionsRef.READ {
 			str += `
+		      READ:`
+			for _, permissionRead := range permissionsRef.READ {
+				str += `
 		      - ` + permissionRead
+			}
 		}
 		if nil != permissionsRef.WRITE {
 			str += `
@@ -143,7 +146,7 @@ func getPermissions(permissionsRef *permissions.Permissions) string {
 			}
 		}
 		//If both are 0 this will override the permissions instead of having both write and read fields empty
-		if 0 == len(permissionsRef.READ) && 0 == len(permissionsRef.WRITE) {
+		if len(permissionsRef.READ) == 0 && len(permissionsRef.WRITE) == 0 {
 			str = `
 		    permissions: {}`
 		}

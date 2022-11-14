@@ -44,10 +44,12 @@ func GetGoogleSubscriptions(google *pubsub.Google) string {
 				helpers.PrintFmtStr(`jsonPath: `, account.JsonPath, 6, true)
 			// Add a check if the first character of the credentialsPath string is a '/' remove it.
 			s := ``
-			if account.TemplatePath[0:1] == `/` {
-				s = strings.Replace(account.TemplatePath, `/`, ``, 1)
-			} else {
-				s = account.TemplatePath
+			if account.TemplatePath != `` {
+				if account.TemplatePath[0:1] == `/` {
+					s = strings.Replace(account.TemplatePath, `/`, ``, 1)
+				} else {
+					s = account.TemplatePath
+				}
 			}
 			str += helpers.PrintFmtStr(`templatePath: `, s, 6, true) +
 				helpers.PrintFmtInt(`ackDeadlineSeconds: `, account.AckDeadlineSeconds, 6, true) +
