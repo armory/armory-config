@@ -63,6 +63,7 @@ The default namespace that Kustomize expects you to deploy this to is the `spinn
 
 **Required Flags**
 - `--halconfig`: Provide the entire Hal directory where your halconfig lives.
+- `test`
 
 **Optional Flags**
 - `--output`: Provide the output directory where your Kustomize files will be generated (default: `~./operatorConfig`)
