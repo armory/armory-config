@@ -5,7 +5,7 @@ This tool is used to migrate your current Halyard-generated halconfig to the spi
 ### Installation
 To install this tool, download it to either your local machine or your Docker container where Halyard is installed.
 
-````
+```
 $ bash -c 'curl -L https://github.com/austinthao5/golang_proto_test/releases/latest/download/binary.tgz | tar -xz'
 ```
 
