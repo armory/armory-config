@@ -61,6 +61,11 @@ kubectl apply -k ./output_directory -n spinnaker
 
 ## Commands
 
+### Convert
+```
+./armory-config convert
+```
+
 **Required Flags**
 - `--halconfig`: Provide the entire Hal directory where your halconfig lives.
 
