@@ -112,7 +112,7 @@ This is the command we used to generate the proto files. Only useful if you want
 protoc -I=$SRC_DIR --go_out=$DST_DIR $SRC_DIR/proto/deploymentConfigurations/providers/AppEngine.proto
 ```
 
-### Learn more about the Spinnaker Operator
+## Learn more about the Spinnaker Operator
 - [Spinnaker Operator Docs](https://docs.armory.io/armory-enterprise/installation/armory-operator)
 - [Spinnaker Operator Repo](https://github.com/armory/spinnaker-operator)
 - [K8s Operator pattern](https://kubernetes.io/docs/concepts/extend-kubernetes/operator/)
