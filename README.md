@@ -7,15 +7,15 @@ This CLI tool is used to migrate your current Halyard-generated halconfig to the
 - This CLI does NOT deploy anything. It only converts the config files into a Spinnaker Operator Kustomize format.
 
 
-## Installation
-To install this tool, download it to either your local machine or your Docker container where Halyard is installed.
+## Getting Started
+**Installation**
 
-Create a new directory
+- Create a new directory
 ```
 mkdir armory-config && cd armory-config
 ```
 
-Download the CLI
+- Download the CLI
 
 
 MacOs
@@ -33,12 +33,14 @@ cd linux
 ```
 <br />
 
-Then run the CLI like this
+**Running the CLI**
+
 ```
 ./armory-config convert --help
 ```
 <br />
 
+**Install Operator**
 
 After the configuration has been converted to a Spinnaker Operator Kustomize format, install the Operator
 
@@ -50,6 +52,7 @@ Armory:
 
 https://docs.armory.io/armory-enterprise/installation/armory-operator
 
+**Apply the Spinnaker Kustomize Operator configurations**
 
 Once Operator has been installed, you can apply your new Kustomize files to Kubernetes using the following command
 
@@ -58,7 +61,7 @@ Once Operator has been installed, you can apply your new Kustomize files to Kube
 kubectl apply -k ./output_directory -n spinnaker
 ```
 
-## Usage
+## Commands
 This will output the Kustomize files to a local directory. It's a one way conversion from Halyard -> Operator meaning that you cannot provide a set of Spinnaker Kustomize files and convert them to halconfig.
 
 The default namespace that the CLI expects you to deploy these files to is the `spinnaker` namespace. If you want to change this, edit the `Kustomization.yml` file that gets outputted. On `line 4` there is a namespace field that can be changed to a different namespace.
@@ -83,7 +86,7 @@ armory-config convert --halconfig ~/.hal --output ./test_output --writefiles
 kubectl apply -k ./test_output -n spinnaker
 ```
 
-**Validation**
+##Validation
 
 To validate whether or not the outputted Kustomize files will render properly, you can run this command
 
