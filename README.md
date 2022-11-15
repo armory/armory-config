@@ -64,7 +64,7 @@ kubectl apply -k ./output_directory -n spinnaker
 ### Usage
 This will output the Kustomize files to a local directory. It's a one way conversion from Halyard -> Operator meaning that you cannot provide a set of Spinnaker Kustomize files and convert them to halconfig.
 
-The default namespace that the CLI expects you to deploy this these files to is the `spinnaker` namespace. If you want to change this, edit the `Kustomization.yml` file that gets outputted. On `line 4` there is a namespace field that can be changed to a different namespace.
+The default namespace that the CLI expects you to deploy these files to is the `spinnaker` namespace. If you want to change this, edit the `Kustomization.yml` file that gets outputted. On `line 4` there is a namespace field that can be changed to a different namespace.
 
 **Required Flags**
 - `--halconfig`: Provide the entire Hal directory where your halconfig lives.
