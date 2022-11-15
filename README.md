@@ -70,7 +70,7 @@ The default namespace that the CLI expects you to deploy these files to is the `
 - `--halconfig`: Provide the entire Hal directory where your halconfig lives.
 
 **Optional Flags**
-- `--output`: Provide the output directory where your Kustomize files will be generated (default: `~./operatorConfig`)
+- `--output`: Provide the output directory where your Kustomize files will be generated (default: `./operatorConfig`)
 - `--spin_flavor`: Specify whether you want to convert the Halconfig to an OSS or Armory distribution (default: `ARMORY`)
 - `--override_deployment`: Override the currentDeployment field in Halyard if you have multiple Spinnaker configurations in the same config file. (default: `default`)
 - `--skip_validations`: Whether or not to skip validating the halconfig files. (default: `N`)
