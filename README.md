@@ -80,7 +80,7 @@ kubectl apply -k ./output_directory -n spinnaker
 
 ```
 # Convert the configs using the CLI
-armory-config convert --halconfig ~/.hal --output ./test_output --writefiles
+./armory-config convert --halconfig ~/.hal --output ./test_output --writefiles
 
 # Apply the configuration with Operator
 kubectl apply -k ./test_output -n spinnaker
@@ -103,7 +103,6 @@ kubectl apply -k /output_directory -n spinnaker --server-dry-run
 ## Caveats
 - `canary.serviceIntegrations` has an issue with AWS accounts when using the `endpoint` field. This field accepts a `string` input whereas other `endpoint` fields for Prometheus, Datadog, etc expect an `object` input. To workaround this, comment or remove this line from your configuration and migrate it manually by copy/pasting the value into your Kustomize Files. The rest of the Canary AWS account configuration can be safely converted.
 -  `--writefiles` does not write files from `persistentStorage.gcs.jsonPath`. Only from `providers.kubernetes.kubeconfigFile`, `authz.requiredGroupMembership.google.credentialsPath`, and `pubsub.google.subscriptions.templatePath`.
-- Your profiles and service-settings files will NOT be validated. The CLI does it's best to try and paste these files into the correct areas however, if the indentation or format of these files are invalid, this won't cause the CLI to break but, you will likely need to validate the configurations are correct yourself.
 
 ## Tips
 
