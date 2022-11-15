@@ -15,7 +15,7 @@ To install this tool, download it to either your local machine or your Docker co
 
 Create a new directory
 ```
-$ mkdir armory-config && cd armory-config
+mkdir armory-config && cd armory-config
 ```
 
 Download the CLI
@@ -23,16 +23,16 @@ Download the CLI
 
 MacOs
 ```
-$ bash -c 'curl -L https://github.com/austinthao5/golang_proto_test/releases/latest/download/armory-config-MacOS.tar.gz | tar -xz'
-$ cd macOS
+bash -c 'curl -L https://github.com/austinthao5/golang_proto_test/releases/latest/download/armory-config-MacOS.tar.gz | tar -xz'
+cd macOS
 ```
 
 
 
 Linux (If you're running Halyard on a Docker container, use this option)
 ```
-$ bash -c 'curl -L https://github.com/austinthao5/golang_proto_test/releases/latest/download/armory-config-linux.tar.gz | tar -xz'
-$ cd linux
+bash -c 'curl -L https://github.com/austinthao5/golang_proto_test/releases/latest/download/armory-config-linux.tar.gz | tar -xz'
+cd linux
 ```
 <br />
 To use the CLI once it's downloaded, run
@@ -42,7 +42,7 @@ To use the CLI once it's downloaded, run
 
 Then run the CLI like this
 ```
-$ ./armory-config convert --help
+./armory-config convert --help
 ```
 <br />
 
@@ -84,10 +84,10 @@ The default namespace that the CLI expects you to deploy this these files to is 
 
 ```
 # Convert the configs using the CLI
-$ armory-config convert --halconfig ~/.hal --output ./test_output --writefiles
+armory-config convert --halconfig ~/.hal --output ./test_output --writefiles
 
 # Apply the configuration with Operator
-$ kubectl apply -k ./test_output -n spinnaker
+kubectl apply -k ./test_output -n spinnaker
 ```
 
 **Validation**
@@ -95,13 +95,13 @@ $ kubectl apply -k ./test_output -n spinnaker
 To validate whether or not the outputted Kustomize files will render properly, you can run this command
 
 ```
-$ kustomize build ./output_directory
+kustomize build ./output_directory
 ```
 
 To validate whether or not the Kustomize files will deploy properly to Kubernetes you can run this command after Operator has been installed
 
 ```
-$ kubectl apply -k /output_directory -n spinnaker --server-dry-run
+kubectl apply -k /output_directory -n spinnaker --server-dry-run
 ```
 
 ### Generate Proto Files
@@ -111,7 +111,7 @@ This is the command we used to generate the proto files. Only useful if you want
 
 
 ```
-$ protoc -I=$SRC_DIR --go_out=$DST_DIR $SRC_DIR/proto/deploymentConfigurations/providers/AppEngine.proto
+protoc -I=$SRC_DIR --go_out=$DST_DIR $SRC_DIR/proto/deploymentConfigurations/providers/AppEngine.proto
 ```
 
 ### Learn more about the Spinnaker Operator
