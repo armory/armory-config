@@ -13,17 +13,24 @@ This tool is used to migrate your current Halyard-generated halconfig to the Spi
 ### Installation
 To install this tool, download it to either your local machine or your Docker container where Halyard is installed.
 
+Create a new directory
+```
+$ mkdir armory-config && cd armory-config
+```
+
+Download the CLI
+
 
 MacOS
 ```
-$ bash -c 'curl -L https://github.com/austinthao5/golang_proto_test/releases/latest/download/binary.tgz | tar -xz'
+$ bash -c 'curl -L https://github.com/austinthao5/golang_proto_test/releases/latest/download/armory-config-linux.tar.gz | tar -xz'
 ```
 
 
 
 Linux (If you're running Halyard on a Docker container, use this option)
 ```
-$ bash -c 'curl -L https://github.com/austinthao5/golang_proto_test/releases/latest/download/binary.tgz | tar -xz'
+$ bash -c 'curl -L https://github.com/austinthao5/golang_proto_test/releases/latest/download/armory-config-macOs.tar.gz | tar -xz'
 ```
 <br />
 To use the CLI once it's downloaded, run
@@ -82,7 +89,11 @@ The default namespace that the CLI expects you to deploy this these files to is 
 **Example usage**
 
 ```
-$ armory-config convert --halconfig ~/.hal --output ./test_output
+# Convert the configs using the CLI
+$ armory-config convert --halconfig ~/.hal --output ./test_output --writefiles
+
+# Apply the configuration with Operator
+$ kubectl apply -k ./test_output -n spinnaker
 ```
 
 **Validation**
