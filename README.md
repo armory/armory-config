@@ -103,6 +103,8 @@ kubectl apply -k /output_directory -n spinnaker --server-dry-run
 
 - The default namespace that the CLI expects you to deploy these files to is the `spinnaker` namespace. If you want to change this, edit the `Kustomization.yml` file that gets outputted. On `line 4` there is a namespace field that can be changed to a different namespace.
 - If you want a single manifest instead of a Kustomize format, run `kustomize build /output_directory > spinnaker_manifest.yml` 
+- If Halyard is installed on a Docker container and you want to remove the outputted files from Docker, you can copy them to your local machine by running `docker cp <container_name>:/path/to/file /path/to/local`
+- If you are unable to use curl and download the CLI directly in Docker, you can download it locally and then run `docker cp /path/to/cli <container_name>:/path/in/docker`
 
 ## Generate Proto Files
 
