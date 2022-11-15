@@ -13,29 +13,30 @@ This tool is used to migrate your current Halyard-generated halconfig to the Spi
 ### Installation
 To install this tool, download it to either your local machine or your Docker container where Halyard is installed.
 
-
-MacOS
+Create a new directory
 ```
-$ bash -c 'curl -L https://github.com/austinthao5/golang_proto_test/releases/latest/download/binary.tgz | tar -xz'
+$ mkdir armory-config && cd armory-config
+```
+
+Download the CLI
+
+
+MacOs
+```
+$ bash -c 'curl -L https://github.com/austinthao5/golang_proto_test/releases/latest/download/armory-config-MacOS.tar.gz | tar -xz'
+$ cd macOS
 ```
 
 
 
 Linux (If you're running Halyard on a Docker container, use this option)
 ```
-$ bash -c 'curl -L https://github.com/austinthao5/golang_proto_test/releases/latest/download/binary.tgz | tar -xz'
+$ bash -c 'curl -L https://github.com/austinthao5/golang_proto_test/releases/latest/download/armory-config-linux.tar.gz | tar -xz'
+$ cd linux
 ```
 <br />
 To use the CLI once it's downloaded, run
 
-
-```
-$ cd binary/macOS
-```
-OR
-```
-$ cd binary/linux
-```
 <br />
 
 
@@ -82,7 +83,11 @@ The default namespace that the CLI expects you to deploy this these files to is 
 **Example usage**
 
 ```
-$ armory-config convert --halconfig ~/.hal --output ./test_output
+# Convert the configs using the CLI
+$ armory-config convert --halconfig ~/.hal --output ./test_output --writefiles
+
+# Apply the configuration with Operator
+$ kubectl apply -k ./test_output -n spinnaker
 ```
 
 **Validation**
