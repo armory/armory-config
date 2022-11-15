@@ -80,7 +80,7 @@ kubectl apply -k ./output_directory -n spinnaker
 
 ```
 # Convert the configs using the CLI
-armory-config convert --halconfig ~/.hal --output ./test_output --writefiles
+./armory-config convert --halconfig ~/.hal --output ./test_output --writefiles
 
 # Apply the configuration with Operator
 kubectl apply -k ./test_output -n spinnaker
