@@ -35,10 +35,6 @@ bash -c 'curl -L https://github.com/austinthao5/golang_proto_test/releases/lates
 cd linux
 ```
 <br />
-To use the CLI once it's downloaded, run
-
-<br />
-
 
 Then run the CLI like this
 ```
