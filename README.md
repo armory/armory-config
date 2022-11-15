@@ -44,9 +44,9 @@ cd linux
 
 After the configuration has been converted to a Spinnaker Operator Kustomize format, install the Operator
 
-OSS: https://github.com/armory/spinnaker-operator
+- OSS: https://github.com/armory/spinnaker-operator
 
-Armory: https://docs.armory.io/armory-enterprise/installation/armory-operator
+- Armory: https://docs.armory.io/armory-enterprise/installation/armory-operator
 
 
 **Apply the Spinnaker Kustomize Operator configurations**
@@ -59,9 +59,6 @@ kubectl apply -k ./output_directory -n spinnaker
 ```
 
 ## Commands
-This will output the Kustomize files to a local directory. It's a one way conversion from Halyard -> Operator meaning that you cannot provide a set of Spinnaker Kustomize files and convert them to halconfig.
-
-The default namespace that the CLI expects you to deploy these files to is the `spinnaker` namespace. If you want to change this, edit the `Kustomization.yml` file that gets outputted. On `line 4` there is a namespace field that can be changed to a different namespace.
 
 **Required Flags**
 - `--halconfig`: Provide the entire Hal directory where your halconfig lives.
@@ -101,6 +98,11 @@ kubectl apply -k /output_directory -n spinnaker --server-dry-run
 - `canary.serviceIntegrations` has an issue with AWS accounts when using the `endpoint` field. This field accepts a `string` input whereas other `endpoint` fields for Prometheus, Datadog, etc expect an `object` input. To workaround this, comment or remove this line from your configuration and migrate it manually by copy/pasting the value into your Kustomize Files. The rest of the Canary AWS account configuration can be safely converted.
 -  `--writefiles` does not write files from `persistentStorage.gcs.jsonPath`. Only from `providers.kubernetes.kubeconfigFile`, `authz.requiredGroupMembership.google.credentialsPath`, and `pubsub.google.subscriptions.templatePath`.
 - Your profiles and service-settings files will NOT be validated. The CLI does it's best to try and paste these files into the correct areas however, if the indentation or format of these files are invalid, this won't cause the CLI to break but, you will likely need to validate the configurations are correct yourself.
+
+## Tips
+
+- The default namespace that the CLI expects you to deploy these files to is the `spinnaker` namespace. If you want to change this, edit the `Kustomization.yml` file that gets outputted. On `line 4` there is a namespace field that can be changed to a different namespace.
+- If you want a single manifest instead of a Kustomize format, run `kustomize build /output_directory > spinnaker_manifest.yml` 
 
 ## Generate Proto Files
 
