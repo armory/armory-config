@@ -23,15 +23,15 @@ Download the CLI
 
 MacOs
 ```
-$ bash -c 'curl -L https://github.com/austinthao5/golang_proto_test/releases/latest/download/armory-config-linux.tar.gz | tar -xz'
-$ cd macOs
+$ bash -c 'curl -L https://github.com/austinthao5/golang_proto_test/releases/latest/download/armory-config-MacOS.tar.gz | tar -xz'
+$ cd macOS
 ```
 
 
 
 Linux (If you're running Halyard on a Docker container, use this option)
 ```
-$ bash -c 'curl -L https://github.com/austinthao5/golang_proto_test/releases/latest/download/armory-config-macOs.tar.gz | tar -xz'
+$ bash -c 'curl -L https://github.com/austinthao5/golang_proto_test/releases/latest/download/armory-config-linux.tar.gz | tar -xz'
 $ cd linux
 ```
 <br />
