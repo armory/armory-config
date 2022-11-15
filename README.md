@@ -5,6 +5,7 @@ This CLI tool is used to migrate your current Halyard-generated halconfig to the
 ## Limitations
 - This CLI does NOT install Operator for you.
 - This CLI does NOT deploy anything. It only converts the config files into a Spinnaker Operator Kustomize format.
+- This CLI does not validate service-settings and profiles files. It does it's best to try and paste the configurations in the right areas however if the indentation or spacing of any of these files are not valid, the CLI won't break but, the formatting will not be deployable with Operator. Please double check the outputted `service-settings.yml` and `profiles-patch.yml` file to ensure a seamless migration.
 
 
 ## Getting Started
