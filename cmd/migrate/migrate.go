@@ -25,6 +25,10 @@ var convertCmd = &cobra.Command{
 		// res := stringer.Reverse(args[0])
 		// fmt.Println(res)
 
+		if halconfig_dir == `` {
+			fmt.Println("Specify your halconfig directory with the --halconfig flag")
+		}
+
 		if len(halconfig_dir) > 0 && len(output_dir) > 0 {
 
 			migrator(halconfig_dir, output_dir, override_deployment_dir, spin_flavor, skip_validations, writefiles)
@@ -36,7 +40,7 @@ var convertCmd = &cobra.Command{
 // Run this function when the CLI starts up. This initializes the flags for the Convert command.
 func init() {
 	rootCmd.AddCommand(convertCmd)
-	convertCmd.Flags().StringVar(&halconfig_dir, "halconfig", "~/.hal", "Provide the Halconfig directory to convert")
+	convertCmd.Flags().StringVar(&halconfig_dir, "halconfig", "", "Provide the Halconfig directory to convert")
 	convertCmd.Flags().StringVar(&output_dir, "output", "./operatorConfig", "Select an output directory")
 	convertCmd.Flags().StringVar(&override_deployment_dir, "override_deployment", "", "Select the deployment name being used by Halyard. This is the subdirectory in the ./hal folder where the profiles and service-settings live, by default the code uses the one in currentDeployment in the config")
 	convertCmd.Flags().StringVar(&spin_flavor, "spin_flavor", "ARMORY", "Select Spinnaker Operator flavor to use (ARMORY, OSS)")
@@ -114,6 +118,7 @@ func migrator(halconfig_dir string, output_dir string, override_deployment_dir s
 	}
 	// Create output files
 	output_config(&KustomizeData, writefiles)
+	fmt.Println("Your files have been generated in the " + output_dir + " directory")
 }
 
 func output_config(KustomizeData *structs.Kustomize, writefiles bool) {

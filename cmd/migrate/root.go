@@ -27,7 +27,7 @@ var rootCmd = &cobra.Command{
 kustomize format. The output should be a fully buildable and deployable set of kustomize files`,
 	Run: func(cmd *cobra.Command, args []string) {
 
-		fmt.Printf("Specify your Halyard Directory with the -h flag and the output directory with the -o flag\nFor example:\n$CMD -h ~/.hal -o test/operator/config")
+		fmt.Printf("Run the convert command by running:\narmory-config convert --help\n")
 
 	},
 }
