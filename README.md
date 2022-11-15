@@ -72,7 +72,10 @@ The default namespace that Kustomize expects you to deploy this to is the `spinn
 - `--writefiles`: Whether or not the CLI will copy all local files referenced in the halconfig and output them into the `files-patch.yml` file. (default: `false`)
 
 **Example usage**
-`armory-config convert --halconfig ~/.hal --output ./test_output`
+
+```
+$ armory-config convert --halconfig ~/.hal --output ./test_output
+```
 
 **Validation**
 
