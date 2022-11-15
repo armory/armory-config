@@ -21,9 +21,10 @@ $ mkdir armory-config && cd armory-config
 Download the CLI
 
 
-MacOS
+MacOs
 ```
 $ bash -c 'curl -L https://github.com/austinthao5/golang_proto_test/releases/latest/download/armory-config-linux.tar.gz | tar -xz'
+$ cd macOs
 ```
 
 
@@ -31,18 +32,11 @@ $ bash -c 'curl -L https://github.com/austinthao5/golang_proto_test/releases/lat
 Linux (If you're running Halyard on a Docker container, use this option)
 ```
 $ bash -c 'curl -L https://github.com/austinthao5/golang_proto_test/releases/latest/download/armory-config-macOs.tar.gz | tar -xz'
+$ cd linux
 ```
 <br />
 To use the CLI once it's downloaded, run
 
-
-```
-$ cd binary/macOS
-```
-OR
-```
-$ cd binary/linux
-```
 <br />
 
 
