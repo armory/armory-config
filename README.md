@@ -1,7 +1,13 @@
 # Halyard to Spinnaker Operator migration tool
 
-This tool is used to migrate your current Halyard-generated halconfig to the spinnaker operator kustomize files format. This works best with a currently working halconfig directory. If you are having issues running this properly, please ensure that you are able to deploy your halconfig with Halyard prior to running this CLI. This CLI does not validate that your Halconfig will deploy. Only that you have the correct format structure.
+This tool is used to migrate your current Halyard-generated halconfig to the Spinnaker Operator Kustomize files format. This works best with a currently working halconfig directory. If you are having issues running this properly, please ensure that you are able to deploy your halconfig with Halyard prior to running this CLI. This CLI does not validate that your Halconfig will deploy. Only that you have the correct format structure.
 
+### Limitations
+- This CLI does NOT install Operator for you.
+- This CLI does NOT deploy anything. It only converts the config files into a Spinnaker Operator Kustomize format.
+- `canary.serviceIntegrations` has an issue with AWS accounts when using the `endpoint` field. This field accepts a `string` input whereas other `endpoint` fields for Prometheus, Datadog, etc expect an `object` input. To workaround this, comment or remove this line from your configuration and migrate it manually by copy/pasting the value into your Kustomize Files. The rest of the Canary AWS account configuration can be safely converted.
+-  `--writefiles` does not write files from `persistentStorage.gcs.jsonPath`. Only from `providers.kubernetes.kubeconfigFile`, `authz.requiredGroupMembership.google.credentialsPath`, and `pubsub.google.subscriptions.templatePath`.
+- Your profiles and service-settings files will NOT be validated. The CLI does it's best to try and paste these files into the correct areas however, if the indentation or format of these files are invalid, this won't cause the CLI to break but, you will likely need to validate the configurations are correct yourself.
 
 
 ### Installation
@@ -37,8 +43,10 @@ Then run the CLI like this
 ```
 $ ./armory-config convert --help
 ```
+<br />
 
-Once the configuration has been converted to a Spinnaker Kustomize format, install the Operator
+
+After the configuration has been converted to a Spinnaker Operator Kustomize format, install the Operator
 
 OSS:
 
@@ -59,7 +67,7 @@ kubectl apply -k ./output_directory -n spinnaker
 ### Usage
 This will output the Kustomize files to a local directory. It's a one way conversion from Halyard -> Operator meaning that you cannot provide a set of Spinnaker Kustomize files and convert them to halconfig.
 
-The default namespace that Kustomize expects you to deploy this to is the `spinnaker` namespace. If you want to change this, edit the `Kustomization.yml` file that gets outputted. On `line 4` there is a namespace field that can be changed to a different namespace.
+The default namespace that the CLI expects you to deploy this these files to is the `spinnaker` namespace. If you want to change this, edit the `Kustomization.yml` file that gets outputted. On `line 4` there is a namespace field that can be changed to a different namespace.
 
 **Required Flags**
 - `--halconfig`: Provide the entire Hal directory where your halconfig lives.
@@ -85,14 +93,21 @@ To validate whether or not the outputted Kustomize files will render properly, y
 $ kustomize build ./output_directory
 ```
 
-To validate whether or not the Kustomize files will deploy properly to Kubernetes you can run this command
+To validate whether or not the Kustomize files will deploy properly to Kubernetes you can run this command after Operator has been installed
 
 ```
 $ kubectl apply -k /output_directory -n spinnaker --server-dry-run
 ```
 
 ### Generate Proto Files
-`protoc -I=$SRC_DIR --go_out=$DST_DIR $SRC_DIR/proto/deploymentConfigurations/providers/AppEngine.proto`
+
+
+This is the command we used to generate the proto files. Only useful if you want to change any of the proto structs. If you don't know what that means, you can safely ignore this.
+
+
+```
+$ protoc -I=$SRC_DIR --go_out=$DST_DIR $SRC_DIR/proto/deploymentConfigurations/providers/AppEngine.proto
+```
 
 ### Learn more about the Spinnaker Operator
 - [Spinnaker Operator Docs](https://docs.armory.io/armory-enterprise/installation/armory-operator)
