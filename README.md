@@ -80,10 +80,16 @@ $ armory-config convert --halconfig ~/.hal --output ./test_output
 **Validation**
 
 To validate whether or not the outputted Kustomize files will render properly, you can run this command
-`kustomize build ./output_directory`
+
+```
+$ kustomize build ./output_directory
+```
 
 To validate whether or not the Kustomize files will deploy properly to Kubernetes you can run this command
-`kubectl apply -k /output_directory -n spinnaker --server-dry-run`
+
+```
+$ kubectl apply -k /output_directory -n spinnaker --server-dry-run
+```
 
 ### Generate Proto Files
 `protoc -I=$SRC_DIR --go_out=$DST_DIR $SRC_DIR/proto/deploymentConfigurations/providers/AppEngine.proto`
