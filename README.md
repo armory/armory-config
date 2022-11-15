@@ -44,13 +44,10 @@ cd linux
 
 After the configuration has been converted to a Spinnaker Operator Kustomize format, install the Operator
 
-OSS:
+OSS: https://github.com/armory/spinnaker-operator
 
-https://github.com/armory/spinnaker-operator
+Armory: https://docs.armory.io/armory-enterprise/installation/armory-operator
 
-Armory:
-
-https://docs.armory.io/armory-enterprise/installation/armory-operator
 
 **Apply the Spinnaker Kustomize Operator configurations**
 
@@ -86,7 +83,7 @@ armory-config convert --halconfig ~/.hal --output ./test_output --writefiles
 kubectl apply -k ./test_output -n spinnaker
 ```
 
-##Validation
+## Validation
 
 To validate whether or not the outputted Kustomize files will render properly, you can run this command
 
